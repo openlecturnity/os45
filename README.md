@@ -1,18 +1,23 @@
-OpenLECTURNITY
+The [OpenLECTURNITY](http://openlecturnity.github.com/os45/) project
 ==============
 
 ### Welcome to the OpenLECTURNITY project.
 
 The OpenLECTURNITY project aims to provide professional lecture and screen recording facilities as well as editing and publishing for free.
-This project is the open source version of imc AG's LECTURNITY v4.5.  
+This project is the open source version of [imc AG](http://www.im-c.com)'s [LECTURNITY](http://www.lecturnity.com) v4.5.  
 
 
 Current State
 -------------
 
-The openLECTURNITY project has just been started. Basic source code has been uploaded. Build instructions have to be provided in order to compile a running executable.
+The OpenLECTURNITY project has just been started. Basic source code has been uploaded. Build instructions have to be provided in order to compile a running executable.
 
 However as the open source project is based on the full version of LECTURNITY there is already lots of functionality thta will be available soon.
+
+
+Contribution Guides
+-------------------
+In the spirit of open source software development, OpenLECTURNITY always encourages community code contribution.
 
 
 Documentation
