@@ -1,10 +1,9 @@
 OpenLECTURNITY
 ==============
 
-Welcome to the OpenLECTURNITY project.
+### Welcome to the OpenLECTURNITY project.
 
-The OpenLECTURNITY project is the open source version of imc AG's LECTURNITY v4.5
-
+The OpenLECTURNITY project is the open source version of imc AG's LECTURNITY v4.5.  
 The OpenLECTURNITY project aims to provide professional lecture and screen recording facilities as well as editing and publishing for free.
 
 
@@ -21,6 +20,6 @@ Documentation
 
 ### File format specifications
 
-[Presentation](tree/master/doc/lecturnitySourceDocuments): The presentation file, also called "Lecturniy Source Document" (LSD).
+[Presentation](tree/master/doc/lecturnitySourceDocuments): The presentation file, also called "Lecturniy Source Document" (LSD).  
+[Recoring ](tree/master/doc/lecturnityRecordings): The recording files, incl. "Lecturniy Recording Document" (LRD), "Lecturnity Meta Data" (LMD), the object file (OBJ) and the event queue file (EVQ).
 
-[Recoring](tree/master/doc/lecturnityRecordings): The recording files, incl. "Lecturniy Recording Document" (LRD), "Lecturnity Meta Data" (LMD), the object file (OBJ) and the event queue file (EVQ).
