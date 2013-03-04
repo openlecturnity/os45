@@ -1,0 +1,128 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNUNG: DIESE ARBEITSBEREICHSDATEI DARF NICHT BEARBEITET ODER GELÖSCHT WERDEN!
+
+###############################################################################
+
+Project: "MfcUtils"=..\..\common\MfcUtils\MfcUtils.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "ZipArchive"=..\..\common\ZipArchive\ZipArchive.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "changeurl"=.\changeurl.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name lutils
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name filesdk
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name MfcUtils
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name ZipArchive
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "changeurlcmd"=.\changeurlcmd.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name filesdk
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name lutils
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name MfcUtils
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name ZipArchive
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "drawsdk"=..\..\common\drawsdk\drawsdk.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "filesdk"=..\..\common\filesdk\filesdk.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name drawsdk
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "lutils"=..\..\common\lutils\lutils.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+

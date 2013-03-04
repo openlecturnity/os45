@@ -1,0 +1,26 @@
+// Created by Microsoft (R) C/C++ Compiler Version 12.00.8168.0 (ab7d2faa).
+//
+// c:\sandbox\imc\pptexport\batconvcore_dll\include_for_assistant\debug\batconvcore.tli
+//
+// Wrapper implementations for Win32 type library ..\batconvcore.dll
+// compiler-generated file created 01/17/08 at 07:10:20 - DO NOT EDIT!
+
+#pragma once
+
+//
+// interface _CBatchConvCore wrapper method implementations
+//
+
+inline short _CBatchConvCore::Launch ( _bstr_t sPPTName, _bstr_t sLsdName ) {
+    short _result;
+    HRESULT _hr = raw_Launch(sPPTName, sLsdName, &_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _result;
+}
+
+inline short _CBatchConvCore::LaunchBatch ( _bstr_t lstFile, short saveToPPTDir, short makeDir, _bstr_t savePath ) {
+    short _result;
+    HRESULT _hr = raw_LaunchBatch(lstFile, saveToPPTDir, makeDir, savePath, &_result);
+    if (FAILED(_hr)) _com_issue_errorex(_hr, this, __uuidof(this));
+    return _result;
+}

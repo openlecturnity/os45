@@ -1,0 +1,7 @@
+<w:p>
+	<w:pPr>
+		<w:pStyle w:val="Normal" />
+	</w:pPr>
+    <w:r>
+		<w:t>%TEXT%</w:t>
+	</w:r>

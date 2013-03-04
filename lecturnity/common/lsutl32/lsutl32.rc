@@ -1,0 +1,1126 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Neutral (Default) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_NEUD)
+#ifdef _WIN32
+LANGUAGE LANG_NEUTRAL, SUBLANG_DEFAULT
+#pragma code_page(1250)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// LANG
+//
+
+IDR_LANGUAGE_DE         LANG                    "res\\ToolkitPro.ResourceDe.xml"
+IDR_LANGUAGE_EN         LANG                    "res\\ToolkitPro.ResourceEn.xml"
+IDR_LANGUAGE_VI         LANG                    "res\\ToolkitPro.ResourceVi.xml"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_PP_PROGRESS DIALOGEX 0, 0, 202, 75
+STYLE DS_SETFONT | DS_MODALFRAME | DS_CENTER | WS_POPUP
+EXSTYLE WS_EX_TOPMOST
+FONT 8, "Microsoft Sans Serif", 400, 0, 0x0
+BEGIN
+    CONTROL         "Progress1",IDC_PP_PROGRESS1,"msctls_progress32",WS_BORDER,2,13,197,11
+    CONTROL         "Progress1",IDC_PP_PROGRESS2,"msctls_progress32",WS_BORDER,2,41,198,11
+    LTEXT           "Overall progress:",IDC_EP_OVERALL,2,3,198,8
+    LTEXT           "Progress:",IDC_EP_PARTICULAR,2,31,198,8
+    DEFPUSHBUTTON   "Continue later",IDC_LATER,76,58,58,14
+    PUSHBUTTON      "Cancel",IDC_CANCEL,140,58,58,14
+END
+
+IDD_STRUCTEDITOR_DIALOG DIALOGEX 0, 0, 244, 433
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_TOPMOST
+CAPTION "Edit document structure"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,134,412,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,187,412,50,14
+    LTEXT           "Rename or remove pages:",IDC_STRUCTEDITOR_HEADER,7,7,230,14
+    CONTROL         "Nur Standard-Index",IDC_STD_INDEX,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,18,68,163,12
+    CONTROL         "In Zukunft immer Standard-Index",IDC_STD_INDEX_ALWAYS,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,18,82,168,12
+    GROUPBOX        "          Klick-Seiten  ",IDC_CLICKPAGES_GROUPBOX,7,55,230,43
+    CONTROL         "",IDC_STRUCTURE_VIEW,"Static",SS_WHITERECT,7,103,230,302
+    LTEXT           "Hint:",IDC_STRUCTEDITOR_HINT,7,21,230,30
+    ICON            IDI_CLICK_ICON_LS,IDC_STATIC,14,54,20,20,SS_REALSIZEIMAGE
+END
+
+IDD_PUBLISHING_FORMAT DIALOGEX 0, 0, 510, 297
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "RM",IDC_FORMAT_RM,4,142,245,34
+    PUSHBUTTON      "LPD",IDC_FORMAT_LPD,4,218,245,34
+    PUSHBUTTON      "WM",IDC_FORMAT_WM,4,104,245,34
+    PUSHBUTTON      "IPOD",IDC_FORMAT_IPOD,4,180,245,34
+    PUSHBUTTON      "FLASH",IDC_FORMAT_FLASH,4,66,245,34
+    PUSHBUTTON      "SLIDESTAR",IDC_FORMAT_SLIDESTAR,261,104,245,34,NOT WS_VISIBLE
+    PUSHBUTTON      "YOUTUBE",IDC_FORMAT_YOUTUBE,261,66,245,34
+    LTEXT           "Custom Profile",IDC_CUSTOM_TITLE,256,199,250,13
+    PUSHBUTTON      "Custom",IDC_FORMAT_CUSTOM,261,218,245,34
+    LTEXT           "Default Profiles",IDC_DEFAULT_TITLE,0,48,506,13
+    PUSHBUTTON      "OK",IDOK,397,276,50,14
+    PUSHBUTTON      "Abbrechen",IDC_CANCEL,456,276,50,14
+    PUSHBUTTON      "Profile Manager",IDC_PROFILE_MANAGER,4,276,109,14
+    CONTROL         "",IDC_STATIC,"Static",SS_BLACKFRAME | SS_SUNKEN,4,266,502,1
+    CONTROL         "",IDC_STATIC,"Static",SS_BLACKFRAME | SS_SUNKEN,254,61,1,204
+END
+
+IDD_PROFILE_MANAGER DIALOGEX 0, 0, 496, 233
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    PUSHBUTTON      "Cancel",IDCANCEL,434,213,55,14
+    PUSHBUTTON      "Delete",IDC_DELETE_PROFILE,434,84,55,14
+    PUSHBUTTON      "Rename",IDC_RENAME_PROFILE,434,61,55,14
+    CONTROL         "",IDC_STATIC,"Static",SS_BLACKFRAME | SS_SUNKEN,2,207,493,1
+    PUSHBUTTON      "OK",IDOK,374,213,55,14
+    CONTROL         "",IDC_PROFILE_LIST,"SysListView32",LVS_REPORT | LVS_SINGLESEL | LVS_SHOWSELALWAYS | LVS_EDITLABELS | LVS_ALIGNLEFT | LVS_NOSORTHEADER | WS_BORDER | WS_TABSTOP,9,15,418,183
+    PUSHBUTTON      "New...",IDC_NEW_PROFILE,434,15,55,14
+    PUSHBUTTON      "Edit",IDC_EDIT_PROFILE,434,38,55,14
+    PUSHBUTTON      "Import...",IDC_IMPORT_PROFILE,434,107,55,14
+    PUSHBUTTON      "Export...",IDC_EXPORT_PROFILE,434,130,55,14
+END
+
+IDD_PROFILE_SETNAME DIALOGEX 0, 0, 242, 68
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,131,47,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,185,47,50,14
+    EDITTEXT        IDC_EDIT_PROFILENAME,7,23,228,13,ES_AUTOHSCROLL | ES_NOHIDESEL
+    LTEXT           "Name:",IDC_LABEL_PROFILENAME,7,11,228,10
+END
+
+IDD_YOUTUBE_SETTINGS DIALOGEX 0, 0, 270, 185
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "User name:",IDC_USERNAME,7,16,75,14
+    EDITTEXT        IDC_EDIT_USERNAME,79,14,184,14,ES_AUTOHSCROLL
+    LTEXT           "Password:",IDC_PASSWORD,7,36,75,14
+    EDITTEXT        IDC_EDIT_PASSWORD,79,34,184,14,ES_PASSWORD | ES_AUTOHSCROLL
+    LTEXT           "Description:",IDC_DESCRIPTION,7,76,75,14
+    EDITTEXT        IDC_EDIT_DESCRIPTION,79,74,184,14,ES_AUTOHSCROLL
+    LTEXT           "Category:",IDC_CATEGORY,7,116,75,14
+    COMBOBOX        IDC_COMBO_CATEGORY,79,114,184,14,CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Privacy:",IDC_PRIVACY,7,136,75,14
+    CONTROL         "",IDC_CHECK_PRIVACY,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,80,133,18,14
+    CONTROL         "",IDC_TYDLG_SEPARATOR,"Static",SS_BLACKFRAME | SS_SUNKEN,3,154,264,1
+    DEFPUSHBUTTON   "OK",IDOK,154,163,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,213,163,50,14
+    EDITTEXT        IDC_EDIT_YT_TITLE,79,54,184,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_EDIT_YT_KEYWORDS,79,94,184,14,ES_AUTOHSCROLL
+    LTEXT           "Title:",IDC_TITLE_YT,7,56,71,14
+    LTEXT           "Keywords:",IDC_KEYWORDS,7,96,71,14
+END
+
+IDD_SLIDESTAR_SETTINGS DIALOGEX 0, 0, 270, 111
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Dialog"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    LTEXT           "Hostname (or IP address):",IDC_HOSTNAME,7,14,60,18
+    EDITTEXT        IDC_EDIT_HOSTNAME,75,14,187,14,ES_AUTOHSCROLL
+    LTEXT           "Username:",IDC_USERNAME,7,34,125,14
+    EDITTEXT        IDC_EDIT_USERNAME,75,34,187,14,ES_AUTOHSCROLL
+    LTEXT           "Password:",IDC_PASSWORD,7,54,125,14
+    EDITTEXT        IDC_EDIT_PASSWORD,75,54,187,14,ES_PASSWORD | ES_AUTOHSCROLL
+    CONTROL         "",IDC_STATIC,"Static",SS_BLACKFRAME | SS_SUNKEN,3,80,264,1
+    DEFPUSHBUTTON   "OK",IDOK,153,89,50,14
+    PUSHBUTTON      "Abbrechen",IDCANCEL,212,89,50,14
+END
+
+IDD_LIVECONTEXT_STARTSCREEN DIALOGEX 0, 0, 186, 52
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | DS_CENTER | WS_POPUP | WS_CAPTION | WS_SYSMENU
+EXSTYLE WS_EX_TOPMOST
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    CONTROL         "",IDC_PROGRESS,"msctls_progress32",WS_BORDER,14,29,158,9
+    LTEXT           "Static",IDC_STATUS,14,14,150,8
+END
+
+IDD_DIALOG_KEYWORDS DIALOGEX 0, 0, 244, 126
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+FONT 8, "Microsoft Sans Serif", 400, 0, 0xCC
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,131,105,50,14
+    PUSHBUTTON      "Cancel",IDCANCEL,185,105,50,14
+    GROUPBOX        "",IDC_KEYWORDS_STATIC_GROUP,9,7,228,90
+    LTEXT           "Title",IDC_KEYWORDS_STATIC_TITLE,19,17,205,8
+    LTEXT           "Keywords (separated by)",IDC_KEYWORDS_STATIC_KEYWORDS,19,59,205,8
+    EDITTEXT        IDC_KEYWORDS_EDIT_TITLE,19,29,208,14,ES_AUTOHSCROLL
+    EDITTEXT        IDC_KEYWORDS_EDIT_KEYWORDS,19,71,208,14,ES_AUTOHSCROLL
+END
+
+IDD_MANUALCON_FIGURATION DIALOGEX 0, 0, 238, 142
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Manual Configuration"
+FONT 8, "MS Sans Serif", 0, 0, 0x0
+BEGIN
+    CONTROL         "",IDC_SPIN_MC_SLIDES_NO,"msctls_updown32",UDS_SETBUDDYINT | UDS_ALIGNRIGHT | UDS_ARROWKEYS,130,14,11,14
+    CONTROL         "Show Header",IDC_CHECK_MC_SHOW_HEADER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,17,37,100,10
+    CONTROL         "Show Footer",IDC_CHECK_MC_SHOW_FOOTER,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,17,56,100,10
+    CONTROL         "Show Table of Content",IDC_CHECK_MC_SHOW_TABLE_OF_CONTENT,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,17,94,100,10
+    DEFPUSHBUTTON   "OK",IDOK,120,119,50,16
+    PUSHBUTTON      "Cancel",IDCANCEL,181,119,50,16
+    EDITTEXT        IDC_EDIT_MC_SLIDES_NO,130,14,23,14,ES_AUTOHSCROLL | ES_NUMBER
+    LTEXT           "Slides Number Per Page:",IDC_STATIC_MC_SLIDES_NO,17,18,110,10
+    GROUPBOX        "",IDC_STATIC,7,3,224,112
+    CONTROL         "Show Cover Sheet",IDC_CHECK_MC_SHOW_COVER_SHEET,"Button",BS_AUTOCHECKBOX | WS_TABSTOP,17,75,100,10
+END
+
+IDD_SINGLE_PROGRESS_DIALOG DIALOGEX 0, 0, 186, 41
+STYLE DS_SETFONT | DS_MODALFRAME | WS_POPUP
+FONT 8, "Microsoft Sans Serif", 400, 0, 0x0
+BEGIN
+    CONTROL         "Progress1",IDC_PROGRESS_BAR,"msctls_progress32",WS_BORDER,7,21,172,11
+    LTEXT           "Fortschritt",IDC_PROGRESS_LABEL,7,7,172,9
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_STRUCTEDITOR_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 237
+        VERTGUIDE, 222
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 426
+    END
+
+    IDD_PUBLISHING_FORMAT, DIALOG
+    BEGIN
+        LEFTMARGIN, 4
+        RIGHTMARGIN, 506
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 290
+    END
+
+    IDD_PROFILE_MANAGER, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 489
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 226
+    END
+
+    IDD_PROFILE_SETNAME, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 235
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 61
+    END
+
+    IDD_YOUTUBE_SETTINGS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 263
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 177
+    END
+
+    IDD_SLIDESTAR_SETTINGS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 262
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 103
+    END
+
+    IDD_LIVECONTEXT_STARTSCREEN, DIALOG
+    BEGIN
+        LEFTMARGIN, 14
+        RIGHTMARGIN, 172
+        TOPMARGIN, 14
+        BOTTOMMARGIN, 38
+    END
+
+    IDD_DIALOG_KEYWORDS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 237
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 119
+    END
+
+    IDD_MANUALCON_FIGURATION, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 231
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 135
+    END
+
+    IDD_SINGLE_PROGRESS_DIALOG, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 179
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 34
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// PNG
+//
+
+IDC_SPLASHSCREEN_IMAGE  PNG                     "res\\lecturnity.png"
+IDB_IPOD                PNG                     "res\\pngIPod.png"
+IDB_REALMEDIA           PNG                     "res\\pngRealMedia.png"
+IDB_WINDOWSMEDIA        PNG                     "res\\pngWindowsMedia.png"
+IDB_LPD                 PNG                     "res\\pngLPD.png"
+IDB_FLASH               PNG                     "res\\pngFlash.png"
+IDB_YOUTUBE             PNG                     "res\\pngYouTube.png"
+IDB_SLIDESTAR           PNG                     "res\\pngSlidestar.png"
+IDB_CUSTOM              PNG                     "res\\pngCustom.png"
+IDB_CLIX                PNG                     "res\\pngClix.png"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDI_CLICK_ICON_LS       ICON                    "res\\clickIcon.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_DELETE_BUTTON       BITMAP                  "res\\DeleteButton.bmp"
+IDB_DELETE_BUTTON_SEL   BITMAP                  "res\\DeleteButtonSel.bmp"
+IDB_DELETE_BUTTON_DISABLED BITMAP                  "res\\DeleteButtonDisabled.bmp"
+IDB_CLICK_ICON          BITMAP                  "res\\bmpClickIcon.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 4,5,0,0
+ PRODUCTVERSION 4,5,0,0
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x40004L
+ FILETYPE 0x2L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040704b0"
+        BEGIN
+            VALUE "CompanyName", "imc AG"
+            VALUE "FileDescription", "filesdk"
+            VALUE "FileVersion", "4, 5, 0, 0"
+            VALUE "InternalName", "filesdk"
+            VALUE "LegalCopyright", "Copyright (C) 2011 imc AG"
+            VALUE "OriginalFilename", "filesdk.dll"
+            VALUE "ProductName", "LECTURNITY"
+            VALUE "ProductVersion", "4, 5, 0, 0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x407, 1200
+    END
+END
+
+#endif    // Neutral (Default) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// German (Germany) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)
+#ifdef _WIN32
+LANGUAGE LANG_GERMAN, SUBLANG_GERMAN
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_DLG_ENTER_LICENSE DIALOGEX 0, 0, 256, 94
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "LECTURNITY"
+FONT 8, "MS Shell Dlg", 400, 0, 0x1
+BEGIN
+    DEFPUSHBUTTON   "OK",IDOK,136,73,50,14
+    DEFPUSHBUTTON   "Cancel",IDCANCEL,191,73,50,14
+    LTEXT           "Please enter a LECTURNITY license key and select ""OK"".",IDC_STC_ENTER_LICENSE_TEXT,7,7,242,20
+    GROUPBOX        "Enter License Key",IDC_STC_KEY_GROUP,7,24,242,40
+    EDITTEXT        IDC_EDT_KEY,14,40,228,14,ES_AUTOHSCROLL
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_DLG_ENTER_LICENSE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 249
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 87
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDB_BM_SHIELD           BITMAP                  "res\\uacShield.bmp"
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 7, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\lsutl32.rc2""  // Nicht mit Microsoft Visual C++ bearbeitete Ressourcen\r\n"
+    "#include ""l.deu\\afxres.rc""          // Standardkomponenten\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDC_EP_OVERALL          "Gesamtfortschritt"
+    IDC_EP_PARTICULAR       "Fortschritt"
+    IDS_MANUAL_CONFIGURATION "Konfiguration"
+END
+
+STRINGTABLE 
+BEGIN
+    IDC_CLICKPAGES_GROUPBOX "       Klick-Seiten"
+    IDC_STC_ENTER_LICENSE_TEXT 
+                            "Bitte geben Sie einen LECTURNITY-Lizenzschlüssel ein und klicken Sie ""OK""."
+    IDS_NO_ADMIN            "Sie benötigen Administrator-Berechtigung für diese Aktion.\n\nKontaktieren Sie Ihren System-Administrator."
+    IDC_CHECK_MC_SHOW_FOOTER "Fußzeile anzeigen"
+    IDC_CHECK_MC_SHOW_TABLE_OF_CONTENT "Inhaltsverzeichnis anzeigen"
+    IDC_CHECK_MC_SHOW_HEADER "Kopfzeile anzeigen"
+    IDC_STATIC_MC_SLIDES_NO "Anzahl der Vollbilder pro Seite:"
+    IDC_CHECK_MC_SHOW_COVER_SHEET "Deckblatt anzeigen"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_ERR_TOOLKIT_LANG_FILE_MISSING 
+                            "Das Hochladen der ""Extreme Toolkit"" Sprachdatei  hat fehlgeschlagen:\n"
+    IDS_FORMAT_FLASH        "Für die Verwendung im Web-Browser basierend auf der Flash-Technologie"
+    IDS_FORMAT_WM           "Für die Verwendung im Web-Browser basierend auf der Windows Media-Technologie"
+    IDS_FORMAT_RM           "Für die Verwendung im Web-Browser basierend auf der RealMedia-Technologie"
+    IDS_FORMAT_IPOD         "Für die Verwendung auf dem iPod oder anderen mobilen Endgeräten (MP4)"
+    IDS_FORMAT_LPD          "Für die Verwendung im LECTURNITY Player"
+    IDS_FORMAT_YOUTUBE      "Direkter Upload des Dokuments auf ein Benutzerkonto des YouTube-Servers"
+    IDS_FORMAT_SLIDESTAR    "Direkter Upload des Dokuments auf ein Benutzerkonto eines SLIDESTAR-Servers"
+    IDS_PUBLISHING_WINDOW_TITLE "Veröffentlichungsprofil"
+    IDS_FORMAT_CUSTOM       "Veröffentlichung des Dokumentes gemäß Ihren Einstellungen"
+END
+
+STRINGTABLE 
+BEGIN
+    IDC_STRUCTURING         "Erzeuge Dokumentenstruktur ..."
+    IDC_IMAGING             "Erzeuge Thumbnails ..."
+    IDC_FULLTEXT            "Erzeuge Volltextsuche ..."
+    IDC_COMPLETED           "Fertig."
+    IDS_PUBLISHINGTITLE     "Wählen Sie ein Profil für Ihr die nächste Veröffentlichung\nIhres Zieldokuments"
+    IDS_PUBLISHINGSUBTITLE  "Mit welchem Profil möchten Sie Ihre Aufzeichnung konvertieren?"
+    IDS_LECTURNITY          "LECTURNITY"
+    IDS_PROFILE_MANAGER     "Profil-Manager"
+    IDS_NAME_CAPTION        "Name"
+    IDS_RESERVED_CHARS      "Die folgenden Zeichen sind reserviert: "
+END
+
+STRINGTABLE 
+BEGIN
+    IDC_FORMAT_FLASH        "LECTURNITY Flash-Dokument"
+    IDS_STRUCTEDITOR_DELETE_DISABLED 
+                            "Die erste Seite kann nicht entfernt werden"
+    IDS_SG_WRITE_ERROR      "Die Dokumentenstruktur konnte nicht geschrieben werden.\nMöglicherweise ist der Datenträger schreibgeschützt."
+    IDC_FORMAT_YOUTUBE      "YouTube"
+    IDC_FORMAT_SLIDESTAR    "SLIDESTAR"
+    IDC_CUSTOM_TITLE        "Benutzerdefiniertes Profil"
+    IDC_DEFAULT_TITLE       "Standard-Profile"
+END
+
+STRINGTABLE 
+BEGIN
+    IDD_STRUCTEDITOR_DIALOG "Dokumentenstruktur bearbeiten"
+    IDC_STRUCTEDITOR_HEADER "Seiten umbenennen oder aus der Dokumentenstruktur entfernen ..."
+    IDS_STRUCTEDITOR_DELETE "Seite aus Dokumentenstruktur entfernen"
+    IDS_STRUCTEDITOR_MODIFY_TITLE "Seitentitel ändern"
+    IDS_STRUCTEDITOR_CONFIRM_DELETE "Löschen bestätigen"
+    IDS_STRUCTEDITOR_CONFIRM_QUESTION 
+                            "Möchten Sie diese Seite endgültig aus der Struktur löschen?"
+    IDC_STRUCTEDITOR_HINT   "Hinweis: Die Dokumentenstruktur dient der Seitennavigation.\n\t Es werden keine Teile der Aufzeichnung gelöscht\n\t sondern lediglich deren Strukturierung geändert."
+END
+
+STRINGTABLE 
+BEGIN
+    IDC_STD_INDEX           "Klick-Seiten ausblenden"
+    IDC_STD_INDEX_ALWAYS    "Klick-Seiten in Zukunft immer ausblenden"
+    IDC_STC_KEY_GROUP       "Lizenzschlüssel eingeben"
+    IDC_KEYWORDS_STATIC_TITLE "Titel:"
+    IDC_KEYWORDS_STATIC_KEYWORDS "Schlüsselworter (durch ; getrennt):"
+    IDS_KEYWORDS_DIALOG_TITLE "Schlüsselworter"
+END
+
+STRINGTABLE 
+BEGIN
+    IDC_CANCEL              "Abbrechen"
+    IDC_PAGE                "Seite"
+    IDC_CHAPTER             "Kapitel"
+    IDC_LATER               "Später fortsetzen"
+    IDS_OK                  "OK"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_SPLASHSCREEN_VERSION "4.5.0"
+    IDS_SPLASHSCREEN_LANGUAGE "de"
+    IDS_SPLASHSCREEN_LICENSE_ERROR 
+                            "Inkonsistente Lizenzinformationen!\nInstallieren Sie LECTURNITY erneut."
+    IDS_SPLASHSCREEN_ERROR  "Fehler"
+    IDS_SPLASHSCREEN_EVALEXPIRED "Evaluationsfrist abgelaufen."
+    IDS_SPLASHSCREEN_EVALDAYS "Evaluationsfrist: %d Tag(e)"
+    IDS_SPLASHSCREEN_EXPIRED "Abgelaufen."
+    IDS_SPLASHSCREEN_EXPIRATION "Laufzeit: %s"
+    IDS_SPLASHSCREEN_INTERNALRELEASE "5"
+    IDS_SPLASHSCREEN_ALLRIGHTSRESERVED "Alle Rechte vorbehalten"
+END
+
+STRINGTABLE 
+BEGIN
+    IDC_FORMAT_GROUP        "Formate"
+    IDC_FORMAT_RM           "LECTURNITY RealMedia-Dokument"
+    IDC_FORMAT_LPD          "LECTURNITY Präsentationsdokument"
+    IDC_FORMAT_WM           "LECTURNITY Windows Media-Dokument"
+    IDC_FORMAT_IPOD         "LECTURNITY iPod-Dokument"
+END
+
+STRINGTABLE 
+BEGIN
+    IDOK                    "OK"
+    IDCANCEL                "Abbrechen"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_ACTIVATED           "Aktiviert"
+    IDS_TARGET_FORMAT       "Target Format"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_STORAGE             "Speicherung/Distribution"
+    IDC_LABEL_PROFILENAME   "Name"
+    IDS_ERROR_CAPTION       "Fehler"
+    IDS_EXPORT_LPD          "LECTURNITY Präsentationsdokument"
+    IDS_EXPORT_WM           "Windows Media-Dokument"
+    IDS_EXPORT_REAL         "RealMedia-Dokument"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_EXPORT_FLASH        "Flash-Dokument"
+    IDS_EXPORT_IPOD         "Video-Dokument"
+    IDS_SD_PODCAST          "Podcast"
+    IDS_SD_WEBSERVER        "Web-Server (über verbundenes Netzlaufwerk)"
+    IDS_SD_LOCAL            "Lokaler Datenträger"
+    IDS_SD_WEBSERVER_FT     "Web-Server (über Daten-Transfer: FTP, SCP, SFTP)"
+    IDS_SD_WEB_STREAMING    "Web + Streaming-Server (über verbundenes Netzlaufwerk)"
+    IDS_SD_WEB_STREAMING_FT "Web + Streaming-Server (über Daten-Transfer: FTP, SCP, SFTP)"
+    IDS_SD_FILE_SERVER      "Datei-Server"
+    IDS_ERROR_NO_LRD        "Kein Dokument ausgewählt.\n\nFür die Erstellung eines neuen Profils ist die Auswahl eines LECTURNITY Aufzeichnungsdokuments erforderlich.\n\nBitte beenden Sie den Profil-Manager und wählen Sie zuerst ein Aufzeichnungsdokument aus."
+    IDS_ERROR_NOADMIN       "Aktion kann nicht ausgeführt werden.\n\nSie benötigen Administrator-Rechte, um die Aktion auszuführen."
+    IDS_CAPTION_NOPERMISSION "Fehlende Zugriffsrechte"
+    IDS_ERROR_EDIT_NOLRD    "Kein Dokument ausgewählt.\n\nFür die Änderung eines Profils ist die Auswahl eines LECTURNITY Aufzeichnungsdokuments erforderlich.\n\nBitte beenden Sie den Profil-Manager und wählen Sie zuerst ein Aufzeichnungsdokument aus."
+    IDS_NO_PROFILE_SELECTED "Kein Profil ausgewählt"
+    IDS_LABEL_EDIT          "Ändern"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_PROFILE_NAME        "Profil-Name"
+    IDS_YOUTUBE_DIALOG      "YouTube Einstellungen"
+    IDS_SLIDESTAR_DIALOG    "Slidestar Einstellungen"
+    IDS_KEY_MISSING         "Bitte geben Sie einen Lizenzschlüssel ein."
+    IDS_KEY_INVALID         "Der Lizenzschlüssel ist nicht gültig."
+    IDS_KEY_FAILURE         "Der Lizenzschlüssel konnte nicht geschrieben werden."
+    IDS_KEY_SUCCESS         "Der Lizenzschlüssel ist gültig und wurde erfolgreich registriert."
+END
+
+STRINGTABLE 
+BEGIN
+    IDC_RENAME_PROFILE      "Umbenennen"
+    IDC_DELETE_PROFILE      "Löschen"
+    IDC_NEW_PROFILE         "Neu..."
+    IDC_EDIT_PROFILE        "Ändern..."
+    IDC_ACTIVATE_PROFILE    "Aktivieren"
+    IDC_DEACTIVATE_PROFILE  "Deaktivieren"
+    IDC_IMPORT_PROFILE      "Importieren..."
+    IDC_EXPORT_PROFILE      "Exportieren..."
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_CONFIRM_DELETE_CAPTION "Löschen bestätigen"
+    IDS_CONFIRM_DELETE_TEXT "Wollen Sie dieses Profil wirklich löschen?"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_PPR_FILEFILTER      "LECTURNITY Publisher Profil (*.lpp)|*.lpp|Alle Dateien (*.*)|*.*||"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_YTTS_TOO_LONG       "Der Text von %s ist zu lang.\n\n'%s' muss weniger als %d Zeichen enthalten %s.\n"
+    IDS_YTTS_TOO_SHORT      "Der Text von %s ist zu kurz.\n\n'%s' muss mindestens %d Zeichen enthalten.\n"
+    IDS_YTTS_ILLEGAL_CHARACTERS 
+                            "'%s' enthält unzulässige Zeichen.\n\nDie Zeichen '<' und '>' sind nicht zugelassen.\n"
+    IDS_YTTS_TITLE          "Titel"
+    IDS_YTTS_DESCRIPTION    "Beschreibung"
+    IDS_YTTS_KEYWORD        "Schüsselwörter"
+    IDS_YTTS_KEYWORD_NUMBER "Schlüsselwort %d"
+    IDS_YTTS_TITLE_CHARS    "oder %d Bytes"
+    IDS_YTTS_EMPTY          "'%s' des Videos darf nicht leer bleiben.\n"
+    IDS_YT_CAT_AUTOS        "Autos & Fahrzeuge"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_ERROR_ACTION_NEW    "Erstellung des Profils nicht moglich."
+    IDS_ERROR_ACTION_EDIT   "Editiertes Profil kann nicht gespeichert werden."
+    IDS_ERROR_ACTION_IMPORT "Importiertes Profil kann nicht gespeichert werden."
+    IDS_ERROR_ACTION_ACCESS "Kein Zugriff auf Profile möglich."
+    IDS_ERROR_APPLICATIONDIR 
+                            "Ursache: Das “Anwendungsdaten”-Verzeichnis kann nicht bestimmt werden (normalerweise: C:\\Dokumente und Einstellungen\\%username%\\Anwendungsdaten)."
+    IDS_ERROR_CREATESUBDIR  "Ursache: Im “Anwendungsdaten”-Verzeichnis (normalerweise: C:\\Dokumente und Einstellungen\\%username%\\Anwendungsdaten) kann kein Unterverzeichnis erstellt werden."
+    IDS_ERROR_PERMISSION    "Ursache: Keine Schreibberechtigung im “Anwendungsdaten”-Verzeichnis (normalerweise: C:\\Dokumente und Einstellungen\\%username%\\Anwendungsdaten)."
+    IDS_ERROR_JNI_INSERT_NEW 
+                            "Profil kann nicht zur Profilliste hinzugefügt werden.\n\nUrsache: Interner Fehler (JNI)"
+    IDS_ERROR_NOTINLIST_EDIT 
+                            "Editiertes Profil kann nicht gespeichert werden.\n\nUrsache: Profil nicht in Profilliste vorhanden."
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_ERROR_JNI_INSERT_EDIT 
+                            "Editiertes Profil kann nicht gespeichert.\n\nUrsache: Interner Fehler (JNI)"
+    IDS_ERROR_CREATESUBDIR_EXPORT 
+                            "Profil kann nicht exportiert werden.\n\nUrsache: Datei oder spezifiertes Unterverzeichnis kann nicht erstellt werden."
+    IDS_ERROR_PERMISSION_EXPORT 
+                            "Profil kann nicht exportiert werden.\n\nUrsache: Keine Schreibberechtigung im ausgewählten Verzeichnis."
+    IDS_ERROR_WRITE_EXPORT  "Profil kann nicht exportiert werden.\n\nUrsache: Fehler beim Speichern der Datei."
+    IDS_ERROR_JNI_MAINWINDOW 
+                            "Profil-Manager kann nicht geöffnet werden.\n\nUrsache: Interner Fehler (Java-Fenster wird nicht gefunden)"
+    IDS_ERROR_WRITE_ACTIVEPROFILE 
+                            "Profil kann nicht aktiviert werden.\n\nUrsache: Kein Zugriff auf die Registry des Systems möglich."
+    IDS_ERROR_WRITE         "Ursache: Fehler beim Speichern der Datei."
+    IDS_ERROR_ACTION_RENAME "Profil kann nicht umbenannt werden."
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_YES                 "Ja"
+    IDS_LICENSE_KEY         "Lizenzschlüssel"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_PROFILE_FLASH        "Flash"
+    ID_PROFILE_RM           "Real Media"
+    ID_PROFILE_WM           "Windows Media"
+    ID_PROFILE_IPOD         "IPOD"
+    ID_PROFILE_OTHER        "Auswahldialog für weitere Profile"
+    ID_PROFILE_LPD          "Lecturnity Präsentation"
+    ID_PROFILE_YOUTUBE      "YouTube"
+    ID_PROFILE_SLIDESTAR    "SLIDESTAR"
+    ID_PROFILE_CLIX         "CLIX"
+    ID_PROFILE_CUSTOM       "Benutzerdefiniert"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_DEFAULT_NAME        "unbenannt"
+END
+
+STRINGTABLE 
+BEGIN
+    IDC_USERNAME            "Benutzername:"
+    IDC_PASSWORD            "Passwort:"
+    IDC_TITLE_YT            "Titel:"
+    IDC_DESCRIPTION         "Beschreibung:"
+    IDC_KEYWORDS            "Schlüsselwörter:"
+    IDC_CATEGORY            "Kategorie:"
+    IDC_PRIVACY             "Privatbereich:"
+    IDC_HOSTNAME            "Rechnername\n(oder IP-Adresse):"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_YT_CAT_COMEDY       "Comedy"
+    IDS_YT_CAT_EDUCATION    "Bildung"
+    IDS_YT_CAT_ENTERTAINTMENT "Unterhaltung"
+    IDS_YT_CAT_FILM         "Film & Animation"
+    IDS_YT_CAT_GAMES        "Spiele"
+    IDS_YT_CAT_HOWTO        "Tipps & Tricks"
+    IDS_YT_CAT_MUSIC        "Musik"
+    IDS_YT_CAT_NEWS         "Nachrichten & Politik"
+    IDS_YT_CAT_NONPROFIT    "Nonprofit & Aktivismus"
+    IDS_YT_CAT_PEOPLE       "Leute & Blogs"
+    IDS_YT_CAT_ANIMALS      "Tiere"
+    IDS_YT_CAT_TECH         "Wissenschaft & Technik"
+    IDS_YT_CAT_SPORTS       "Sport"
+    IDS_YT_CAT_TRAVEL       "Reisen & Events"
+    IDS_LC_RECORD_MODE      "Starte Aufzeichnungsmodus"
+    IDS_LC_EDIT_MODE        "Starte Editiermodus"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_LC_PREVIEW_MODE     "Starte Vorschau"
+END
+
+#endif    // German (Germany) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// English (U.S.) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDC_EP_OVERALL          "Overall progress"
+    IDC_EP_PARTICULAR       "Progress"
+    IDS_MANUAL_CONFIGURATION "Configuration"
+END
+
+STRINGTABLE 
+BEGIN
+    IDC_CLICKPAGES_GROUPBOX "       Click pages"
+    IDC_STC_ENTER_LICENSE_TEXT 
+                            "Please enter a LECTURNITY license key and select ""OK""."
+    IDS_NO_ADMIN            "You need administration privileges for this action.\n\nPlease contact your system administrator."
+    IDC_CHECK_MC_SHOW_FOOTER "Show Footer"
+    IDC_CHECK_MC_SHOW_TABLE_OF_CONTENT "Show Table of Content"
+    IDC_CHECK_MC_SHOW_HEADER "Show Header"
+    IDC_STATIC_MC_SLIDES_NO "Number of fullscreens per page:"
+    IDC_CHECK_MC_SHOW_COVER_SHEET "Show Cover Sheet"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_ERR_TOOLKIT_LANG_FILE_MISSING 
+                            "Loading Extreme Toolkit language file failed:\n"
+    IDS_FORMAT_FLASH        "For the usage in a Web browser based on the\nFlash technology"
+    IDS_FORMAT_WM           "For the usage in a Web browser based on the Windows Media technology"
+    IDS_FORMAT_RM           "For the usage in a Web browser based on the RealMedia technology"
+    IDS_FORMAT_IPOD         "For the usage on iPod or other mobile devices (MP4)"
+    IDS_FORMAT_LPD          "For the usage in the LECTURNITY Player"
+    IDS_FORMAT_YOUTUBE      "Direct upload of the document to an user account on a YouTube server"
+    IDS_FORMAT_SLIDESTAR    "Direct upload of the document to an user account of a SLIDESTAR server"
+    IDS_PUBLISHING_WINDOW_TITLE "Publishing Profile"
+    IDS_FORMAT_CUSTOM       "Publishing of the document according to your settings"
+END
+
+STRINGTABLE 
+BEGIN
+    IDC_STRUCTURING         "Creating document structure ..."
+    IDC_IMAGING             "Creating thumbnails ..."
+    IDC_FULLTEXT            "Creating full text search ..."
+    IDC_COMPLETED           "Completed."
+    IDS_PUBLISHINGTITLE     "Select a Profile to be used for the next Publishing"
+    IDS_PUBLISHINGSUBTITLE  "Which Profile do you want to use to publish your Recording?"
+    IDS_LECTURNITY          "LECTURNITY"
+    IDS_PROFILE_MANAGER     "Profile Manager"
+    IDS_NAME_CAPTION        "Name"
+    IDS_RESERVED_CHARS      "The following characters are reserved: "
+END
+
+STRINGTABLE 
+BEGIN
+    IDC_FORMAT_FLASH        "LECTURNITY Flash Document"
+    IDS_STRUCTEDITOR_DELETE_DISABLED "first page cannot be removed"
+    IDS_SG_WRITE_ERROR      "Could not write the document structure.\nPlease check if the volume is write protected."
+    IDC_FORMAT_YOUTUBE      "YouTube Publishing"
+    IDC_FORMAT_SLIDESTAR    "SLIDESTAR Publishing"
+    IDC_CUSTOM_TITLE        "Custom Profile"
+    IDC_DEFAULT_TITLE       "Default Profiles"
+END
+
+STRINGTABLE 
+BEGIN
+    IDD_STRUCTEDITOR_DIALOG "Edit document structure"
+    IDC_STRUCTEDITOR_HEADER "Rename pages or remove pages from document structure ..."
+    IDS_STRUCTEDITOR_DELETE "remove page from structure"
+    IDS_STRUCTEDITOR_MODIFY_TITLE "specify page title"
+    IDS_STRUCTEDITOR_CONFIRM_DELETE "Confirm Delete"
+    IDS_STRUCTEDITOR_CONFIRM_QUESTION 
+                            "Do you really want to remove this page from the document structure?"
+    IDC_STRUCTEDITOR_HINT   "Hint:\tThe document strucure is used for page navigation.\n\tRemoving a page will remove a navigation mark only.\n\tNo parts of the recording will be deleted."
+END
+
+STRINGTABLE 
+BEGIN
+    IDC_STD_INDEX           "Hide click pages"
+    IDC_STD_INDEX_ALWAYS    "Always hide click pages"
+    IDC_STC_KEY_GROUP       "Enter license key"
+    IDC_KEYWORDS_STATIC_TITLE "Title:"
+    IDC_KEYWORDS_STATIC_KEYWORDS "Keywords (separated by ;):"
+    IDS_KEYWORDS_DIALOG_TITLE "Keywords"
+END
+
+STRINGTABLE 
+BEGIN
+    IDC_CANCEL              "Cancel"
+    IDC_PAGE                "Page"
+    IDC_CHAPTER             "Chapter"
+    IDC_LATER               "Continue later"
+    IDS_OK                  "OK"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_SPLASHSCREEN_VERSION "4.5.0"
+    IDS_SPLASHSCREEN_LANGUAGE "en"
+    IDS_SPLASHSCREEN_LICENSE_ERROR 
+                            "Inconsistent license information!\nPlease reinstall LECTURNITY."
+    IDS_SPLASHSCREEN_ERROR  "Error"
+    IDS_SPLASHSCREEN_EVALEXPIRED "Evaluation period expired."
+    IDS_SPLASHSCREEN_EVALDAYS "Evaluation period: %d day(s)."
+    IDS_SPLASHSCREEN_EXPIRED "Expired."
+    IDS_SPLASHSCREEN_EXPIRATION "Expiration date: %s"
+    IDS_SPLASHSCREEN_INTERNALRELEASE "5"
+    IDS_SPLASHSCREEN_ALLRIGHTSRESERVED "All rights reserved"
+END
+
+STRINGTABLE 
+BEGIN
+    IDC_FORMAT_GROUP        "Formats"
+    IDC_FORMAT_RM           "LECTURNITY RealMedia Document"
+    IDC_FORMAT_LPD          "LECTURNITY Presentation Document"
+    IDC_FORMAT_WM           "LECTURNITY Windows Media Document"
+    IDC_FORMAT_IPOD         "LECTURNITY iPod Document"
+END
+
+STRINGTABLE 
+BEGIN
+    IDOK                    "OK"
+    IDCANCEL                "Cancel"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_ACTIVATED           "Activated"
+    IDS_TARGET_FORMAT       "Target Format"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_STORAGE             "Storage/Distribution"
+    IDC_LABEL_PROFILENAME   "Name"
+    IDS_ERROR_CAPTION       "Error"
+    IDS_EXPORT_LPD          "LECTURNITY Presentation document"
+    IDS_EXPORT_WM           "Windows Media document"
+    IDS_EXPORT_REAL         "RealMedia document"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_EXPORT_FLASH        "Flash document"
+    IDS_EXPORT_IPOD         "Video document"
+    IDS_SD_SLIDESTAR        "SLIDESTAR"
+    IDS_SD_PODCAST          "Podcast"
+    IDS_SD_WEBSERVER        "Web server (over connected network drive)"
+    IDS_SD_LOCAL            "Local data volume"
+    IDS_SD_WEBSERVER_FT     "Web server (over file transfer: FTP, SCP, SFTP)"
+    IDS_SD_WEB_STREAMING    "Web + streaming server (over connected network drive)"
+    IDS_SD_WEB_STREAMING_FT "Web + streaming server (over file transfer: FTP, SCP, SFTP)"
+    IDS_SD_FILE_SERVER      "File server"
+    IDS_ERROR_NO_LRD        "No document selected.\n\nThe creation of a new profile requires a LECTURNITY Recording Document to be selected.\n\nPlease leave the Profile Manager and select a Recording Document first. "
+    IDS_ERROR_NOADMIN       "Action not possible.\n\nYou need administrator rights to perform this action."
+    IDS_CAPTION_NOPERMISSION "Wrong Access Permissions"
+    IDS_ERROR_EDIT_NOLRD    "No document selected.\n\nThe editing of a profile requires a LECTURNITY Recording Document to be selected.\n\nPlease leave the Profile Manager and select a Recording Document first. "
+    IDS_NO_PROFILE_SELECTED "No Profile selected"
+    IDS_LABEL_EDIT          "Edit"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_PROFILE_NAME        "Profile Name"
+    IDS_YOUTUBE_DIALOG      "YouTube Settings"
+    IDS_SLIDESTAR_DIALOG    "Slidestar Settings"
+    IDS_KEY_MISSING         "Please insert a license key."
+    IDS_KEY_INVALID         "The given key is not valid."
+    IDS_KEY_FAILURE         "The key could not be written."
+    IDS_KEY_SUCCESS         "License key is valid and is registered successfully."
+END
+
+STRINGTABLE 
+BEGIN
+    IDC_RENAME_PROFILE      "Rename"
+    IDC_DELETE_PROFILE      "Delete"
+    IDC_NEW_PROFILE         "New..."
+    IDC_EDIT_PROFILE        "Edit..."
+    IDC_ACTIVATE_PROFILE    "Activate"
+    IDC_DEACTIVATE_PROFILE  "Deactivate"
+    IDC_IMPORT_PROFILE      "Import..."
+    IDC_EXPORT_PROFILE      "Export..."
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_CONFIRM_DELETE_CAPTION "Confirm Delete"
+    IDS_CONFIRM_DELETE_TEXT "Do you really want to delete this Profile?"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_ERROR_JNI_INSERT_EDIT 
+                            "Cannot save edited profile.\n\nReason: Internal error (JNI)."
+    IDS_ERROR_DELETE_FILE   "Cannot delete selected profile.\n\nReason: No permission."
+    IDS_ERROR_FILENOTFOUND_IMPORT 
+                            "Cannot import profile.\n\nReason: Selected file not found."
+    IDS_ERROR_PERMISSION_READ_IMPORT 
+                            "Cannot import profile.\n\nReason: No read permission to selected file."
+    IDS_ERROR_READ_IMPORT   "Cannot import profile.\n\nReason: Error during file reading."
+    IDS_ERROR_FORMAT_IMPORT "Cannot import profile.\n\nReason: Selected file is not a profile file."
+    IDS_ERROR_CREATESUBDIR_EXPORT 
+                            "Cannot export profile.\n\nReason: Cannot create file or specified subdirectory."
+    IDS_ERROR_PERMISSION_EXPORT 
+                            "Cannot export profile.\n\nReason: No write permission in selected directory"
+    IDS_ERROR_WRITE_EXPORT  "Cannot export profile.\n\nReason: Error during file saving."
+    IDS_ERROR_JNI_MAINWINDOW 
+                            "Cannot open Profile Manager.\n\nReason: Internal error (Java window not found)."
+    IDS_ERROR_WRITE_ACTIVEPROFILE 
+                            "Cannot activate selected profile.\n\nReason: The system’s registry cannot be accessed."
+    IDS_ERROR_WRITE         "Reason: Error during file saving."
+    IDS_ERROR_ACTION_RENAME "Cannot rename profile."
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_PPR_FILEFILTER      "LECTURNITY Publisher Profile (*.lpp)|*.lpp|All files (*.*)|*.*||"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_YTTS_TOO_LONG       "The text of '%s' is too long.\n\n'%s' must be shorter than %d characters %s.\n"
+    IDS_YTTS_TOO_SHORT      "The text of '%s' is too short!.\n\n'%s' must be longer than %d characters.\n"
+    IDS_YTTS_ILLEGAL_CHARACTERS 
+                            "'%s' contains illegal characters\n\nThe characters '<' and '>' are not allowed.\n"
+    IDS_YTTS_TITLE          "Title"
+    IDS_YTTS_DESCRIPTION    "Description"
+    IDS_YTTS_KEYWORD        "Keyword(s)"
+    IDS_YTTS_KEYWORD_NUMBER "Keyword %d"
+    IDS_YTTS_TITLE_CHARS    " or %d bytes"
+    IDS_YTTS_EMPTY          "%s of the video must not be empty.\n"
+    IDS_YT_CAT_AUTOS        "Cars & Vehicles"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_ERROR_ACTION_NEW    "Cannot create new profile."
+    IDS_ERROR_ACTION_EDIT   "Cannot save edited profile."
+    IDS_ERROR_ACTION_IMPORT "Cannot save imported profile."
+    IDS_ERROR_ACTION_ACCESS "Cannot access profiles."
+    IDS_ERROR_APPLICATIONDIR 
+                            "Reason: Cannot determine the “Application Data” directory (usually: C:\\Users\\%username%\\Application Data)."
+    IDS_ERROR_CREATESUBDIR  "Ursache: Im “Anwendungsdaten”-Verzeichnis (normalerweise: C:\\Dokumente und Einstellungen\\%username%\\Anwendungsdaten) kann kein Unterverzeichnis erstellt werden."
+    IDS_ERROR_PERMISSION    "Reason: No write permission to “Application Data” directory (usually: C:\\Users\\%username%\\Application Data)."
+    IDS_ERROR_JNI_INSERT_NEW 
+                            "Cannot insert new profile to profile list.\n\nReason: Internal error (JNI)."
+    IDS_ERROR_NOTINLIST_EDIT 
+                            "Cannot save edited profile.\n\nReason: Profile not found in profile list."
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_YES                 "Yes"
+    IDS_LICENSE_KEY         "License Key"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_DEFAULT_NAME        "unnamed"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_PROFILE_FLASH        "Flash"
+    ID_PROFILE_RM           "Real Media"
+    ID_PROFILE_WM           "Windows Media"
+    ID_PROFILE_IPOD         "IPOD"
+    ID_PROFILE_OTHER        "Auswahldialog für weitere Profile"
+    ID_PROFILE_LPD          "Lecturnity Presentation"
+    ID_PROFILE_YOUTUBE      "YouTube"
+    ID_PROFILE_SLIDESTAR    "SLIDESTAR"
+    ID_PROFILE_CLIX         "CLIX"
+    ID_PROFILE_CUSTOM       "Custom"
+END
+
+STRINGTABLE 
+BEGIN
+    IDC_USERNAME            "User name:"
+    IDC_PASSWORD            "Password:"
+    IDC_TITLE_YT            "Title:"
+    IDC_DESCRIPTION         "Description:"
+    IDC_KEYWORDS            "Keywords:"
+    IDC_CATEGORY            "Category:"
+    IDC_PRIVACY             "Privacy:"
+    IDC_HOSTNAME            "Hostname\n(or IP address):"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_YT_CAT_COMEDY       "Comedy"
+    IDS_YT_CAT_EDUCATION    "Education"
+    IDS_YT_CAT_ENTERTAINTMENT "Entertainment"
+    IDS_YT_CAT_FILM         "Film & Animation"
+    IDS_YT_CAT_GAMES        "Gaming"
+    IDS_YT_CAT_HOWTO        "Howto & Style"
+    IDS_YT_CAT_MUSIC        "Music"
+    IDS_YT_CAT_NEWS         "News & Politics"
+    IDS_YT_CAT_NONPROFIT    "Non-profits & Activism"
+    IDS_YT_CAT_PEOPLE       "People & Blogs"
+    IDS_YT_CAT_ANIMALS      "Pets & Animals"
+    IDS_YT_CAT_TECH         "Science & Technology"
+    IDS_YT_CAT_SPORTS       "Sports"
+    IDS_YT_CAT_TRAVEL       "Travel & Events"
+    IDS_LC_RECORD_MODE      "Starting up Record Mode"
+    IDS_LC_EDIT_MODE        "Starting up Edit Mode"
+END
+
+STRINGTABLE 
+BEGIN
+    IDS_LC_PREVIEW_MODE     "Starting up Preview"
+END
+
+#endif    // English (U.S.) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)
+#ifdef _WIN32
+LANGUAGE 7, 1
+#pragma code_page(1252)
+#endif //_WIN32
+#include "res\lsutl32.rc2"  // Nicht mit Microsoft Visual C++ bearbeitete Ressourcen
+#include "l.deu\afxres.rc"          // Standardkomponenten
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

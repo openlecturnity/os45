@@ -1,0 +1,128 @@
+	<w:ftr w:type="first">
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="Footer"/><w:tabs><w:tab w:val="left" w:pos="2796"/></w:tabs>
+			</w:pPr>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="Footer"/><w:tabs><w:tab w:val="left" w:pos="2796"/></w:tabs>
+			</w:pPr>
+			<w:r>
+				<w:rPr><w:noProof/></w:rPr>
+				<w:pict>
+					<v:rect id="_x0000_s2058" style="position:absolute;left:0;text-align:left;margin-left:431pt;margin-top:10.05pt;width:25.5pt;height:25.5pt;z-index:2" fillcolor="#f79646" stroked="f">
+						<v:textbox style="mso-next-textbox:#_x0000_s2058">
+							<w:txbxContent>
+								<w:p>
+									<w:pPr>
+										<w:spacing w:before="60" w:after="0"/>
+										<w:jc w:val="center"/>
+									</w:pPr>
+									<w:r>
+										<w:rPr>
+											<w:rStyle w:val="PageNumber"/>
+										</w:rPr>
+										<w:fldChar w:fldCharType="begin"/>
+									</w:r>
+									<w:r>
+										<w:rPr>
+											<w:rStyle w:val="PageNumber"/>
+										</w:rPr>
+										<w:instrText> PAGE </w:instrText>
+									</w:r>
+									<w:r>
+										<w:rPr>
+											<w:rStyle w:val="PageNumber"/>
+										</w:rPr>
+										<w:fldChar w:fldCharType="end"/>
+									</w:r>
+								</w:p>
+							</w:txbxContent>
+						</v:textbox>
+					</v:rect>
+				</w:pict>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="Footer"/>
+				<w:tabs>
+					<w:tab w:val="left" w:pos="2796"/>
+				</w:tabs>
+			</w:pPr>
+			<w:r>
+				<w:t>%AUTHOR%: %AUTHOR_NAME%</w:t>
+			</w:r>
+			<w:r>
+				<w:tab wx:wTab="1785" wx:tlc="none" wx:cTlc="39"/>
+			</w:r>
+			<w:r>
+				<w:t>%DATE%: %DATE_VALUE%</w:t>
+			</w:r>
+		</w:p>
+	</w:ftr>
+	<w:ftr w:type="odd">
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="Footer"/><w:tabs><w:tab w:val="left" w:pos="2796"/></w:tabs>
+			</w:pPr>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="Footer"/><w:tabs><w:tab w:val="left" w:pos="2796"/></w:tabs>
+			</w:pPr>
+			<w:r>
+				<w:rPr><w:noProof/></w:rPr>
+				<w:pict>
+					<v:rect id="_x0000_s2058" style="position:absolute;left:0;text-align:left;margin-left:431pt;margin-top:10.05pt;width:25.5pt;height:25.5pt;z-index:2" fillcolor="#f79646" stroked="f">
+						<v:textbox style="mso-next-textbox:#_x0000_s2058">
+							<w:txbxContent>
+								<w:p>
+									<w:pPr>
+										<w:spacing w:before="60" w:after="0"/>
+										<w:jc w:val="center"/>
+									</w:pPr>
+									<w:r>
+										<w:rPr>
+											<w:rStyle w:val="PageNumber"/>
+										</w:rPr>
+										<w:fldChar w:fldCharType="begin"/>
+									</w:r>
+									<w:r>
+										<w:rPr>
+											<w:rStyle w:val="PageNumber"/>
+										</w:rPr>
+										<w:instrText> PAGE </w:instrText>
+									</w:r>
+									<w:r>
+										<w:rPr>
+											<w:rStyle w:val="PageNumber"/>
+										</w:rPr>
+										<w:fldChar w:fldCharType="end"/>
+									</w:r>
+								</w:p>
+							</w:txbxContent>
+						</v:textbox>
+					</v:rect>
+				</w:pict>
+			</w:r>
+		</w:p>
+		<w:p>
+			<w:pPr>
+				<w:pStyle w:val="Footer"/>
+				<w:tabs>
+					<w:tab w:val="left" w:pos="2796"/>
+				</w:tabs>
+			</w:pPr>
+			<w:r>
+				<w:t>%AUTHOR%: %AUTHOR_NAME%</w:t>
+			</w:r>
+			<w:r>
+				<w:tab wx:wTab="1785" wx:tlc="none" wx:cTlc="39"/>
+			</w:r>
+			<w:r>
+				<w:t>%DATE%: %DATE_VALUE%</w:t>
+			</w:r>
+		</w:p>
+	</w:ftr>

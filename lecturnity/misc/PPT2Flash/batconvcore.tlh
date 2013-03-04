@@ -1,0 +1,77 @@
+// Created by Microsoft (R) C/C++ Compiler Version 12.00.8168.0 (ab7d2faa).
+//
+// c:\sandbox\imc\pptexport\batconvcore_dll\include_for_assistant\debug\batconvcore.tlh
+//
+// C++ source equivalent of Win32 type library ..\batconvcore.dll
+// compiler-generated file created 01/17/08 at 07:10:20 - DO NOT EDIT!
+
+#pragma once
+#pragma pack(push, 8)
+
+#include <comdef.h>
+
+namespace batch_ppt2lsd {
+
+//
+// Forward references and typedefs
+//
+
+struct __declspec(uuid("ebde598d-1f76-4fc2-8bd7-5922141d32f6"))
+/* dual interface */ _CBatchConvCore;
+struct /* coclass */ CBatchConvCore;
+
+//
+// Smart pointer typedef declarations
+//
+
+_COM_SMARTPTR_TYPEDEF(_CBatchConvCore, __uuidof(_CBatchConvCore));
+
+//
+// Type library items
+//
+
+struct __declspec(uuid("ebde598d-1f76-4fc2-8bd7-5922141d32f6"))
+_CBatchConvCore : IDispatch
+{
+    //
+    // Wrapper methods for error-handling
+    //
+
+    short Launch (
+        _bstr_t sPPTName,
+        _bstr_t sLsdName );
+    short LaunchBatch (
+        _bstr_t lstFile,
+        short saveToPPTDir,
+        short makeDir,
+        _bstr_t savePath );
+
+    //
+    // Raw methods provided by interface
+    //
+
+    virtual HRESULT __stdcall raw_Launch (
+        BSTR sPPTName,
+        BSTR sLsdName,
+        short * _arg3 ) = 0;
+    virtual HRESULT __stdcall raw_LaunchBatch (
+        BSTR lstFile,
+        short saveToPPTDir,
+        short makeDir,
+        BSTR savePath,
+        short * _arg5 ) = 0;
+};
+
+struct __declspec(uuid("51d6869d-f0eb-404f-8d06-a6ebfb20aecd"))
+CBatchConvCore;
+    // [ default ] interface _CBatchConvCore
+
+//
+// Wrapper method implementations
+//
+
+#include "batconvcore.tli"
+
+} // namespace batch_ppt2lsd
+
+#pragma pack(pop)

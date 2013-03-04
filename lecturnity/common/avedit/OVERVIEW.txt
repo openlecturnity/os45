@@ -1,0 +1,96 @@
+AvEdit DLL
+==========
+
+Kurze Übersicht der Dateien in der AvEdit-DLL.
+
+Autor: Martin Danielsson
+
+$Revision: 1.3 $
+$Date: 2005-12-14 10:16:49 $
+
+avedit.cpp
+   Enthält die Klasse AVEdit, welche für die Koordination von
+   AVTargets und AVSources zuständig ist. Weiter kann die Klasse eine
+   Vorschau erzeugen und darstellen, und natürlich auch anhand eines
+   Ausgabeformates (in AVTarget spezifiziert) auch einen Export einer
+   vorgegebenen Timeline erzeugen. Um eine Timeline aufzubauen,
+   benötigt man AVSource-Objekte (Quellen), die auf eine Zeitachse
+   verteilt werden, und ein AVTarget-Objekt pro Strom, das
+   AVSource-Objekte zusammenfasst und die Ausgabe definiert.
+
+   Man beachte, dass die Header-Datei "avedit.h" auch die Header für
+   die beiden Klassen AVSource und AVTarget enthält, auch wenn die
+   Implementierungen sich hierfür in eigenen cpp-Dateien befinden.
+
+
+avinfo.cpp
+   Enthält die nützliche Klasse AVInfo. AVInfo kapselt zum einen die
+   Funktionalität des DirectShow-Interfaces IMediaDet, welches dazu
+   benutzt werden kann, aus vorhandenen Medien-Dateien verschiedene
+   Informationen zu extrahieren, wie z.B. Medientyp (Audio, Video,
+   Codec,..) oder Länge. Weiter sind einige statische Methoden in
+   AVInfo implementiert, die an verschiedenen Stellen gebraucht
+   werden. Beispiele: Erzeugung und Konfiguration von
+   DirectShow-Filtern, die ein VfW-Codec kapseln, Erzeugung bestimmter
+   Medien-Datentyp-Objekte (AM_MEDIA_TYPE-Objekte,
+   z.B. unkomprimiertes Video einer bestimmten Auflösung) oder auch
+   das Schreiben von unkomprimiertem Audio aus einer (beinahe)
+   beliebigen Eingabedatei.
+
+
+avsource.cpp
+   Hier ist die Klasse AVSource implementiert, welche ein "Atom" in
+   den für AVEdit zu erzeugenden Timelines darstellt. Im Prinzip ist
+   AVSource einfach nur ein Datenbehälter, lediglich in der Methode
+   "AddTo" ist Code vorhanden, der auch etwas "tut": Hier ist die
+   Implementierung des "Envelope"-Effektes zur Anpassung der
+   Lautstärke von Ton vorhanden.
+
+- Tut nicht "AddTo" vor allem das Hinzufügen zu einem AVTarget? Und dann ist da außerdem noch der Volume-Effekt?
+
+
+avtarget.cpp
+   Implementierung der Klasse AVTarget, welche eine Reihe von
+   AVSources zu einer Timeline bündeln kann. Im Grunde auch ein
+   Datenbehälter. Lediglich in der Methode "AddTo" ist etwas
+   komplizierterer Code zu finden: Hier wird geschaut, ob sich
+   AVSource-Objekte eventuell überschneiden und diese dann ggf. in
+   verschiedene "Track"-Objekte eingefügt.
+
+   Restlicher Code beschäftigt sich damit, wie man auf jeden Fall
+   einen für die Darstellung und/oder Export gültigen Medientypen
+   sicherstellen kann.
+
+
+
+skewclock.cpp
+   Implementierung der Klasse CSkewReferenceClock. Die
+   CSkewReferenceClock wird dazu verwendet, verschiedene
+   Filter-Graphen miteinander zu synchronisieren, ggf. auch mit einem
+   Offset versehen. Im Prinzip extrahiert man dazu am besten aus dem
+   Graphen mit der Audio-Wiedergabe die (auf jeden Fall vorhandene)
+   Reference Clock, und übergibt sie dann einer Instanz von
+   CSkewReferenceClock. Allen anderen Graphen, die mit dem Audio
+   synchronisiert werden sollen, wird dann diese Instanz von
+   CSkewReferenceClock aus Reference Clock übergegen. Diese Aktionen
+   passieren alle in der Methode "BuildPreview()" von AvEdit. Dort
+   wird den nicht-Audio-Graphen eine CSkewReferenceClock als
+   "SyncSource" übergeben (über das Interface IMediaFilter).
+
+
+StdAfx.cpp
+   Für die vorkompilierten Header.
+
+
+wavdest.cpp
+   DirectShow-Ausgabe-Filter für das Schreiben von WAV- und
+   LAD-Dateien. Dieser Filter wurde zum Großteil aus den Beispielen
+   des DirectX SDK übernommen und um das Schreiben von LAD-Dateien
+   erweitert. Dies geschieht über das neue Interface ILadMux; der
+   Editor fordert, wenn eine LAD-Datei geschrieben werden soll, das
+   Interface ILadMux des Filters an, und kann dort den LAD-Info-String
+   hineingeben. Wenn dies passiert ist, schreibt CWavDestFilter eine
+   LAD-Datei, sonst eine normale WAV-Datei. Dieser Filter wird nicht
+   explizit dem System bekannt gemacht (wie z.B. ladfilter.dll oder
+   resizer.dll), sondern eine Instanz wird direkt als Objekt
+   instanziiert (mittels new); also nicht über CoCreateInstance.

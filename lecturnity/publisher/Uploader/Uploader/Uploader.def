@@ -1,0 +1,23 @@
+; Uploader.def : Declares the module parameters for the DLL.
+
+LIBRARY      "Uploader"
+
+EXPORTS
+    ; Explicit exports can go here
+    CheckUpload						@1
+    StartUpload						@2
+    GetProgress						@3
+	ShowTransferConfigDialog		@4
+	GetTransferData					@5
+	ShowPodcastChannelConfigDialog	@6
+	GetPodcastChannelData			@7
+	GetErrorString					@8
+	StartPodcast					@9
+	CheckTargetExists				@10
+	FinishSession					@11
+	StartSession					@12
+	CancelSession					@13
+	ShowYtTransferConfigDialog		@14
+	GetYtTransferData				@15
+	CheckYtUpload					@16
+	StartYtUpload					@17

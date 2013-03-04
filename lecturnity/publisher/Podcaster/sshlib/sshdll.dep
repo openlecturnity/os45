@@ -1,0 +1,14 @@
+# Microsoft Developer Studio Generated Dependency File, included by sshdll.mak
+
+.\SshClient.cpp : \
+	".\SshClient.h"\
+	
+
+.\sshdll.cpp : \
+	".\SshClient.h"\
+	
+
+.\StdAfx.cpp : \
+	"..\..\dxsdk\include\basetsd.h"\
+	".\StdAfx.h"\
+	

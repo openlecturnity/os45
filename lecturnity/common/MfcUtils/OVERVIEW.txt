@@ -1,0 +1,83 @@
+MfcUtils-Lib
+============
+
+Kurze Übersicht der Dateien in der Bibliothek MfcUtils.
+
+Autor: Martin Danielsson
+
+$Revision: 1.5 $
+$Date: 2005-12-09 11:03:27 $
+
+ColorStatic.cpp
+   Klasse CColorStatic. Instanzen der Klasse CColorStatic können dazu
+   verwendet werden, Schaltflächen darzustellen, mit Hilfe derer man
+   eine Farbe definieren kann. Die Instanz selbst merkt sich die
+   aktuell ausgewählte Farbe. Verwendung: "Button" auf Dialog
+   instanziieren, Variable dafür hinzufügen, dann ggf. manuell die
+   Klasse im betreffenden Header auf "CColorStatic" setzen.
+
+
+CustomPropPage.cpp
+   Klasse CCustomPropPage. Unklar, was diese Klasse soll. War
+   wahrscheinlich als Ersatz für CPropertyPage gedacht, aber im Moment
+   tut sie eigentlich nichts anderes als auch CDialog tut. Unklar, wo
+   diese Klasse - wenn überhaupt - benutzt wird.
+
+
+ImageStatic.cpp
+   Klasse CImageStatic. Funktioniert im Prinzip wie ein
+   CStatic-Objekt, welches ein Bild aus einer Datei lesen kann und
+   anschließend (ggf. auch skaliert) anzeigen kann. Hierzu wird das
+   Draw SDK (Klasse Image) verwendet, und dadurch besteht eine
+   Abhänigigkeit eben zum Draw SDK, und damit auch zu GDI+. Dies ist
+   die einzige Abhängigkeit der Bibliothekt MfcUtils.
+
+
+MfcUtils.cpp
+
+   Enthält nur eine einzige statische Methode: Localize. Localize wird
+   für die Lokalisierung von Dialogen verwendet, die in den Resourcen
+   sprachneutral abgelegt sind. Localize benötigt eine CWnd-Instanz
+   und ein Array von IDs von Dialog-Elementen. Localize setzt voraus,
+   dass in den entsprechenden String-Tabellen der aktuellen Sprache
+   ein String mit derselben ID existiert wie die ID des
+   Dialog-Elementes. Localize lädt dann den String und setzt den
+   Inhalt des Window-Textes des Dialog-Elementes entsprechend. Dies
+   ist eine "gute" Klasse/Funktion, die man ruhig so benutzen kann. Es
+   macht vor allem eventuell in Zukunft das Übersetzen von Dialogen
+   erheblich einfacher, da man nur noch String-Tabellen übersetzen
+   muss, und nicht noch GUI-Komponenten.
+
+
+MYSHEET.CPP
+   Ohje. Die Klasse CMySheet. Diese Klasse gibt es nur deshalb, weil
+   CPropertySheet aus dem MFC aus irgendwelchen lustigen Gründen
+   (=Bug) nicht den Font umstellen kann, auch wenn alle Property Pages
+   im Prinzip z.B. mit der Schriftart "Tahoma" definiert sind, stellt
+   CPropertySheet die Schriftart wieder auf "MS Sans Serif" um, ohne
+   dass man etwas dagegen (auf normalem Wege) unternehmen
+   kann. CMySheet umgeht dieses Problem. Von irgendwoher kopierter
+   Code, der m.E. im Moment nirgends benutzt wird. Aber kann
+   vielleicht mal nützlich werden...
+
+
+MyTabCtrl.cpp
+   Das fällt auch in die Kategorie "Ohje!". Diese Klasse wird mit
+   Sicherheit im Moment nirgends benutzt und stellte wahrscheinlich
+   zwischenzeitlich eine Art Spielwiese dar, die dann aus Versehen in
+   das Projekt MfcUtils einfloss. Ist nur eine Subklasse von CTabCtrl,
+   tut aber nichts zusätzliches.
+
+
+StdAfx.cpp
+   Für die vorkompilierten Header.
+
+
+TitleStatic.cpp
+   Klasse CTitleStatic. In einem frühen Stadium des Editors hatten die
+   verschiedenen Unterteilungen der Benutzeroberfläche
+   Überschriften. Diese lassen sich recht hübsch mit Hilfe der Klasse
+   CTitleStatic realisieren. Sie verhalten sich wie CStatics (und
+   lassen sich auch so instanziieren: Auf Dialogen durch Subclassing,
+   auf Forms durch direktes Instanziieren), zeichnen aber noch einen
+   Hintergrund in Fensterüberschrift-Stil.

@@ -1,0 +1,7 @@
+; resdll.def : Deklariert die Modul-Parameter für die DLL.
+
+LIBRARY      "resdll"
+DESCRIPTION  'resdll Windows Dynamic Link Library'
+
+EXPORTS
+    ; Explizite Exporte können hier eingefügt werden

@@ -1,0 +1,158 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>%Author%: %Title% - LECTURNITY WebPlayer %Version%</title>
+
+    <script type="text/javascript">
+      <!--
+      var g_scormEnabled = %ScormEnabled%;
+      //-->
+    </script>
+
+    <script src="js/APIWrapper.js" type="text/javascript"></script>
+    <script src="js/scorm.js" type="text/javascript"></script>
+
+    <link rel="stylesheet" href="style.css">
+
+    <script type="text/javascript">
+      <!--
+      var DocumentWindow = null;
+
+      function openWebDocument() 
+      {
+         var docWidth = 960; // leads to 970 outside
+         var docHeight = 690; // leads to 740 outside
+         
+         var borderTop = 117;
+         var borderBottom = 22;
+         var borderLeft = 25;
+         var borderRight = 25;
+         var marginTop = 17;
+         var margin = 20;
+         var webplayerHeight = 35;
+         var statusbarHeight = 24;
+         var titleHeight = 82;
+
+         docWidth = Math.max(docWidth, borderLeft + %VideoWidth% + borderRight);
+         docHeight = Math.max(docHeight, borderTop + marginTop + %VideoHeight% + statusbarHeight + borderBottom + webplayerHeight);
+      
+         var page = "__frames.html";
+         var win = "webDocument";
+         
+         var left = 10;
+         var top = 10;
+         
+         if (window.screen) 
+         {
+            var hor = screen.availWidth;
+            var ver = screen.availHeight;
+            left = (hor - docWidth - 10) * 0.5;
+            top = (ver - docHeight - 50) * 0.5;
+            if (left < 0)
+              left = 0;
+            if (top < 0)
+              top = 0;
+         }
+      
+         var options 
+           = "width=" + docWidth 
+           + ",height=" + docHeight
+           + ",left=" + left 
+           + ",top=" + top 
+           + ",locationbar=no,menubar=no,toolbar=no,status=yes,resizable=no,scrollbars=no";
+      
+         DocumentWindow = window.open(page, win, options);
+         if (DocumentWindow != null)
+         {
+           DocumentWindow.focus();
+         }
+         else
+         {
+           // Popup Blocker!
+           alert("A popup blocker has prevented the LECTURNITY document from opening.\nPlease click the link on this page in order to open the document.\n\nIf that does not work, please deactivate your popup blocker and try again.");
+         }
+      }
+      
+      function closeWebDocument()
+      {
+        DocumentWindow.close();
+        scorm_unload();
+      }
+      //-->
+    </script>
+       
+  </head>
+  <body onLoad="javascript:openWebDocument()" onUnload="javascript:closeWebDocument()" style="background-color:#010C58">
+
+    <!-- border table -->
+    <table id="BorderTable" border="0" cellpadding="0" cellspacing="0" style="padding:0px; margin:0px; width:100%; height:100%;">
+      <tr>
+        <td class="bordertopleft"><img src="images/trans.gif" width="25" height="1" alt="">
+        </td>
+        <td class="bordertoplogo"><img src="images/trans.gif" width="184" height="1" alt="">
+        </td>
+        <td class="bordertop"><img src="images/trans.gif" width="1" height="1" alt="">
+        </td>
+        <td class="bordertoptheme"><img src="images/trans.gif" width="603" height="1" alt="">
+        </td>
+        <td class="bordertopright"><img src="images/trans.gif" width="25" height="1" alt="">
+        </td>
+      </tr>
+      <tr>
+        <td class="borderleft"><img src="images/trans.gif" width="25" height="1" alt="">
+        </td>
+        <td class="bordermiddle" colspan="3" style="padding:0px; margin:10px; vertical-align:top; text-align:left;">
+
+          <br>
+          <noscript>
+            <p style="font-family:Arial,Helvetica,sans-serif;font-size:16px;color:#CC0018;font-weight:bold;">
+              JavaScript is deactivated or is blocked.<br>
+            </p>
+            <p style="font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#0D2059;font-weight:normal;width:650px;">
+                This may have different reasons:
+            </p>
+            <ul style="list-style-type:disc;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#0D2059;font-weight:normal;">
+              <li>Your internet browser does not allow JavaScript, enable JavaScript before you proceed.</li>
+              <li>You are using Internet Explorer on a Windows XP SP2 system, and the content is situated on a<br>
+                local hard drive. By default, Internet Explorer does not allow scripting in local web pages. In order<br>
+                to enable scripting, open the "Internet Settings" and check the "Allow active content to run in files<br>
+                on My Computer" option:</li>
+            </ul>
+            <img src="images/ie_xpsp2_internet_options.png">
+          </noscript>
+
+          <script type="text/javascript">
+          <!--
+          document.writeln('<br>');
+          document.writeln('<p style="font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#0D2059;font-weight:normal;">');
+          document.writeln('  The e-Lecture will start immediately. <br>');
+          document.writeln('  <br>');
+          document.writeln('  Otherwise, please:<br>');
+          document.writeln('  1)&nbsp;&nbsp;&nbsp; Deactivate your pop-up blocker and reload this site.<br>');
+          document.writeln('  2)&nbsp;&nbsp;&nbsp; If this does not help, click <a href="javascript:openWebDocument()">here</a> to start the e-Lecture.<br>');
+          document.writeln('  <br>');
+          document.writeln('  <br>');
+          document.writeln('  Important note: Please do not close this window during your e-Lecture.<br>');
+          document.writeln('</p>');
+          // -->
+          </script>
+
+        <!-- border table (cont.) -->
+        </td>
+        <td class="borderright"><img src="images/trans.gif" width="25" height="1" alt="">
+        </td>
+      </tr>
+      <tr>
+        <td class="borderbottomleft"><img src="images/trans.gif" width="25" height="1" alt="">
+        </td>
+        <td class="borderbottom" colspan="3"><img src="images/trans.gif" width="100" height="1" alt="">
+        </td>
+        <td class="borderbottomright"><img src="images/trans.gif" width="25" height="1" alt="">
+        </td>
+      </tr>
+    </table>
+
+  </body>
+</html>

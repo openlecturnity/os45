@@ -1,0 +1,22 @@
+		<w:r>
+			<w:rPr>
+				<w:b/>
+				<w:highlight w:val="light-gray"/>
+			</w:rPr>
+			<w:fldChar w:fldCharType="begin"/>
+		</w:r>
+		<w:r>
+			<w:rPr>
+				<w:b/>
+				<w:highlight w:val="light-gray"/>
+			</w:rPr>
+			<w:instrText> TOC \o "2-3" \h \z \t "Heading 1,1,Überschrift 0 für Verzeichnisse,1" </w:instrText>
+		</w:r>
+		<w:r>
+			<w:rPr>
+				<w:b/>
+				<w:highlight w:val="light-gray"/>
+			</w:rPr>
+			<w:fldChar w:fldCharType="separate"/>
+		</w:r>
+		

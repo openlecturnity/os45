@@ -1,0 +1,14 @@
+REGEDIT
+;   Diese .REG-Datei kann von Ihrem SETUP-Programm verwendet werden.
+;   Falls kein SETUP-Programm verfügbar ist, werden die unten stehenden Einträge
+;   automatisch in InitInstance registriert, mit einem Aufruf an 
+;   CWinApp::RegisterShellFileTypes and COleObjectFactory::UpdateRegistryAll.
+
+HKEY_CLASSES_ROOT\.lpp = Publisher.Profile
+HKEY_CLASSES_ROOT\Publisher.Profile\shell\open\command = PUBLISHER.EXE %1
+HKEY_CLASSES_ROOT\Publisher.Profile\shell\open\ddeexec = [open("%1")]
+HKEY_CLASSES_ROOT\Publisher.Profile\shell\open\ddeexec\application = PUBLISHER
+    ; Hinweis: die Anwendung ist optional
+    ;  (als Standardwert wird der Name der Anwendung in "command" verwendet)
+
+HKEY_CLASSES_ROOT\Publisher.Profile = Publisher-Profil

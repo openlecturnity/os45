@@ -1,0 +1,97 @@
+function layout_enableControl(btId, bEnable)
+{
+  // We do not have a stop button
+  if (btId == "stop")
+    return;
+  // Are the navigation buttons disabled (1) or hidden (2)?
+  if ((g_layoutNavigationStandardButtons > 0) && (btId != "mute"))
+    return;
+
+  parent.control.button_enableButton("layout" + btId, bEnable);
+}
+
+function layout_displayIsBuffering(bDisplay, bufferingProgress)
+{
+  parent.control.controlbar_displayIsBuffering(bDisplay, bufferingProgress);
+}
+
+function layout_displayIsDownloading(bEnable)
+{
+  parent.control.controlbar_displayIsDownloading(bEnable);
+}
+
+function layout_setPlayIsPause(bPlayIsPause)
+{
+  if (bPlayIsPause)
+    parent.control.button_setButtonState("layoutplay", "1");
+  else
+    parent.control.button_setButtonState("layoutplay", "0");
+}
+
+function layout_setIsMuted(bIsMuted)
+{
+  if (bIsMuted)
+    parent.control.button_setButtonState("layoutmute", "1");
+  else
+    parent.control.button_setButtonState("layoutmute", "0");
+}
+
+function layout_updateTime(timeMs)
+{
+  if (!g_isSliding)
+  {
+    parent.control.g_layoutIgnoreTimeChange = true;
+    parent.control.g_layoutTimeSlider.setValue(timeMs);
+    parent.control.g_layoutIgnoreTimeChange = false;
+  }
+
+  var delta = g_lastDisplayedTimeMs - timeMs;
+  if (delta >= 1000 || delta <= -1000)
+  {
+    parent.control.controlbar_displayCurrentTime(timeMs);
+    g_lastDisplayedTimeMs = timeMs;
+  }
+
+  if (g_isStandaloneMode)
+    return;
+
+  var newSlide = layout_getSlideForTime(timeMs);
+
+  if (newSlide != g_layoutCurrentSlide)
+  {
+    frames['thumbsFrame'].thumbs_activateSlide(newSlide + 1);
+    //frames['slidesFrame'].thumbs_activateSlide(newSlide + 1);
+    //frames['slidesFrameVert'].thumbs_activateSlide(newSlide + 1);
+
+    var slideString = "%SlideLabel% " + (newSlide+1) + " %SlideLabelOf% " + g_thumbCount;
+    parent.control.controlbar_setSlideLabelText(slideString);
+    //getHtmlObject('', 'slidesLabel', '', false, true).innerHTML = slideString;
+
+    g_layoutCurrentSlide = newSlide;
+  }
+}
+
+function layout_getSlidesTop()
+{
+  return 120;
+}
+
+function layout_getSlidesLeft()
+{
+  return g_slidesOffset;
+}
+
+function layout_getSearchState()
+{
+    return frames['searchFrame'].search_getState();
+}
+
+function layout_setSearchPos(top, height)
+{
+    frames['searchFrame'].search_setPos(top, height);
+}
+
+function layout_setSearchMinPos(top)
+{
+    frames['searchFrame'].search_setMinTop(top);
+}

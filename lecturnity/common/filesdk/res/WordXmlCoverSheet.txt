@@ -1,0 +1,135 @@
+<w:p>
+	<w:pPr>
+		<w:pStyle w:val="HeadlineTitelseite"/>
+		<w:rPr>
+			<w:b/>
+		</w:rPr>
+	</w:pPr>
+</w:p>
+<w:p>
+	<w:pPr>
+		<w:pStyle w:val="SubheadlineTitelseite"/></w:pPr>
+	</w:p>
+<w:p>
+	<w:pPr>
+		<w:pStyle w:val="Ansprechpartner"/>
+	</w:pPr>
+</w:p>
+<w:p>
+	<w:pPr>
+		<w:pStyle w:val="Ansprechpartner"/>
+	</w:pPr>
+</w:p>
+<w:p>
+	<w:pPr>
+		<w:pStyle w:val="HeadlineTitelseite"/>
+	</w:pPr>
+	<w:fldSimple w:instr=" TITLE   \* MERGEFORMAT ">
+		<w:r><w:t>%TITLE%</w:t></w:r>
+	</w:fldSimple>
+	<w:r>
+		<w:tab/>
+	</w:r>
+</w:p>
+<w:p>
+	<w:pPr>
+		<w:pStyle w:val="Ansprechpartner"/>
+	</w:pPr>
+</w:p>
+<w:p>
+	<w:pPr>
+		<w:pStyle w:val="Ansprechpartner"/>
+	</w:pPr>
+</w:p>
+<w:p>
+	<w:pPr>
+		<w:pStyle w:val="Ansprechpartner"/>
+	</w:pPr>
+</w:p>
+<w:p>
+	<w:pPr>
+		<w:pStyle w:val="Ansprechpartner"/>
+	</w:pPr>
+</w:p>
+<w:p>
+	<w:pPr>
+		<w:pStyle w:val="Ansprechpartner"/>
+	</w:pPr>
+</w:p>
+<w:p>
+	<w:pPr>
+		<w:pStyle w:val="Ansprechpartner"/>
+	</w:pPr>
+</w:p>
+<w:p>
+	<w:pPr>
+		<w:pStyle w:val="Ansprechpartner"/>
+	</w:pPr>
+</w:p>
+<w:p>
+	<w:pPr>
+		<w:pStyle w:val="Ansprechpartner"/>
+	</w:pPr>
+	<w:r>
+		<w:t>%AUTHOR%:</w:t>
+	</w:r>
+	<w:r>
+		<w:t> </w:t>
+	</w:r>
+	<w:fldSimple w:instr=" AUTHOR   \* MERGEFORMAT ">
+		<w:r>
+			<w:rPr>
+				<w:noProof/>
+			</w:rPr>
+			<w:t>%AUTHOR_NAME%</w:t>
+		</w:r>
+	</w:fldSimple>
+</w:p>
+<w:p>
+	<w:pPr>
+		<w:pStyle w:val="Ansprechpartner"/>
+	</w:pPr>
+	<w:r>
+		<w:t>%DATE%: </w:t>
+	</w:r>
+	<w:r>
+		<w:t>%DATE_VALUE%</w:t>
+	</w:r>
+</w:p>
+<w:p>
+	<w:pPr>
+		<w:pStyle w:val="Ansprechpartner"/>
+		<w:rPr>
+			<w:sz-cs w:val="18"/>
+		</w:rPr>
+		<w:sectPr>
+%COVERSHEET_HEADER%
+			<w:ftr w:type="odd">
+				<w:p>
+					<w:pPr>
+						<w:pStyle w:val="FuzeileTitelseite"/>
+					</w:pPr>
+				</w:p>
+				<w:p>
+					<w:pPr>
+						<w:pStyle w:val="Footer"/>
+						<w:rPr>
+							<w:sz-cs w:val="14"/>
+							<w:lang w:val="EN-US"/>
+						</w:rPr>
+					</w:pPr>
+				</w:p>
+			</w:ftr>
+			<w:pgSz w:w="11906" w:h="16838" w:code="9"/>
+			<w:pgMar w:top="349" w:right="1985" w:bottom="1134" w:left="1985" w:header="0" w:footer="164" w:gutter="0"/>
+			<w:cols w:space="708"/>
+			<w:docGrid w:line-pitch="360"/>
+		</w:sectPr>
+	</w:pPr>
+	<w:r>
+		<w:rPr>
+			<w:sz-cs w:val="18"/>
+		</w:rPr>
+		<w:br/>
+	</w:r>
+</w:p>

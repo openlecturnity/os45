@@ -1,0 +1,192 @@
+<w:styles>
+	<w:versionOfBuiltInStylenames w:val="7" />
+	<w:latentStyles w:defLockedState="off" w:latentStyleCount="267" />
+	<w:style w:type="paragraph" w:default="on" w:styleId="Normal">
+      		<w:name w:val="Normal" />
+			<w:pPr>
+				<w:spacing w:before="120" w:after="40" w:line="312" w:line-rule="auto"/>
+				<w:contextualSpacing/>
+				<w:jc w:val="left"/>
+			</w:pPr>
+			<w:rPr>
+			<w:rFonts w:ascii="Arial" w:h-ansi="Arial"/>
+        		<wx:font wx:val="Arial" />
+				<w:color w:val="464646"/>
+        		<w:sz w:val="22" />
+        		<w:sz-cs w:val="22" />
+      		</w:rPr>
+	</w:style>
+	<w:style w:type="paragraph" w:styleId="Title">
+		<w:name w:val="Title"/>
+		<w:basedOn w:val="Normal"/>
+		<w:pPr>
+			<w:spacing w:before="240" w:after="60"/>
+			<w:jc w:val="center"/>
+			<w:outlineLvl w:val="0"/>
+		</w:pPr>
+		<w:rPr>
+			<w:rFonts w:ascii="Arial" w:h-ansi="Arial"/>
+			<wx:font wx:val="Arial"/>
+			<w:b/><w:b-cs/>
+			<w:kern w:val="28"/>
+			<w:sz w:val="36"/>
+			<w:sz-cs w:val="36"/>
+		</w:rPr>
+	</w:style>
+	<w:style w:type="paragraph" w:styleId="Heading1">
+		<w:name w:val="heading 1"/>
+		<wx:uiName wx:val="Heading 1"/>
+		<w:basedOn w:val="Normal"/>
+		<w:next w:val="Normal"/>
+		<w:pPr>
+			<w:keepNext/>
+			<w:spacing w:before="240" w:after="60"/>
+			<w:outlineLvl w:val="0"/>
+		</w:pPr>
+		<w:rPr>
+			<w:rFonts w:ascii="Arial" w:h-ansi="Arial"/>
+			<wx:font wx:val="Arial"/>
+			<w:b/><w:b-cs/>
+			<w:kern w:val="32"/>
+			<w:sz w:val="32"/>
+			<w:sz-cs w:val="32"/>
+		</w:rPr>
+	</w:style>
+	<w:style w:type="paragraph" w:styleId="berschrift0frVerzeichnisse">
+		<w:name w:val="Überschrift 0 für Verzeichnisse"/>
+		<w:basedOn w:val="Normal"/>
+		<w:autoRedefine/>
+		<w:rPr>
+			<wx:font wx:val="Arial"/><w:b/>
+			<w:sz w:val="32"/>
+		</w:rPr>
+	</w:style>	
+	<w:style w:type="paragraph" w:styleId="TableOfContentStyle">
+		<w:name w:val="Table of Content Title"/>
+		<w:basedOn w:val="Normal"/>
+		<w:autoRedefine/>
+		<w:rPr>
+			<wx:font wx:val="Arial"/><w:b/>
+			<w:sz w:val="32"/>
+		</w:rPr>
+	</w:style>
+	<w:style w:type="paragraph" w:styleId="Header">
+		<w:name w:val="header"/>
+		<wx:uiName wx:val="Header"/>
+		<w:basedOn w:val="Normal"/>
+		<w:next w:val="Normal"/>
+		<w:link w:val="CharChar1"/>
+		<w:autoRedefine/>
+		<w:pPr>
+			<w:pStyle w:val="Header"/>
+			<w:spacing w:before="0" w:after="0"/>
+			<w:ind w:left="-1418" w:right="-1418" w:first-line="1418"/>
+		</w:pPr>
+		<w:rPr>
+			<wx:font wx:val="Arial"/>
+			<w:sz w:val="28"/>
+		</w:rPr>
+	</w:style>
+	<w:style w:type="paragraph" w:styleId="Footer">
+		<w:name w:val="footer"/>
+		<wx:uiName wx:val="Footer"/>
+		<w:basedOn w:val="Normal"/>
+		<w:autoRedefine/>
+		<w:pPr>
+			<w:pStyle w:val="Footer"/>
+				<w:tabs>
+					<w:tab w:val="right" w:pos="9072"/>
+				</w:tabs>
+		</w:pPr>
+		<w:rPr>
+			<wx:font wx:val="Arial"/>
+			<w:sz w:val="18"/>
+		</w:rPr>
+	</w:style>
+	<w:style w:type="character" w:default="on" w:styleId="DefaultParagraphFont">
+		<w:name w:val="Default Paragraph Font"/>
+	</w:style>
+	<w:style w:type="character" w:styleId="PageNumber">
+		<w:name w:val="page number"/>
+		<wx:uiName wx:val="Page Number"/>
+		<w:basedOn w:val="DefaultParagraphFont"/>
+		<w:rPr>
+			<w:rFonts w:ascii="Arial" w:h-ansi="Arial"/>
+			<w:color w:val="FFFBF0"/>
+			<w:sz w:val="18"/>
+		</w:rPr>
+	</w:style>
+	<w:style w:type="list" w:default="on" w:styleId="NoList">
+		<w:name w:val="No List"/>
+	</w:style>
+	<w:style w:type="list" w:styleId="Inhaltsverzeichnis">
+		<w:name w:val="Inhaltsverzeichnis"/>
+		<w:basedOn w:val="NoList"/>
+		<w:pPr>
+			<w:listPr>
+				<w:ilfo w:val="1"/>
+			</w:listPr>
+		</w:pPr>
+	</w:style>
+	<w:style w:type="paragraph" w:styleId="TOC1">
+		<w:name w:val="toc 1"/>
+		<wx:uiName wx:val="TOC 1"/>
+		<w:basedOn w:val="Normal"/>
+		<w:next w:val="Normal"/>
+		<w:autoRedefine/>
+		<w:rPr>
+			<wx:font wx:val="Arial"/>
+		</w:rPr>
+	</w:style>
+	<w:style w:type="character" w:styleId="Hyperlink">
+		<w:name w:val="Hyperlink"/>
+		<w:basedOn w:val="DefaultParagraphFont"/>
+		<w:rPr>
+			<w:color w:val="0000FF"/>
+			<w:u w:val="single"/>
+		</w:rPr>
+	</w:style>
+	<w:style w:type="paragraph" w:styleId="HeadlineTitelseite">
+		<w:name w:val="Headline Titelseite"/>
+		<w:basedOn w:val="Normal"/>
+		<w:next w:val="SubheadlineTitelseite"/>
+		<w:autoRedefine/>
+		<w:rsid w:val="007A0A80"/>
+		<w:pPr>
+			<w:tabs>
+				<w:tab w:val="left" w:pos="6437"/>
+			</w:tabs>
+			<w:spacing w:before="240" w:after="120"/>
+		</w:pPr>
+		<w:rPr>
+			<wx:font wx:val="Arial"/>
+			<w:sz w:val="44"/>
+			<w:sz-cs w:val="44"/>
+		</w:rPr>
+	</w:style>
+	<w:style w:type="paragraph" w:styleId="SubheadlineTitelseite">
+		<w:name w:val="Subheadline Titelseite"/>
+		<w:basedOn w:val="Normal"/>
+		<w:next w:val="Ansprechpartner"/>
+		<w:autoRedefine/>
+		<w:rsid w:val="00007957"/>
+		<w:pPr>
+			<w:spacing w:before="360"/>
+		</w:pPr>
+		<w:rPr>
+			<wx:font wx:val="Arial"/>
+			<w:sz w:val="32"/>
+		</w:rPr>
+	</w:style>
+	<w:style w:type="paragraph" w:styleId="Ansprechpartner">
+		<w:name w:val="Ansprechpartner"/>
+		<w:basedOn w:val="SubheadlineTitelseite"/>
+		<w:autoRedefine/>
+		<w:rsid w:val="00086388"/>
+		<w:rPr>
+			<wx:font wx:val="Arial"/>
+			<w:b/>
+			<w:sz w:val="22"/>
+		</w:rPr>
+	</w:style>	
+</w:styles>

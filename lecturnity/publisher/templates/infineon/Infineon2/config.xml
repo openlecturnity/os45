@@ -1,0 +1,226 @@
+<templateConfig name="LECTURNITY WebPlayer7" 
+                title_de="\"Infineon Lecture\"-Design mit Folienübersicht links"
+                title_en="\"Infineon Lecture\" design with slide overview at the left side"
+                description_de="Infineon-Vorlage \"Lecture\" mit Folienübersicht links."
+                description_en="Infineon template \"Lecture\" with slide overview at the left side."
+                author="imc AG" 
+                copyright="(c) 2005 imc AG, Office Freiburg" 
+                screenshot="screenshot.jpg">
+
+   <configurations>
+      <config name="normalDocument">true</config>
+      <config name="standaloneDocument">true</config>
+   </configurations>
+
+   <id>{4A91BBD8-C915-41af-8B10-4E422CD634FF}</id>
+   <isScormCompliant>true</isScormCompliant>
+   <isUtfTemplate>true</isUtfTemplate>
+
+   <configurableKeywords>
+   </configurableKeywords>
+
+   <replaceKeywords>
+      <keyword name="%BrowserInnerWidth%" evaluate="true">1010</keyword>
+      <keyword name="%BrowserInnerHeight%" evaluate="true">690</keyword>
+      <keyword name="%PlayerWidth%" evaluate="true">220</keyword>
+   </replaceKeywords>
+
+   <normalDocument>
+      <slidesSize>
+         <width>1010 - 25 - 20 - 25 - max(220, max(%VideoWidth%, %StillImageWidth%))</width>
+         <height>499</height>
+      </slidesSize>
+
+      <staticFiles>
+         <file>config.xml</file>
+         <file>js/APIWrapper.js</file>
+         <file>js/browserlib.js</file>
+         <file>js/button.js</file>
+         <file>js/evhandler.js</file>
+         <file>js/lslider.js</file>
+         <file>js/scorm.js</file>
+         <file>js/slides.js</file>
+         <file>js/utils.js</file>
+         <file>images/border_bottom.png</file>
+         <file>images/border_bottom_left.png</file>
+         <file>images/border_bottom_right.png</file>
+         <file>images/border_left.png</file>
+         <file>images/border_right.png</file>
+         <file>images/border_top.png</file>
+         <file>images/border_top_left.png</file>
+         <file>images/border_top_lecture.png</file>
+         <file>images/border_top_logo_infineon.png</file>
+         <file>images/border_top_right.png</file>
+         <file>images/bubble.gif</file>
+         <file>images/button_back.png</file>
+         <file>images/button_back_f2.png</file>
+         <file>images/button_back_f3.png</file>
+         <file>images/button_back_f4.png</file>
+         <file>images/button_end.png</file>
+         <file>images/button_end_f2.png</file>
+         <file>images/button_end_f3.png</file>
+         <file>images/button_end_f4.png</file>
+         <file>images/button_forward.png</file>
+         <file>images/button_forward_f2.png</file>
+         <file>images/button_forward_f3.png</file>
+         <file>images/button_forward_f4.png</file>
+         <file>images/button_home.png</file>
+         <file>images/button_home_f2.png</file>
+         <file>images/button_home_f3.png</file>
+         <file>images/button_home_f4.png</file>
+         <file>images/button_mute.png</file>
+         <file>images/button_mute_f2.png</file>
+         <file>images/button_mute_f3.png</file>
+         <file>images/button_mute_f4.png</file>
+         <file>images/button_pause.png</file>
+         <file>images/button_pause_f2.png</file>
+         <file>images/button_pause_f3.png</file>
+         <file>images/button_pause_f4.png</file>
+         <file>images/button_play.png</file>
+         <file>images/button_play_f2.png</file>
+         <file>images/button_play_f3.png</file>
+         <file>images/button_play_f4.png</file>
+         <file>images/controlbar_bg.png</file>
+         <file>images/controlbar_left.png</file>
+         <file>images/controlbar_right.png</file>
+         <file>images/ie_xpsp2_internet_options.png</file>
+         <file>images/initialize_de.png</file>
+         <file>images/initialize_en.png</file>
+         <file>images/telepointer24.gif</file>
+         <file>images/timeslider_bg.png</file>
+         <file>images/timeslider_knob.png</file>
+         <file>images/trans.gif</file>
+         <file>images/volumeslider_bg.png</file>
+      </staticFiles>
+
+      <templateFiles>
+         <file prefix="%BaseDocumentName%" writeToRoot="true" isIndex="true">normal/index.html.tmpl</file>
+         <file>__controlbar.html.tmpl</file>
+         <file writeToRoot="true">normal/__frames.html.tmpl</file>
+         <file writeToRoot="true">normal/__main.html.tmpl</file>
+         <file writeToRoot="true">normal/__thumbs.html.tmpl</file>
+         <file writeToRoot="true">normal/__info.html.tmpl</file>
+         <file writeToRoot="true">normal/slides.css.tmpl</file>
+         <file writeToRoot="true">normal/style.css.tmpl</file>
+         <file>js/controlbar.js.tmpl</file>
+         <file>js/layout.js.tmpl</file>
+         <file>js/layoutapi.js.tmpl</file>
+         <file>js/variables.js.tmpl</file>
+      </templateFiles>
+
+      <realMedia>
+         <replaceKeywords>
+            <keyword name="%ControlJavaScript%">control_rm.js</keyword>
+         </replaceKeywords>
+
+         <staticFiles>
+            <file>js/control_rm.js</file>
+         </staticFiles>
+      </realMedia>
+
+      <windowsMedia>
+         <replaceKeywords>
+            <keyword name="%ControlJavaScript%">control_wm.js</keyword>
+         </replaceKeywords>
+
+         <staticFiles>
+            <file>js/control_wm.js</file>
+         </staticFiles>
+      </windowsMedia>
+   </normalDocument>
+
+   <standaloneDocument>
+      <staticFiles>
+         <file>config.xml</file>
+         <file>js/APIWrapper.js</file>
+         <file>js/browserlib.js</file>
+         <file>js/button.js</file>
+         <file>js/evhandler.js</file>
+         <file>js/lslider.js</file>
+         <file>js/scorm.js</file>
+         <file>js/slides.js</file>
+         <file>js/utils.js</file>
+         <file>images/border_bottom.png</file>
+         <file>images/border_bottom_left.png</file>
+         <file>images/border_bottom_right.png</file>
+         <file>images/border_left.png</file>
+         <file>images/border_right.png</file>
+         <file>images/border_top.png</file>
+         <file>images/border_top_left.png</file>
+         <file>images/border_top_lecture.png</file>
+         <file>images/border_top_logo_infineon.png</file>
+         <file>images/border_top_right.png</file>
+         <file>images/button_back.png</file>
+         <file>images/button_back_f2.png</file>
+         <file>images/button_back_f3.png</file>
+         <file>images/button_back_f4.png</file>
+         <file>images/button_end.png</file>
+         <file>images/button_end_f2.png</file>
+         <file>images/button_end_f3.png</file>
+         <file>images/button_end_f4.png</file>
+         <file>images/button_forward.png</file>
+         <file>images/button_forward_f2.png</file>
+         <file>images/button_forward_f3.png</file>
+         <file>images/button_forward_f4.png</file>
+         <file>images/button_home.png</file>
+         <file>images/button_home_f2.png</file>
+         <file>images/button_home_f3.png</file>
+         <file>images/button_home_f4.png</file>
+         <file>images/button_mute.png</file>
+         <file>images/button_mute_f2.png</file>
+         <file>images/button_mute_f3.png</file>
+         <file>images/button_mute_f4.png</file>
+         <file>images/button_pause.png</file>
+         <file>images/button_pause_f2.png</file>
+         <file>images/button_pause_f3.png</file>
+         <file>images/button_pause_f4.png</file>
+         <file>images/button_play.png</file>
+         <file>images/button_play_f2.png</file>
+         <file>images/button_play_f3.png</file>
+         <file>images/button_play_f4.png</file>
+         <file>images/controlbar_bg.png</file>
+         <file>images/controlbar_left.png</file>
+         <file>images/controlbar_right.png</file>
+         <file>images/ie_xpsp2_internet_options.png</file>
+         <file>images/initialize_de.png</file>
+         <file>images/initialize_en.png</file>
+         <file>images/timeslider_bg.png</file>
+         <file>images/timeslider_knob.png</file>
+         <file>images/trans.gif</file>
+         <file>images/volumeslider_bg.png</file>
+      </staticFiles>
+
+      <templateFiles>
+         <file prefix="%BaseDocumentName%" writeToRoot="true" isIndex="true">standalone/index.html.tmpl</file>
+         <file>__controlbar.html.tmpl</file>
+         <file writeToRoot="true">standalone/__frames.html.tmpl</file>
+         <file writeToRoot="true">standalone/__main.html.tmpl</file>
+         <file writeToRoot="true">standalone/style.css.tmpl</file>
+         <file>js/controlbar.js.tmpl</file>
+         <file>js/layoutstandalone.js.tmpl</file>
+         <file>js/layoutapi.js.tmpl</file>
+         <file>js/variables.js.tmpl</file>
+      </templateFiles>
+
+      <realMedia>
+         <replaceKeywords>
+            <keyword name="%ControlJavaScript%">control_rm.js</keyword>
+         </replaceKeywords>
+
+         <staticFiles>
+            <file>js/control_rm.js</file>
+         </staticFiles>
+      </realMedia>
+
+      <windowsMedia>
+         <replaceKeywords>
+            <keyword name="%ControlJavaScript%">control_wm.js</keyword>
+         </replaceKeywords>
+
+         <staticFiles>
+            <file>js/control_wm.js</file>
+         </staticFiles>
+      </windowsMedia>
+   </standaloneDocument>
+
+</templateConfig>

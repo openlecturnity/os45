@@ -1,0 +1,4 @@
+	<w:pgSz w:w="11906" w:h="16838" w:code="9"/>
+	<w:pgMar w:top="1701" w:right="1418" w:bottom="1134" w:left="1418" w:header="567" w:footer="324" w:gutter="0"/>
+	<w:cols w:space="708"/>
+	<w:docGrid w:line-pitch="360"/>

@@ -1,0 +1,15 @@
+//
+// PUBLISHER.RC2 - Ressourcen, die Microsoft Visual C++ nicht direkt bearbeitet
+//
+
+#ifdef APSTUDIO_INVOKED
+	#error this file is not editable by Microsoft Visual C++
+#endif //APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Fügen Sie hier manuell bearbeitete Ressourcen hinzu...
+
+IDR_MANIFEST RT_MANIFEST MOVEABLE PURE
+             "res\\manifest.xml"
+/////////////////////////////////////////////////////////////////////////////

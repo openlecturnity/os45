@@ -1,0 +1,1073 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Deutsch (Deutschland) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)
+#ifdef _WIN32
+LANGUAGE LANG_GERMAN, SUBLANG_GERMAN
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)\r\n"
+    "#ifdef _WIN32\r\n"
+    "LANGUAGE 7, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#endif //_WIN32\r\n"
+    "#include ""res\\Publisher.rc2""  // Nicht mit Microsoft Visual C++ bearbeitete Ressourcen\r\n"
+    "#include ""l.deu\\afxres.rc""          // Standardkomponenten\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON    DISCARDABLE     "res\\Publisher.ico"
+IDR_PROFILTYPE          ICON    DISCARDABLE     "res\\PublisherDoc.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDR_MAINFRAME           BITMAP  MOVEABLE PURE   "res\\Toolbar.bmp"
+IDB_FRONTPAGE           BITMAP  DISCARDABLE     "res\\Frontpage.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_MAINFRAME TOOLBAR DISCARDABLE  16, 15
+BEGIN
+    BUTTON      ID_FILE_NEW
+    BUTTON      ID_FILE_OPEN
+    BUTTON      ID_FILE_SAVE
+    SEPARATOR
+    BUTTON      ID_EDIT_CUT
+    BUTTON      ID_EDIT_COPY
+    BUTTON      ID_EDIT_PASTE
+    SEPARATOR
+    BUTTON      ID_FILE_PRINT
+    SEPARATOR
+    BUTTON      ID_APP_ABOUT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINFRAME MENU PRELOAD DISCARDABLE 
+BEGIN
+    POPUP "&Datei"
+    BEGIN
+        MENUITEM "&Dokument öffnen...",         ID_FILE_OPEN_LRD
+        MENUITEM SEPARATOR
+        MENUITEM "&Neues Profil erstellen\tStrg+N", ID_FILE_NEW
+        MENUITEM "Profil ö&ffnen...\tStrg+O",   ID_FILE_OPEN
+        MENUITEM "Profil s&peichern\tStrg+S",   ID_FILE_SAVE
+        MENUITEM "Profil speichern &unter...",  ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "Letzte Datei",                ID_FILE_MRU_FILE1, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "&Beenden",                    ID_APP_EXIT
+    END
+    POPUP "&Bearbeiten"
+    BEGIN
+        MENUITEM "&Rückgängig\tStrg+Z",         ID_EDIT_UNDO
+        MENUITEM SEPARATOR
+        MENUITEM "&Ausschneiden\tStrg+X",       ID_EDIT_CUT
+        MENUITEM "&Kopieren\tStrg+C",           ID_EDIT_COPY
+        MENUITEM "E&infügen\tStrg+V",           ID_EDIT_PASTE
+    END
+    POPUP "&Ansicht"
+    BEGIN
+        MENUITEM "Symbolleiste",                ID_VIEW_TOOLBAR, GRAYED
+        MENUITEM "S&tatusleiste",               ID_VIEW_STATUS_BAR
+    END
+    POPUP "&?"
+    BEGIN
+        MENUITEM "&Hilfe",                      ID__HILFE
+        MENUITEM "&imc AG Web-Auftritt",        ID__IMCAGWEBAUFTRITT
+        MENUITEM SEPARATOR
+        MENUITEM "Inf&o über Publisher...",     ID_APP_ABOUT
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS PRELOAD MOVEABLE PURE 
+BEGIN
+    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL
+    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL
+    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL
+    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL
+    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT
+    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT
+    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL
+    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY 
+    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOG DISCARDABLE  0, 0, 235, 55
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Info über Publisher"
+FONT 8, "Tahoma"
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,7,10,21,20
+    LTEXT           "LECTURNITY Publisher",IDC_STATIC,40,10,119,8,
+                    SS_NOPREFIX
+    LTEXT           "(c) 2004 imc AG, www.im-c.de",IDC_STATIC,40,39,119,8
+    DEFPUSHBUTTON   "OK",IDOK,178,7,50,14,WS_GROUP
+    LTEXT           "Version 1.7.0.b1w",IDC_STATIC,40,20,119,8
+END
+
+IDD_LRDINFO_FORM DIALOG DISCARDABLE  0, 0, 273, 280
+STYLE WS_CHILD
+FONT 8, "Tahoma"
+BEGIN
+    GROUPBOX        "Datei-Eigenschaften",IDC_STATIC,7,16,259,77
+    LTEXT           "Dateinamen:",IDC_STATIC,17,26,52,8
+    LTEXT           "Datum:",IDC_STATIC,17,79,52,8
+    GROUPBOX        "Dokument-Eigenschaften",IDC_STATIC,7,94,259,84
+    LTEXT           "Titel:",IDC_STATIC,17,104,52,8
+    LTEXT           "Autor:",IDC_STATIC,17,117,52,8
+    LTEXT           "Produzent:",IDC_STATIC,17,130,52,8
+    LTEXT           "Schlüsselworte:",IDC_STATIC,17,143,52,8
+    GROUPBOX        "Medien-Informationen",IDC_STATIC,7,179,259,83
+    EDITTEXT        IDC_LRDINFO_FILENAME,75,27,184,28,ES_MULTILINE | 
+                    ES_AUTOVSCROLL | ES_READONLY | NOT WS_BORDER | 
+                    WS_VSCROLL | NOT WS_TABSTOP
+    EDITTEXT        IDC_LRDINFO_RECORDDATE,75,79,185,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP
+    EDITTEXT        IDC_LRDINFO_TITLE,75,104,185,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP
+    EDITTEXT        IDC_LRDINFO_AUTHOR,75,117,185,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP
+    EDITTEXT        IDC_LRDINFO_PRODUCER,75,130,185,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP
+    EDITTEXT        IDC_LRDINFO_KEYWORDS,75,143,185,28,ES_MULTILINE | 
+                    ES_AUTOVSCROLL | ES_READONLY | NOT WS_BORDER | 
+                    WS_VSCROLL | NOT WS_TABSTOP
+    LTEXT           "Video:",IDC_STATIC,17,202,52,8
+    EDITTEXT        IDC_LRDINFO_VIDEO,75,202,185,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP
+    LTEXT           "Clips:",IDC_STATIC,17,215,52,8
+    LISTBOX         IDC_LRDINFO_CLIPSLIST,75,217,184,39,LBS_SORT | 
+                    LBS_USETABSTOPS | LBS_NOINTEGRALHEIGHT | WS_VSCROLL | 
+                    WS_TABSTOP
+    LTEXT           "Audio:",IDC_STATIC,17,189,22,8
+    EDITTEXT        IDC_LRDINFO_AUDIO,75,189,185,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER | NOT WS_TABSTOP
+    PUSHBUTTON      "&Durchsuchen...",ID_FILE_OPEN_LRD,188,58,71,14
+    CTEXT           "Dokument-Eigenschaften",IDC_LRDINFO_CAPTION,0,0,273,11,
+                    SS_CENTERIMAGE
+END
+
+IDD_SETTINGS_TARGET DIALOG DISCARDABLE  0, 0, 228, 177
+STYLE DS_CONTROL | WS_CHILD
+FONT 8, "Tahoma"
+BEGIN
+    LTEXT           "Bitte geben Sie hier das Zielformat für die Veröffentlichung an. Je nach Zielformat können Sie auch das Medienformat bestimmen.",
+                    IDC_STATIC,7,7,214,23
+    GROUPBOX        "Zielformat",IDC_STATIC,7,34,214,44
+    CONTROL         "&LECTURNITY Präsentationsdokument",
+                    IDC_TARGET_LECTURNITY,"Button",BS_AUTORADIOBUTTON | 
+                    WS_TABSTOP,17,44,197,10
+    CONTROL         "&Streaming Media Web-Dokument",IDC_TARGET_STREAMING,
+                    "Button",BS_AUTORADIOBUTTON,17,54,197,10
+    CONTROL         "&Flash Web-Dokument",IDC_TARGET_FLASH,"Button",
+                    BS_AUTORADIOBUTTON,17,64,197,10
+    GROUPBOX        "Medien-Format",IDC_STATIC,7,79,214,34
+    CONTROL         "Windows Media-Format",IDC_TARGET_MEDIA_WMT,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,17,89,197,10
+    CONTROL         "RealMedia-Format",IDC_TARGET_MEDIA_RM,"Button",
+                    BS_AUTORADIOBUTTON,17,99,197,10
+END
+
+IDD_SETTINGS_MESSAGE DIALOG DISCARDABLE  0, 0, 213, 38
+STYLE WS_CHILD
+FONT 8, "Tahoma"
+BEGIN
+    ICON            32514,IDC_MESSAGE_ICON,7,7,21,20
+    EDITTEXT        IDC_SETTINGS_MESSAGE,33,7,173,24,ES_MULTILINE | 
+                    ES_AUTOVSCROLL | ES_READONLY | NOT WS_BORDER | 
+                    WS_VSCROLL | NOT WS_TABSTOP
+END
+
+IDD_SETTINGS_FORM DIALOG DISCARDABLE  0, 0, 272, 301
+STYLE WS_CHILD
+FONT 8, "Tahoma"
+BEGIN
+    CONTROL         "Tab1",IDC_SETTINGS_TAB,"SysTabControl32",TCS_MULTILINE | 
+                    WS_TABSTOP,7,36,258,256
+    LTEXT           "Zielformat:",IDC_STATIC,7,20,49,8
+    COMBOBOX        IDC_SETTINGS_TARGETFORMAT,59,17,164,111,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL
+    CTEXT           "Profil-Einstellungen",IDC_SETTINGS_CAPTION,0,0,271,11,
+                    SS_CENTERIMAGE
+END
+
+IDD_SETTINGS_TEMPLATE DIALOG DISCARDABLE  0, 0, 228, 105
+STYLE DS_CONTROL | WS_CHILD
+FONT 8, "Tahoma"
+BEGIN
+    LTEXT           "Hier können Sie die aktuellen Vorlagen-Einstellungen überprüfen. Klicken Sie bitte auf die Schaltfläche ""Ändern..."", um die Vorlage und/oder dessen Einstellungen zu ändern.",
+                    IDC_STATIC,7,7,214,33
+    GROUPBOX        "Vorlagen-Informationen",IDC_STATIC,7,40,214,56
+    LTEXT           "Titel:",IDC_STATIC,17,50,72,8
+    EDITTEXT        IDC_TEMPLATE_TITLE,90,50,125,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER
+    LTEXT           "SCORM-kompatibel:",IDC_STATIC,17,61,72,8
+    EDITTEXT        IDC_TEMPLATE_SCORM,90,61,125,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER
+    PUSHBUTTON      "Ä&ndern...",IDC_TEMPLATE_CONFIGURE,155,76,60,14
+END
+
+IDD_SETTINGS_SCORM DIALOG DISCARDABLE  0, 0, 228, 155
+STYLE DS_CONTROL | WS_CHILD
+FONT 8, "Tahoma"
+BEGIN
+    LTEXT           "Hier können Sie die SCORM-Einstellungen bestimmen, die bei der Erstellung der SCORM-Packages berücksichtigt werden. Um erweiterte Einstellungen einsehen zu können, betätigen Sie bitte die Schaltfläche ""Erweitert...""",
+                    IDC_STATIC,7,7,214,45
+    PUSHBUTTON      "&Erweitert...",IDC_SCORM_CONFIGURE,143,125,71,14
+    GROUPBOX        "",IDC_STATIC,7,54,214,91
+    CONTROL         "SCORM-Unterstützung",IDC_SETTINGS_SCORM,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,12,54,89,10
+    CONTROL         "Strikte SCORM-Unterstützung",IDC_SETTINGS_SCORMSTRICT,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,17,66,184,10
+    LTEXT           "Sprache:",IDC_STATIC,17,83,68,8
+    LTEXT           "Volltextintegration:",IDC_STATIC,17,93,68,8
+    LTEXT           "Version:",IDC_STATIC,17,103,68,8
+    LTEXT           "Status:",IDC_STATIC,17,113,68,8
+    LTEXT           "German (de)",IDC_STATIC,91,83,122,8
+    LTEXT           "Ja",IDC_STATIC,91,93,122,8
+    LTEXT           "1.0",IDC_STATIC,91,103,122,8
+    LTEXT           "Final",IDC_STATIC,91,113,122,8
+END
+
+IDD_SETTINGS_SLIDES DIALOG DISCARDABLE  0, 0, 228, 152
+STYLE DS_CONTROL | WS_CHILD
+FONT 8, "Tahoma"
+BEGIN
+    GROUPBOX        "Konvertierungsumfang",IDC_STATIC,7,7,214,48
+    CONTROL         "Zeigerdarstellung",IDC_SLIDES_POINTER,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,17,17,197,10
+    CONTROL         "&Seitendynamik",IDC_SLIDES_DYNAMIC,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,17,30,197,10
+    CONTROL         "&Datenkompression",IDC_SLIDES_COMPRESSION,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,27,40,187,10
+    GROUPBOX        "Seitengröße",IDC_STATIC,7,56,214,86
+    CONTROL         "Standard-Größe (600x450)",IDC_SLIDES_SIZE_STANDARD,
+                    "Button",BS_AUTORADIOBUTTON,17,66,103,10
+    CONTROL         "Original-Auflösung beibehalten",
+                    IDC_SLIDES_SIZE_ORIGINAL,"Button",BS_AUTORADIOBUTTON,17,
+                    76,114,10
+    CONTROL         "Seitengröße nach Bildschirmauflösung",
+                    IDC_SLIDES_SIZE_SCREEN,"Button",BS_AUTORADIOBUTTON,17,86,
+                    135,10
+    COMBOBOX        IDC_SLIDES_SIZE_SELECT,41,97,86,73,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Benutzerdefinierte Größe",IDC_SLIDES_SIZE_CUSTOM,"Button",
+                    BS_AUTORADIOBUTTON,17,112,97,10
+    EDITTEXT        IDC_SLIDES_SIZE_WIDTH,41,123,26,13,ES_AUTOHSCROLL
+    EDITTEXT        IDC_SLIDES_SIZE_HEIGHT,79,123,26,13,ES_AUTOHSCROLL
+    LTEXT           "x",IDC_STATIC,70,125,8,8
+    CONTROL         "Seitenverhältnis beibehalten",
+                    IDC_SLIDES_SIZE_KEEPASPECT,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,108,124,107,10
+END
+
+IDD_SETTINGS_DIALOGTEMPLATE DIALOG DISCARDABLE  0, 0, 228, 177
+STYLE WS_CHILD
+FONT 8, "Tahoma"
+BEGIN
+END
+
+IDD_SETTINGS_LPD DIALOG DISCARDABLE  0, 0, 228, 118
+STYLE DS_CONTROL | WS_CHILD
+FONT 8, "Tahoma"
+BEGIN
+    GROUPBOX        "Ton-Einstellungen",IDC_STATIC,7,7,214,35
+    CONTROL         "&Original-Ton beibehalten (höhere Datenrate)",
+                    IDC_LPD_AUDIO_WAV,"Button",BS_AUTORADIOBUTTON | WS_GROUP | 
+                    WS_TABSTOP,17,17,196,10
+    CONTROL         "&Ton komprimieren (geringer Qualitätsverlust)",
+                    IDC_LPD_AUDIO_AQS,"Button",BS_AUTORADIOBUTTON,17,27,196,
+                    10
+    GROUPBOX        "Andere Einstellungen",IDC_STATIC,7,43,214,65
+    CONTROL         "&Dokumentenstruktur einbetten (Thumbnails)",IDC_CHECK2,
+                    "Button",BS_AUTOCHECKBOX | WS_TABSTOP,17,53,196,10
+    CONTROL         "&Schriftarten einbetten",IDC_CHECK4,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,17,63,196,10
+    CONTROL         "&Wiedergabe im Schnellstartmodus",IDC_CHECK3,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,17,73,196,10
+    CONTROL         "&Clips über Seiten darstellen",IDC_CHECK1,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,17,83,196,10
+    CONTROL         "&Im Vollbildmodus starten",IDC_CHECK5,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,17,93,196,10
+END
+
+IDD_SETTINGS_VIDEOCLIPS DIALOG DISCARDABLE  0, 0, 228, 147
+STYLE DS_CONTROL | WS_CHILD
+FONT 8, "Tahoma"
+BEGIN
+    GROUPBOX        "Video-Größe",IDC_STATIC,7,7,214,59
+    CONTROL         "&Standard-Größe (320x240)",IDC_VIDEO_SIZE_STANDARD,
+                    "Button",BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,17,
+                    17,195,10
+    CONTROL         "&Maximale Clip-Größe",IDC_VIDEO_SIZE_MAXCLIP,"Button",
+                    BS_AUTORADIOBUTTON,17,27,195,10
+    CONTROL         "&Benutzerdefinierte Größe",IDC_VIDEO_SIZE_CUSTOM,"Button",
+                    BS_AUTORADIOBUTTON,17,37,195,10
+    EDITTEXT        IDC_VIDEO_SIZE_WIDTH,41,47,26,13,ES_AUTOHSCROLL
+    LTEXT           "x",IDC_STATIC,70,49,8,8
+    EDITTEXT        IDC_VIDEO_SIZE_HEIGHT,79,47,26,13,ES_AUTOHSCROLL
+    CONTROL         "S&eitenverhältnis beibehalten",
+                    IDC_VIDEO_SIZE_KEEPASPECT,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,108,48,107,10
+    GROUPBOX        "",IDC_STATIC,7,67,214,70
+    CONTROL         "&Clips von Video getrennt",IDC_VIDEO_SPLITCLIPS,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,13,67,94,10
+    LTEXT           "Bitte bestimmen Sie hier die Größe des Clip-Bereiches:",
+                    IDC_STATIC,17,77,197,8
+    CONTROL         "Clips in &Original-Größe",IDC_RADIO4,"Button",
+                    BS_AUTORADIOBUTTON | WS_GROUP | WS_TABSTOP,17,87,198,10
+    CONTROL         "Clips nicht größer als der &Seitenbereich",IDC_RADIO5,
+                    "Button",BS_AUTORADIOBUTTON,17,97,198,10
+    CONTROL         "Clips &nicht größer als",IDC_RADIO6,"Button",
+                    BS_AUTORADIOBUTTON,17,107,198,10
+    EDITTEXT        IDC_VIDEO_SIZE_WIDTH2,41,118,26,13,ES_AUTOHSCROLL
+    LTEXT           "x",IDC_STATIC,69,121,8,8
+    EDITTEXT        IDC_VIDEO_SIZE_HEIGHT2,79,118,26,13,ES_AUTOHSCROLL
+    CONTROL         "Se&itenverhältnis beibehalten",
+                    IDC_VIDEO_SIZE_KEEPASPECT2,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,107,120,107,10
+END
+
+IDD_SETTINGS_MEDIA_WM DIALOG DISCARDABLE  0, 0, 228, 163
+STYLE WS_CHILD
+FONT 8, "Tahoma"
+BEGIN
+    GROUPBOX        "Codecs und Player-Kompatibilität für das Zielpublikum",
+                    IDC_STATIC,7,7,214,44
+    CONTROL         "Windows Media Player 6.&4 (Standard-Codecs)",IDC_RADIO1,
+                    "Button",BS_AUTORADIOBUTTON,17,17,163,10
+    CONTROL         "Windows Media Player &6.4 (evtl. Codec-Download)",
+                    IDC_RADIO2,"Button",BS_AUTORADIOBUTTON,17,27,178,10
+    CONTROL         "Windows Media Player &9 und höher",IDC_RADIO3,"Button",
+                    BS_AUTORADIOBUTTON,17,37,128,10
+    GROUPBOX        "Zielbandbreite",IDC_STATIC,7,52,214,54
+    LTEXT           "Bitte wählen Sie eine Bandbreite für Ihr Zielpublikum aus.",
+                    IDC_STATIC,18,62,197,8
+    LTEXT           "Die Bitraten für Audio, Video und Clips werden entsprechended angepasst.",
+                    IDC_STATIC,18,73,120,27
+    COMBOBOX        IDC_WM_TARGETBITRATE,139,86,77,63,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "Detail-Einstellungen",IDC_STATIC,7,107,214,47
+    LTEXT           "Audio:",IDC_STATIC,17,117,36,8
+    LTEXT           "Video:",IDC_STATIC,17,128,36,8
+    LTEXT           "Clips:",IDC_STATIC,17,139,36,8
+    EDITTEXT        IDC_EDIT1,58,117,58,12,ES_AUTOHSCROLL | ES_READONLY | 
+                    NOT WS_BORDER | NOT WS_TABSTOP
+    EDITTEXT        IDC_EDIT2,58,128,74,12,ES_AUTOHSCROLL | ES_READONLY | 
+                    NOT WS_BORDER | NOT WS_TABSTOP
+    EDITTEXT        IDC_EDIT3,58,139,75,12,ES_AUTOHSCROLL | ES_READONLY | 
+                    NOT WS_BORDER | NOT WS_TABSTOP
+    PUSHBUTTON      "Ä&ndern...",IDC_BUTTON1,149,134,65,14
+END
+
+IDD_SETTINGS_MEDIA_RM DIALOG DISCARDABLE  0, 0, 227, 168
+STYLE WS_CHILD
+FONT 8, "Tahoma"
+BEGIN
+    GROUPBOX        "Bandbreitenauswahl",IDC_STATIC,7,53,213,65
+    CONTROL         "28.8k &Modem (20 kbps)",IDC_CHECK1,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,17,63,91,10
+    CONTROL         "56k M&odem (34 kbps)",IDC_CHECK2,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,17,73,84,10
+    CONTROL         "Single ISDN (45 kbps)",IDC_CHECK3,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,17,83,85,10
+    CONTROL         "Dual I&SDN (80 kbps)",IDC_CHECK4,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,17,93,80,10
+    CONTROL         "DSL/Kabelmodem (220 kbps)",IDC_CHECK5,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,17,103,107,10
+    CONTROL         "&LAN (150 kbps)",IDC_CHECK6,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,125,63,65,10
+    CONTROL         "&256k DSL (225 kbps)",IDC_CHECK7,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,125,73,81,10
+    CONTROL         "&384k DSL (225 kbps)",IDC_CHECK8,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,125,83,81,10
+    CONTROL         "&512k DSL (225 kbps)",IDC_CHECK9,"Button",
+                    BS_AUTOCHECKBOX | WS_TABSTOP,125,93,81,10
+    GROUPBOX        "Videoqualität",IDC_STATIC,7,119,213,40
+    CONTROL         "Au&tomatisch",IDC_RADIO1,"Button",BS_AUTORADIOBUTTON,17,
+                    129,92,10
+    CONTROL         "&Benutzerdefiniert",IDC_RADIO2,"Button",
+                    BS_AUTORADIOBUTTON,120,129,92,10
+    COMBOBOX        IDC_RM_VIDEOQUALITY_SELECT,131,141,84,68,
+                    CBS_DROPDOWNLIST | WS_VSCROLL | WS_TABSTOP
+    GROUPBOX        "Unterstützte Real Player und Server-Versionen",
+                    IDC_STATIC,7,7,213,45
+    CONTROL         "Real Player/Server &8.0 und höher",IDC_RADIO3,"Button",
+                    BS_AUTORADIOBUTTON,17,17,195,10
+    CONTROL         "Real Player/Server &7.0",IDC_RADIO4,"Button",
+                    BS_AUTORADIOBUTTON,17,27,195,10
+    CONTROL         "Real Player/Server &6.0 (G2)",IDC_RADIO5,"Button",
+                    BS_AUTORADIOBUTTON,17,37,195,10
+END
+
+IDD_SETTINGS_TRANSFER DIALOG DISCARDABLE  0, 0, 228, 185
+STYLE DS_CONTROL | WS_CHILD
+FONT 8, "Tahoma"
+BEGIN
+    GROUPBOX        "Unterverzeichnis auf dem Server",IDC_STATIC,7,7,214,25
+    CONTROL         "Automatisch anlegen",IDC_TRANSFER_LB_SUBDIR_AUTO,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,17,17,83,10
+    CONTROL         "Benutzerdefiniert (Rückfrage)",
+                    IDC_TRANSFER_LB_SUBDIR_MANUAL,"Button",
+                    BS_AUTORADIOBUTTON | WS_TABSTOP,104,17,109,10
+    LTEXT           "Übertragungsart:",IDC_STATIC,17,44,64,8
+    EDITTEXT        IDC_TRANSFER_TYPE0,83,44,129,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER
+    LTEXT           "Ziel:",IDC_STATIC,17,55,64,8
+    EDITTEXT        IDC_TRANSFER_TARGET0,83,55,129,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER
+    PUSHBUTTON      "Ä&ndern...",IDC_TRANSFER_CONFIGURE0,152,67,62,14
+    GROUPBOX        "Ziel für Präsentations-Datei(en)",IDC_STATIC,7,33,214,
+                    53
+    LTEXT           "Übertragungsart:",IDC_TRANSFER_MEDIA_LB_TRANSFER,17,97,
+                    64,8
+    EDITTEXT        IDC_TRANSFER_TYPE1,83,97,129,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER
+    LTEXT           "Ziel:",IDC_TRANSFER_MEDIA_LB_TARGET,17,108,64,8
+    EDITTEXT        IDC_TRANSFER_TARGET1,83,108,129,12,ES_AUTOHSCROLL | 
+                    ES_READONLY | NOT WS_BORDER
+    PUSHBUTTON      "Än&dern...",IDC_TRANSFER_CONFIGURE1,152,121,62,14
+    LTEXT           "Server-Art:",IDC_TRANSFER_LB_SERVERTYPE,17,141,44,8
+    COMBOBOX        IDC_TRANSFER_SERVERTYPE,64,139,150,60,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Basis-URL:",IDC_TRANSFER_LB_SERVERURL,17,157,44,8
+    EDITTEXT        IDC_TRANSFER_SERVERURL,64,155,150,13,ES_AUTOHSCROLL
+    GROUPBOX        "Ziel für Streaming-Dateien",IDC_STATIC,7,87,214,89
+END
+
+IDD_SETTINGS_MEDIA DIALOGEX 0, 0, 228, 204
+STYLE DS_CONTROL | WS_CHILD
+EXSTYLE WS_EX_CONTROLPARENT
+FONT 8, "Tahoma", 0, 0, 0x1
+BEGIN
+    LTEXT           "Medien-Format:",IDC_STATIC,7,9,63,8
+    COMBOBOX        IDC_MEDIA_FORMAT,73,7,148,85,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+END
+
+IDD_FRONTPAGE DIALOG DISCARDABLE  0, 0, 374, 190
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "LECTURNITY Publisher"
+FONT 8, "Tahoma"
+BEGIN
+    CONTROL         150,IDC_STATIC,"Static",SS_BITMAP,0,0,109,192
+    LTEXT           "Bitte geben Sie hier an, welches Dokument und welches Profil für die Verarbeitung benutzt werden soll. Wenn Sie die Profil-Einstellungen verändern wollen, klicken Sie bitte auf die Schaltfläche ""Experten-Modus"".",
+                    IDC_STATIC,117,7,250,37
+    LTEXT           "Präsentationsdokument:",IDC_STATIC,125,55,207,8
+    EDITTEXT        IDC_FRONTPAGE_FILENAME,125,65,232,12,ES_AUTOHSCROLL
+    PUSHBUTTON      "&Durchsuchen...",IDC_FRONTPAGE_BROWSE,292,79,65,14
+    LTEXT           "Profil:",IDC_STATIC,125,101,208,8
+    COMBOBOX        IDC_FRONTPAGE_PROFILE,125,111,232,134,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    CONTROL         "Diesen Dialog nicht mehr &anzeigen",
+                    IDC_FRONTPAGE_DONTSHOWAGAIN,"Button",BS_AUTOCHECKBOX | 
+                    WS_TABSTOP,117,156,125,10
+    PUSHBUTTON      "&Experten-Modus",IDC_FRONTPAGE_EXPERTMODE,117,169,79,14
+    PUSHBUTTON      "&Verarbeitung starten",IDOK,207,169,79,14
+    PUSHBUTTON      "&Abbrechen",IDCANCEL,287,169,79,14
+    PUSHBUTTON      "&Entfernen",IDC_FRONTPAGE_DELETEPROFILE,292,125,65,14
+    GROUPBOX        "",IDC_STATIC,117,44,250,104
+END
+
+IDD_PROFILE_VIEW DIALOG DISCARDABLE  0, 0, 440, 35
+STYLE WS_CHILD
+FONT 8, "MS Sans Serif"
+BEGIN
+    LTEXT           "Profil-Auswahl:",IDC_STATIC,7,18,44,8
+    COMBOBOX        IDC_PROFILE_SELECT,61,16,274,125,CBS_DROPDOWNLIST | 
+                    WS_VSCROLL | WS_TABSTOP
+    PUSHBUTTON      "Verarbeitung &starten",IDC_PROFILE_STARTPUBLISH,338,15,
+                    95,15
+    CTEXT           "Profil-Auswahl",IDC_PROFILE_CAPTION,0,0,439,11,
+                    SS_CENTERIMAGE
+END
+
+IDD_PUBLISH_PROGRESS DIALOG DISCARDABLE  0, 0, 330, 131
+STYLE DS_MODALFRAME | WS_POPUP | WS_CAPTION
+CAPTION "Dialog"
+FONT 8, "MS Sans Serif"
+BEGIN
+    PUSHBUTTON      "Abbrechen",IDC_CANCEL_PUBLISH,143,110,50,14
+    LTEXT           "Bitte haben Sie Geduld, während das Dokument veröffentlicht wird.",
+                    IDC_STATIC,7,7,316,19
+    CONTROL         "Progress1",IDC_PROGRESS_TOTAL,"msctls_progress32",
+                    WS_BORDER,7,40,316,14
+    LTEXT           "Gesamtfortschritt:",IDC_STATIC,7,29,107,8
+    LTEXT           "Detail-Fortschritt:",IDC_STATIC,7,66,66,8
+    LTEXT           "Schreiben der Streaming-Dateien",IDC_LB_DETAIL,83,66,
+                    130,8
+    CONTROL         "Progress1",IDC_PROGRESS_DETAIL,"msctls_progress32",
+                    WS_BORDER,7,76,316,14
+    LTEXT           "Restzeit:",IDC_STATIC,252,66,34,8
+    RTEXT           "< 1min",IDC_LB_TIMELEFT,291,65,32,8
+END
+
+
+#ifndef _MAC
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040704B0"
+        BEGIN
+            VALUE "CompanyName", "\0"
+            VALUE "FileDescription", "MFC-Anwendung Publisher\0"
+            VALUE "FileVersion", "1, 0, 0, 1\0"
+            VALUE "InternalName", "Publisher\0"
+            VALUE "LegalCopyright", "Copyright (C) 2004\0"
+            VALUE "LegalTrademarks", "\0"
+            VALUE "OriginalFilename", "Publisher.EXE\0"
+            VALUE "ProductName", "Anwendung Publisher\0"
+            VALUE "ProductVersion", "1, 0, 0, 1\0"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x407, 1200
+    END
+END
+
+#endif    // !_MAC
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 48
+    END
+
+    IDD_LRDINFO_FORM, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 266
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 273
+    END
+
+    IDD_SETTINGS_TARGET, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 221
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 170
+    END
+
+    IDD_SETTINGS_MESSAGE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 206
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 31
+    END
+
+    IDD_SETTINGS_FORM, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 265
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 294
+    END
+
+    IDD_SETTINGS_TEMPLATE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 221
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 98
+    END
+
+    IDD_SETTINGS_SCORM, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 221
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 148
+    END
+
+    IDD_SETTINGS_SLIDES, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 221
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 145
+    END
+
+    IDD_SETTINGS_DIALOGTEMPLATE, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 221
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 170
+    END
+
+    IDD_SETTINGS_LPD, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 221
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 111
+    END
+
+    IDD_SETTINGS_VIDEOCLIPS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 221
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 140
+    END
+
+    IDD_SETTINGS_MEDIA_WM, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 221
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 156
+    END
+
+    IDD_SETTINGS_MEDIA_RM, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 220
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 161
+    END
+
+    IDD_SETTINGS_TRANSFER, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 221
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 178
+    END
+
+    IDD_SETTINGS_MEDIA, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 221
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 197
+    END
+
+    IDD_FRONTPAGE, DIALOG
+    BEGIN
+        LEFTMARGIN, 27
+        RIGHTMARGIN, 367
+        VERTGUIDE, 117
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 183
+    END
+
+    IDD_PROFILE_VIEW, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 433
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 30
+    END
+
+    IDD_PUBLISH_PROGRESS, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 323
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 124
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog Info
+//
+
+IDD_SETTINGS_SLIDES DLGINIT
+BEGIN
+    IDC_SLIDES_SIZE_SELECT, 0x403, 21, 0
+0x3132, 0x7836, 0x3631, 0x2032, 0x2020, 0x2820, 0x3436, 0x7830, 0x3834, 
+0x2930, "\000" 
+    IDC_SLIDES_SIZE_SELECT, 0x403, 21, 0
+0x3733, 0x7836, 0x3832, 0x2032, 0x2020, 0x2820, 0x3038, 0x7830, 0x3036, 
+0x2930, "\000" 
+    IDC_SLIDES_SIZE_SELECT, 0x403, 22, 0
+0x3036, 0x7830, 0x3435, 0x2030, 0x2020, 0x2820, 0x3031, 0x3432, 0x3778, 
+0x3836, 0x0029, 
+    IDC_SLIDES_SIZE_SELECT, 0x403, 22, 0
+0x3237, 0x7838, 0x3435, 0x2036, 0x2020, 0x2820, 0x3131, 0x3235, 0x3878, 
+0x3436, 0x0029, 
+    IDC_SLIDES_SIZE_SELECT, 0x403, 23, 0
+0x3538, 0x7836, 0x3436, 0x2032, 0x2020, 0x2820, 0x3231, 0x3038, 0x3178, 
+0x3230, 0x2934, "\000" 
+    IDC_SLIDES_SIZE_SELECT, 0x403, 22, 0
+0x3131, 0x3637, 0x3878, 0x3238, 0x2020, 0x3128, 0x3036, 0x7830, 0x3231, 
+0x3030, 0x0029, 
+    0
+END
+
+IDD_SETTINGS_MEDIA_WM DLGINIT
+BEGIN
+    IDC_WM_TARGETBITRATE, 0x403, 23, 0
+0x6f4d, 0x6564, 0x2f6d, 0x5349, 0x4e44, 0x2820, 0x3635, 0x6b20, 0x6962, 
+0x2f74, 0x2973, "\000" 
+    IDC_WM_TARGETBITRATE, 0x403, 23, 0
+0x7544, 0x6c61, 0x4920, 0x4453, 0x204e, 0x3128, 0x3832, 0x6b20, 0x6962, 
+0x2f74, 0x2973, "\000" 
+    IDC_WM_TARGETBITRATE, 0x403, 17, 0
+0x5344, 0x204c, 0x3328, 0x3438, 0x6b20, 0x6962, 0x2f74, 0x2973, "\000" 
+    IDC_WM_TARGETBITRATE, 0x403, 18, 0
+0x414c, 0x204e, 0x3128, 0x3030, 0x2030, 0x626b, 0x7469, 0x732f, 0x0029, 
+
+    IDC_WM_TARGETBITRATE, 0x403, 18, 0
+0x6542, 0x756e, 0x7a74, 0x7265, 0x6564, 0x6966, 0x696e, 0x7265, 0x0074, 
+
+    0
+END
+
+IDD_SETTINGS_MEDIA_RM DLGINIT
+BEGIN
+    IDC_RM_VIDEOQUALITY_SELECT, 0x403, 17, 0
+0x6542, 0x6577, 0x7567, 0x676e, 0x6e65, 0x7720, 0x6965, 0x6863, "\000" 
+    IDC_RM_VIDEOQUALITY_SELECT, 0x403, 7, 0
+0x6f4e, 0x6d72, 0x6c61, "\000" 
+    IDC_RM_VIDEOQUALITY_SELECT, 0x403, 14, 0
+0x6942, 0x646c, 0x7265, 0x7320, 0x6863, 0x7261, 0x0066, 
+    IDC_RM_VIDEOQUALITY_SELECT, 0x403, 8, 0
+0x6944, 0x7361, 0x6f68, 0x0077, 
+    0
+END
+
+IDD_SETTINGS_FORM DLGINIT
+BEGIN
+    IDC_SETTINGS_TARGETFORMAT, 0x403, 41, 0
+0x454c, 0x5443, 0x5255, 0x494e, 0x5954, 0x5020, 0xe472, 0x6573, 0x746e, 
+0x7461, 0x6f69, 0x736e, 0x6f64, 0x756b, 0x656d, 0x746e, 0x2820, 0x2e2a, 
+0x706c, 0x2964, "\000" 
+    IDC_SETTINGS_TARGETFORMAT, 0x403, 38, 0
+0x7453, 0x6572, 0x6d61, 0x6e69, 0x2067, 0x654d, 0x6964, 0x2061, 0x6557, 
+0x2d62, 0x6f44, 0x756b, 0x656d, 0x746e, 0x2820, 0x2e2a, 0x7468, 0x6c6d, 
+0x0029, 
+    IDC_SETTINGS_TARGETFORMAT, 0x403, 27, 0
+0x6c46, 0x7361, 0x2068, 0x6557, 0x2d62, 0x6f44, 0x756b, 0x656d, 0x746e, 
+0x2820, 0x2e2a, 0x7773, 0x2966, "\000" 
+    0
+END
+
+IDD_SETTINGS_MEDIA DLGINIT
+BEGIN
+    IDC_MEDIA_FORMAT, 0x403, 21, 0
+0x6957, 0x646e, 0x776f, 0x2073, 0x654d, 0x6964, 0x2d61, 0x6f46, 0x6d72, 
+0x7461, "\000" 
+    IDC_MEDIA_FORMAT, 0x403, 17, 0
+0x6552, 0x6c61, 0x654d, 0x6964, 0x2d61, 0x6f46, 0x6d72, 0x7461, "\000" 
+    0
+END
+
+IDD_FRONTPAGE DLGINIT
+BEGIN
+    IDC_FRONTPAGE_PROFILE, 0x403, 41, 0
+0x454c, 0x5443, 0x5255, 0x494e, 0x5954, 0x5020, 0xe472, 0x6573, 0x746e, 
+0x7461, 0x6f69, 0x736e, 0x6f64, 0x756b, 0x656d, 0x746e, 0x2820, 0x6f6c, 
+0x616b, 0x296c, "\000" 
+    IDC_FRONTPAGE_PROFILE, 0x403, 43, 0
+0x7453, 0x6572, 0x6d61, 0x6e69, 0x2067, 0x654d, 0x6964, 0x2f61, 0x6552, 
+0x6c61, 0x654d, 0x6964, 0x2d61, 0x6f44, 0x756b, 0x656d, 0x746e, 0x2820, 
+0x6f6c, 0x616b, 0x296c, "\000" 
+    IDC_FRONTPAGE_PROFILE, 0x403, 47, 0
+0x7453, 0x6572, 0x6d61, 0x6e69, 0x2067, 0x654d, 0x6964, 0x2f61, 0x6957, 
+0x646e, 0x776f, 0x2073, 0x654d, 0x6964, 0x2d61, 0x6f44, 0x756b, 0x656d, 
+0x746e, 0x2820, 0x6f6c, 0x616b, 0x296c, "\000" 
+    IDC_FRONTPAGE_PROFILE, 0x403, 23, 0
+0x6c46, 0x7361, 0x2d68, 0x6f44, 0x756b, 0x656d, 0x746e, 0x2820, 0x6f6c, 
+0x616b, 0x296c, "\000" 
+    0
+END
+
+IDD_SETTINGS_TRANSFER DLGINIT
+BEGIN
+    IDC_TRANSFER_SERVERTYPE, 0x403, 31, 0
+0x654b, 0x6e69, 0x5320, 0x7265, 0x6576, 0x2c72, 0x6c20, 0x6b6f, 0x6c61, 
+0x2065, 0x6957, 0x6465, 0x7265, 0x6167, 0x6562, "\000" 
+    IDC_TRANSFER_SERVERTYPE, 0x403, 12, 0
+0x5448, 0x5054, 0x532d, 0x7265, 0x6576, 0x0072, 
+    IDC_TRANSFER_SERVERTYPE, 0x403, 17, 0
+0x7453, 0x6572, 0x6d61, 0x6e69, 0x2067, 0x6553, 0x7672, 0x7265, "\000" 
+    0
+END
+
+IDD_PROFILE_VIEW DLGINIT
+BEGIN
+    IDC_PROFILE_SELECT, 0x403, 49, 0
+0x454c, 0x5443, 0x5255, 0x494e, 0x5954, 0x502d, 0xe472, 0x6573, 0x746e, 
+0x7461, 0x6f69, 0x2c6e, 0x6920, 0x206e, 0x7255, 0x7073, 0x7572, 0x676e, 
+0x7673, 0x7265, 0x657a, 0x6369, 0x6e68, 0x7369, "\000" 
+    IDC_PROFILE_SELECT, 0x403, 47, 0
+0x454c, 0x5443, 0x5255, 0x494e, 0x5954, 0x502d, 0xe472, 0x6573, 0x746e, 
+0x7461, 0x6f69, 0x2c6e, 0x6420, 0x7269, 0x6b65, 0x2074, 0x7561, 0x2066, 
+0x6557, 0x2d62, 0x6553, 0x7672, 0x7265, "\000" 
+    IDC_PROFILE_SELECT, 0x403, 56, 0
+0x6957, 0x646e, 0x776f, 0x2073, 0x654d, 0x6964, 0x2d61, 0x6f44, 0x756b, 
+0x656d, 0x746e, 0x202c, 0x6964, 0x6572, 0x746b, 0x6120, 0x6675, 0x5720, 
+0x6265, 0x532f, 0x7274, 0x6165, 0x696d, 0x676e, 0x532d, 0x7265, 0x6576, 
+0x0072, 
+    IDC_PROFILE_SELECT, 0x403, 52, 0
+0x6552, 0x6c61, 0x654d, 0x6964, 0x2d61, 0x6f44, 0x756b, 0x656d, 0x746e, 
+0x202c, 0x6964, 0x6572, 0x746b, 0x6120, 0x6675, 0x5720, 0x6265, 0x532f, 
+0x7274, 0x6165, 0x696d, 0x676e, 0x532d, 0x7265, 0x6576, 0x0072, 
+    0
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE PRELOAD DISCARDABLE 
+BEGIN
+    IDR_MAINFRAME           "Publisher\n\nProfil\nPublisher-Profile (*.lpp)\n.lpp\nPublisher.Profile\nPublisher-Profil"
+    IDD_SETTINGS_TARGET     "Zielformat"
+    IDD_SETTINGS_TEMPLATE   "Vorlage"
+    IDD_SETTINGS_SCORM      "SCORM"
+    IDD_SETTINGS_SLIDES     "Seiten"
+    IDD_SETTINGS_LPD        "Präsentationsdokument"
+    IDD_SETTINGS_VIDEOCLIPS "Video und Clips"
+    IDD_SETTINGS_WM         "Windows Media"
+    IDD_SETTINGS_RM         "RealMedia"
+END
+
+STRINGTABLE PRELOAD DISCARDABLE 
+BEGIN
+    AFX_IDS_APP_TITLE       "Publisher"
+    AFX_IDS_IDLEMESSAGE     "Bereit"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_INDICATOR_EXT        "ER"
+    ID_INDICATOR_CAPS       "UF"
+    ID_INDICATOR_NUM        "NUM"
+    ID_INDICATOR_SCRL       "RF"
+    ID_INDICATOR_OVR        "ÜB"
+    ID_INDICATOR_REC        "MA"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_FILE_NEW             "Erstellt ein neues Dokument.\nNeu"
+    ID_FILE_OPEN            "Öffnet ein bestehendes Dokument.\nÖffnen"
+    ID_FILE_CLOSE           "Schließt das aktive Dokument.\nSchließen"
+    ID_FILE_SAVE            "Speichert das aktive Dokument.\nSpeichern"
+    ID_FILE_SAVE_AS         "Speichert das aktive Dokument unter neuem Namen.\nSpeichern unter"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_APP_ABOUT            "Zeigt Programm-Informationen, Versionsnummer und Copyright an.\nInfo"
+    ID_APP_EXIT             "Verläßt die Anwendung; fragt, ob Dokumente gespeichert werden sollen.\nBeenden"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_FILE_MRU_FILE1       "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE2       "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE3       "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE4       "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE5       "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE6       "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE7       "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE8       "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE9       "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE10      "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE11      "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE12      "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE13      "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE14      "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE15      "Öffnet dieses Dokument."
+    ID_FILE_MRU_FILE16      "Öffnet dieses Dokument."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_NEXT_PANE            "Wechselt zum nächsten Fensterausschnitt.\nNächster Ausschnitt"
+    ID_PREV_PANE            "Springt zum vorherigen Fensterausschnitt zurück.\nVorheriger Ausschnitt"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_WINDOW_SPLIT         "Teilt das aktive Fenster in Ausschnitte.\nTeilen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_EDIT_CLEAR           "Löscht die Markierung.\nLöschen"
+    ID_EDIT_CLEAR_ALL       "Löscht alles.\nAlles löschen"
+    ID_EDIT_COPY            "Kopiert die Markierung und überträgt sie in die Zwischenablage.\nKopieren"
+    ID_EDIT_CUT             "Entfernt die Markierung und überträgt sie in die Zwischenablage.\nAusschneiden"
+    ID_EDIT_FIND            "Sucht den angegebenen Text.\nSuchen"
+    ID_EDIT_PASTE           "Fügt den Inhalt der Zwischenablage ein.\nEinfügen"
+    ID_EDIT_REPEAT          "Wiederholt die letzte Aktion.\nWiederholen"
+    ID_EDIT_REPLACE         "Ersetzt einen bestimmten Text durch einen anderen.\nErsetzen"
+    ID_EDIT_SELECT_ALL      "Markiert das gesamte Dokument.\nAlles markieren"
+    ID_EDIT_UNDO            "Macht die letzte Aktion rückgängig.\nRückgängig"
+    ID_EDIT_REDO            "Wiederholt die vorher rückgängig gemachte Aktion.\nWiederherstellen"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    ID_VIEW_TOOLBAR         "Blendet die Symbolleiste ein oder aus.\nSymbolleiste ein-/ausschalten"
+    ID_VIEW_STATUS_BAR      "Blendet die Statusleiste ein oder aus.\nStatusleiste ein-/ausschalten"
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    AFX_IDS_SCSIZE          "Ändert die Fenstergröße."
+    AFX_IDS_SCMOVE          "Ändert die Position des Fensters."
+    AFX_IDS_SCMINIMIZE      "Verkleinert das Fenster zu einem Symbol."
+    AFX_IDS_SCMAXIMIZE      "Vergrößert das Fenster zu voller Größe."
+    AFX_IDS_SCNEXTWINDOW    "Wechselt zum nächsten Dokumentfenster."
+    AFX_IDS_SCPREVWINDOW    "Wechselt zum vorherigen Dokumentfenster."
+    AFX_IDS_SCCLOSE         "Schließt das aktive Fenster und fordert zur Dokumentspeicherung auf."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    AFX_IDS_SCRESTORE       "Stellt das Fenster in seiner normalen Größe wieder her."
+    AFX_IDS_SCTASKLIST      "Aktiviert die Task-Liste."
+END
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    IDD_SETTINGS_TRANSFER   "Veröffentlichung"
+    IDD_SETTINGS_MEDIA      "Medien-Format"
+END
+
+#endif    // Deutsch (Deutschland) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)
+#ifdef _WIN32
+LANGUAGE 7, 1
+#pragma code_page(1252)
+#endif //_WIN32
+#include "res\Publisher.rc2"  // Nicht mit Microsoft Visual C++ bearbeitete Ressourcen
+#include "l.deu\afxres.rc"          // Standardkomponenten
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

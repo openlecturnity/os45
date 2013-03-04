@@ -1,0 +1,95 @@
+/* ------------------------------------------------------------------------
+ * Variable definitions
+ * ------------------------------------------------------------------------ */
+
+var g_baseDocumentName = '%BaseDocumentName%';
+var g_playerWarningMessage = '%PluginRmWmNotDetected%';
+
+var g_slidesWidth = %SlidesWidth%;
+var g_slidesHeight = %SlidesHeight%;
+
+var g_hasVideo = %HasVideo%;
+var g_videoWidth = %VideoWidth%;
+var g_videoHeight = %VideoHeight%;
+var g_hasStillImage = %HasStillImage%;
+var g_stillImageWidth = %StillImageWidth%;
+var g_stillImageHeight = %StillImageHeight%;
+
+var g_thumbCount = %NumOfThumbnails%;
+
+var g_hasClips = %HasClips%;
+var g_numOfClips = %NumOfClips%;
+
+var g_isAutostartMode = %IsAutostartMode%;
+var g_isStandaloneMode = %IsStandalone%; 
+var g_hasTesting = %HasTesting%;
+var g_scormEnabled = %ScormEnabled%;
+var g_pluginContextMenuEnabled = %PluginContextMenuEnabled%;
+
+var g_scormLoaded = false;
+var g_LMSResumeSupported = false;
+
+var g_returnPosition = 0;
+var g_sessionTime = 0;
+
+var maxLayerIndex = %MaxLayerIndex%;
+
+// Declaration of g_mediaStartTimes and g_mediaDurations
+%MediaData%
+
+// Declaration of g_clipEntries
+%ClipEntries%
+
+// Declaration of g_visitedPages - use to track completion status
+var g_visitedPages = new Array();
+for(var i = 0; i < g_thumbCount; i++)
+	g_visitedPages[i] = "false";
+
+// Declaration of g_thumbEntries
+%ThumbEntries%
+
+// Declaration of g_slideEntries
+%SlideEntries%
+
+// Declaration of g_tpEntries
+%TelepointerEntries%
+
+// Declaration of g_interactionEntries
+%InteractionEntries%
+
+// Declaration of g_stopmarkTimes
+%StopmarkEntries%
+
+// Declaration of g_targetmarkTimes
+%TargetmarkEntries%
+
+// Error messages
+var g_realPnrDocMissing = '%RmPnrDocMissing%';
+var PNR_DOC_MISSING = -2147221496;
+var g_realPnrNetConnect = '%RmPnrNetConnect%';
+var PNR_NET_CONNECT = -2147221436;
+var g_realPnrInvalidHost = '%RmPnrInvalidHost%';
+var PNR_INVALID_HOST = -2147221433;
+var g_realPnrServerAlert = '%RmPnrServerAlert%';
+var PNR_SERVER_ALERT = -2147221308;
+var g_realPnrDnr = '%RmPnrDnr%';
+var PNR_DNR = -2147217468;
+var g_realPnrServerTimeout = '%RmPnrServerTimeout%';
+var PNR_SERVER_TIMEOUT = -2147221428;
+var g_realPnrFail = '%RmPnrFail%';
+var PNR_FAIL = -2147467259;
+var g_realPluginCheckError = '%RmPluginCheckError%';
+var g_realUnknownError = '%RmUnknownError%';
+var g_realHttpsWarning = '%RmHttpsWarning%';
+
+var g_wmNetscapeLess71 = '%WmNetscapeLess71%';
+var g_wmNetscape8 = '%WmNetscape8%';
+var g_wmFirefoxLess10 = '%WmFirefoxLess10%';
+var g_wmMozillaLess16 = '%WmMozillaLess16%';
+var g_wmBrowserNotSupported = '%WmBrowserNotSupported%';
+var g_wmActivexControlRequired = '%WmActivexControlRequired%';
+var g_wmActivexControlWarning = '%WmActivexControlWarning%';
+var g_wmActivexControlDownload = '%WmActivexControlDownload%';
+var g_wmActivexControlUnknown = '%WmActivexControlUnknown%';
+var g_wmProgressiveDownloadAlert = '%WmProgressiveDownloadAlert%';
+var g_wmProgressiveDownloadWmp64 = '%WmProgressiveDownloadWmp64%';

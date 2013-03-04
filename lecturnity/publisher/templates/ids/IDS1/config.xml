@@ -1,0 +1,216 @@
+<templateConfig name="LECTURNITY WebPlayer Full Screen" 
+                title_de="Standard-Design: Vollbild (nur Internet Explorer)"
+                title_en="Standard design: Full screen (only Internet Explorer)"
+                description_de="Vorlage im Standard-Design mit viel Platz für Folien. Video wird nicht unterstützt. Der Vollbild-Modus ist auf den Internet Explorer beschränkt."
+                description_en="Template in standard design providing much space for slides. Video is not supported. Full screen support is restricted to the Internet Explorer."
+                author="imc AG" 
+                copyright="(c) 2005 imc AG, Office Freiburg" 
+                screenshot="screenshot.jpg">
+
+   <configurations>
+      <config name="normalDocument">true</config>
+      <config name="standaloneDocument">true</config>
+   </configurations>
+
+   <id>{20390F92-9BC0-4711-AD46-B09D6B19089E}</id>
+   <isScormCompliant>true</isScormCompliant>
+   <isUtfTemplate>true</isUtfTemplate>
+
+   <configurableKeywords>
+      <keyword name="%LogoImage%" name_de="Logo auf der Steuerungsleiste" name_en="Logo on control bar" type="image" minwidth="0" minheight="0" maxwidth="100" maxheight="34"></keyword>
+      <keyword name="%LogoImageUrl%" name_de="URL für Logo auf Steuerungsleiste" name_en="URL for Logo on control bar" type="text" maxlength="255">http://www.lecturnity.de</keyword>
+      <keyword name="%BackgroundColor%" name_de="Hintergrundfarbe" name_en="Background color" type="color">#F1EFE2</keyword>
+      <keyword name="%IntroPageLogo%" name_de="Intro-Seite: Logo-Bild" name_en="Intro screen: Logo image" type="image" minwidth="0" minheight="0" maxwidth="640" maxheight="480"></keyword>
+      <keyword name="%IntroBackgroundColor%" name_de="Intro-Seite: Hintergrundfarbe" name_en="Intro screen: Background color" type="color">#F1EFE2</keyword>
+      <keyword name="%IntroBorderColor%" name_de="Intro-Seite: Rahmenfarbe" name_en="Intro screen: Border color" type="color">#666666</keyword>
+      <keyword name="%IntroBorderWidth%" name_de="Intro-Seite: Rahmenbreite (auch 0 möglich)" name_en="Intro screen: Border width (may be 0)" type="integer">2</keyword>
+      <keyword name="%IntroText%" name_de="Intro-Seite: Zusätzlicher Text" name_en="Intro screen: Additional text" type="text"></keyword>
+      <keyword name="%IntroTextColor%" name_de="Intro-Seite: Textfarbe" name_en="Intro screen: Text color" type="color">#333333</keyword>
+   </configurableKeywords>
+
+   <normalDocument>
+      <slidesSize>
+         <width>%ScreenWidth%</width>
+         <height>%ScreenHeight% - 113</height>
+      </slidesSize>
+
+      <staticFiles>
+         <file>config.xml</file>
+         <file>js/APIWrapper.js</file>
+         <file>js/browserlib.js</file>
+         <file>js/button.js</file>
+         <file>js/evhandler.js</file>
+         <file>js/lslider.js</file>
+         <file>js/scorm.js</file>
+         <file>js/slides.js</file>
+         <file>js/utils.js</file>
+         <file>images/bubble.gif</file>
+         <file>images/button_back.png</file>
+         <file>images/button_back_f2.png</file>
+         <file>images/button_back_f3.png</file>
+         <file>images/button_back_f4.png</file>
+         <file>images/button_end.png</file>
+         <file>images/button_end_f2.png</file>
+         <file>images/button_end_f3.png</file>
+         <file>images/button_end_f4.png</file>
+         <file>images/button_forward.png</file>
+         <file>images/button_forward_f2.png</file>
+         <file>images/button_forward_f3.png</file>
+         <file>images/button_forward_f4.png</file>
+         <file>images/button_home.png</file>
+         <file>images/button_home_f2.png</file>
+         <file>images/button_home_f3.png</file>
+         <file>images/button_home_f4.png</file>
+         <file>images/button_mute.png</file>
+         <file>images/button_mute_f2.png</file>
+         <file>images/button_mute_f3.png</file>
+         <file>images/button_mute_f4.png</file>
+         <file>images/button_pause.png</file>
+         <file>images/button_pause_f2.png</file>
+         <file>images/button_pause_f3.png</file>
+         <file>images/button_pause_f4.png</file>
+         <file>images/button_play.png</file>
+         <file>images/button_play_f2.png</file>
+         <file>images/button_play_f3.png</file>
+         <file>images/button_play_f4.png</file>
+         <file>images/controlbar_bg.png</file>
+         <file>images/controlbar_left.png</file>
+         <file>images/controlbar_right.png</file>
+         <file>images/initialize_de.png</file>
+         <file>images/initialize_en.png</file>
+         <file>images/telepointer24.gif</file>
+         <file>images/timeslider_bg.png</file>
+         <file>images/timeslider_knob.png</file>
+         <file>images/trans.gif</file>
+         <file>images/volumeslider_bg.png</file>
+         <file>images/ie_xpsp2_internet_options.png</file>
+         <file>images/button_exit.png</file>
+         <file>images/button_exit_f2.png</file>
+         <file>images/button_exit_f3.png</file>
+         <file>images/button_exit_f4.png</file>
+      </staticFiles>
+
+      <templateFiles>
+         <file writeToRoot="true" prefix="%BaseDocumentName%" isIndex="true">index.html.tmpl</file>
+         <file writeToRoot="true">normal/__frames.html.tmpl</file>
+         <file>__controlbar.html.tmpl</file>
+         <file writeToRoot="true">normal/__main.html.tmpl</file>
+         <file writeToRoot="true">normal/__slides.html.tmpl</file>
+         <file writeToRoot="true">normal/slides.css.tmpl</file>
+         <file writeToRoot="true">normal/style.css.tmpl</file>
+         <file>js/controlbar.js.tmpl</file>
+         <file>js/layout.js.tmpl</file>
+         <file>js/layoutapi.js.tmpl</file>
+         <file>js/variables.js.tmpl</file>
+      </templateFiles>
+
+      <realMedia>
+         <replaceKeywords>
+            <keyword name="%ControlJavaScript%">control_rm.js</keyword>
+         </replaceKeywords>
+
+         <staticFiles>
+            <file>js/control_rm.js</file>
+         </staticFiles>
+      </realMedia>
+
+      <windowsMedia>
+         <replaceKeywords>
+            <keyword name="%ControlJavaScript%">control_wm.js</keyword>
+         </replaceKeywords>
+
+         <staticFiles>
+            <file>js/control_wm.js</file>
+         </staticFiles>
+      </windowsMedia>
+   </normalDocument>
+
+   <standaloneDocument>
+      <staticFiles>
+         <file>config.xml</file>
+         <file>js/APIWrapper.js</file>
+         <file>js/browserlib.js</file>
+         <file>js/button.js</file>
+         <file>js/evhandler.js</file>
+         <file>js/lslider.js</file>
+         <file>js/scorm.js</file>
+         <file>js/slides.js</file>
+         <file>js/utils.js</file>
+         <file>images/button_back.png</file>
+         <file>images/button_back_f2.png</file>
+         <file>images/button_back_f3.png</file>
+         <file>images/button_back_f4.png</file>
+         <file>images/button_end.png</file>
+         <file>images/button_end_f2.png</file>
+         <file>images/button_end_f3.png</file>
+         <file>images/button_end_f4.png</file>
+         <file>images/button_forward.png</file>
+         <file>images/button_forward_f2.png</file>
+         <file>images/button_forward_f3.png</file>
+         <file>images/button_forward_f4.png</file>
+         <file>images/button_home.png</file>
+         <file>images/button_home_f2.png</file>
+         <file>images/button_home_f3.png</file>
+         <file>images/button_home_f4.png</file>
+         <file>images/button_mute.png</file>
+         <file>images/button_mute_f2.png</file>
+         <file>images/button_mute_f3.png</file>
+         <file>images/button_mute_f4.png</file>
+         <file>images/button_pause.png</file>
+         <file>images/button_pause_f2.png</file>
+         <file>images/button_pause_f3.png</file>
+         <file>images/button_pause_f4.png</file>
+         <file>images/button_play.png</file>
+         <file>images/button_play_f2.png</file>
+         <file>images/button_play_f3.png</file>
+         <file>images/button_play_f4.png</file>
+         <file>images/controlbar_bg.png</file>
+         <file>images/controlbar_left.png</file>
+         <file>images/controlbar_right.png</file>
+         <file>images/initialize_de.png</file>
+         <file>images/initialize_en.png</file>
+         <file>images/timeslider_bg.png</file>
+         <file>images/timeslider_knob.png</file>
+         <file>images/trans.gif</file>
+         <file>images/volumeslider_bg.png</file>
+         <file>images/ie_xpsp2_internet_options.png</file>
+         <file>images/button_exit.png</file>
+         <file>images/button_exit_f2.png</file>
+         <file>images/button_exit_f3.png</file>
+         <file>images/button_exit_f4.png</file>
+      </staticFiles>
+
+      <templateFiles>
+         <file writeToRoot="true" prefix="%BaseDocumentName%" isIndex="true">index.html.tmpl</file>
+         <file writeToRoot="true">standalone/__frames.html.tmpl</file>
+         <file>__controlbar.html.tmpl</file>
+         <file writeToRoot="true">standalone/__main.html.tmpl</file>
+         <file writeToRoot="true">standalone/style.css.tmpl</file>
+         <file>js/controlbar.js.tmpl</file>
+         <file>js/layoutstandalone.js.tmpl</file>
+         <file>js/layoutapi.js.tmpl</file>
+         <file>js/variables.js.tmpl</file>
+      </templateFiles>
+
+      <realMedia>
+         <replaceKeywords>
+            <keyword name="%ControlJavaScript%">control_rm.js</keyword>
+         </replaceKeywords>
+
+         <staticFiles>
+            <file>js/control_rm.js</file>
+         </staticFiles>
+      </realMedia>
+
+      <windowsMedia>
+         <replaceKeywords>
+            <keyword name="%ControlJavaScript%">control_wm.js</keyword>
+         </replaceKeywords>
+
+         <staticFiles>
+            <file>js/control_wm.js</file>
+         </staticFiles>
+      </windowsMedia>
+   </standaloneDocument>
+
+</templateConfig>

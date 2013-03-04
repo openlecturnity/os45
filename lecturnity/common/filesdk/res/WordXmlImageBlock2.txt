@@ -1,0 +1,10 @@
+</w:binData>
+						<v:shape id="%SHAPEID%" type="#_x0000_t75" style="width:%WIDTH%pt;height:%HEIGHT%pt" o:bordertopcolor="this" o:borderleftcolor="this" o:borderbottomcolor="this" o:borderrightcolor="this">
+							<v:imagedata src="wordml://%IMAGETYPE%" o:title="%IMAGENAME%"/>
+							<w10:bordertop type="%BORDERTYPE%" width="4"/>
+							<w10:borderleft type="%BORDERTYPE%" width="4"/>
+							<w10:borderbottom type="%BORDERTYPE%" width="4"/>
+							<w10:borderright type="%BORDERTYPE%" width="4"/>
+						</v:shape>
+				</w:pict>
+		</w:p>

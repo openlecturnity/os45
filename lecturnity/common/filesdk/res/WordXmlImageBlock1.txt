@@ -1,0 +1,6 @@
+			<w:p>
+					<w:pPr>
+						%KEEPNEXT%
+					</w:pPr>
+					<w:pict>%SHAPETYPE%
+						<w:binData w:name="wordml://%IMAGETYPE%">

@@ -1,0 +1,78 @@
+function layout_enableControl(btId, bEnable)
+{
+  // We do not have a stop button
+  if (!(btId == "stop"))
+    top.control.button_enableButton("layout" + btId, bEnable);
+}
+
+function layout_displayIsBuffering(bDisplay)
+{
+  top.control.controlbar_displayIsBuffering(bDisplay);
+}
+
+function layout_setPlayIsPause(bPlayIsPause)
+{
+  if (bPlayIsPause)
+    top.control.button_setButtonState("layoutplay", "1");
+  else
+    top.control.button_setButtonState("layoutplay", "0");
+}
+
+function layout_setIsMuted(bIsMuted)
+{
+  if (bIsMuted)
+    top.control.button_setButtonState("layoutmute", "1");
+  else
+    top.control.button_setButtonState("layoutmute", "0");
+}
+
+function layout_updateTime(timeMs)
+{
+  if (!g_isSliding)
+  {
+    top.control.g_layoutIgnoreTimeChange = true;
+    top.control.g_layoutTimeSlider.setValue(timeMs);
+    top.control.g_layoutIgnoreTimeChange = false;
+  }
+
+  var delta = g_lastDisplayedTimeMs - timeMs;
+  if (delta >= 1000 || delta <= -1000)
+  {
+    top.control.controlbar_displayCurrentTime(timeMs);
+    g_lastDisplayedTimeMs = timeMs;
+  }
+
+  if (g_isStandaloneMode)
+    return;
+
+  var newSlide = layout_getSlideForTime(timeMs);
+
+  if (newSlide != g_layoutCurrentSlide)
+  {
+    frames['thumbsFrame'].thumbs_activateSlide(newSlide + 1);
+
+    var slideString = "%SlideLabel% " + (newSlide+1) + " %SlideLabelOf% " + g_thumbCount;
+    top.control.controlbar_setSlideLabelText(slideString);
+
+    g_layoutCurrentSlide = newSlide;
+  }
+}
+
+function layout_getSlidesTop()
+{
+  var borderBottom = 22;
+  var webplayerHeight = 35;
+
+  var height;
+  if (!isIE)
+    height = window.innerHeight + webplayerHeight;
+  else
+    height = document.body.offsetHeight + webplayerHeight;
+
+  return (height - webplayerHeight - borderBottom - g_slidesHeight);
+}
+
+function layout_getSlidesLeft()
+{
+  return g_slidesOffset;
+}

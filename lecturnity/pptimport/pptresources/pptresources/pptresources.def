@@ -1,0 +1,27 @@
+; pptresources.def : Deklariert die Modulparameter für die DLL.
+
+LIBRARY      "pptresources"
+
+EXPORTS
+	ShowImportWizard         @1
+	ParseTitleMaster         @2
+	ParseMaster				 @3
+	ImportTemplate			 @4
+	ImportSlide				 @5
+	TimerUpdate				 @6
+	EndProgressDialog    	 @7
+	GetMainCaption			 @8
+	GetOpenLSDFileErrorMsg	 @9
+	GetDiskFullMsg			 @10
+	GetOverwriteImageMsg	 @11
+	GetNoFileMsg			 @12
+	GetMenuSaveAsLSD		 @13
+	GetMenuOpenInAssistant	 @14
+	ShowResultDialog		 @15
+	GetSourceDirectory		 @16
+	InsertRestrictedObject   @17
+	ShowProgressDialog		 @18
+	GetOffice2007Msg		 @19
+	GetIllegalCharacterMsg	 @20
+	GetReadOnlyErrorMessage  @21
+	GetPresentationIsFinalErrorMessage @22

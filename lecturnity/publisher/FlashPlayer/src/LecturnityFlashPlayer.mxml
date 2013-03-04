@@ -1,0 +1,3818 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Application xmlns:mx="http://www.adobe.com/2006/mxml" 
+                name="LecFlashPlayer" 
+                layout="absolute" 
+                frameRate="8" 
+                backgroundColor="#A0A0A0" 
+                preloader="utils.preloader.CustomPreloader" 
+                usePreloader="true" 
+                xmlns:local="*" 
+                xmlns:iconcbo="utils.iconcombobox.*" 
+                xmlns:controls="com.fxcomponents.controls.*" 
+                horizontalScrollPolicy="off" 
+                verticalScrollPolicy="off" 
+                initialize="OnInit()" 
+                applicationComplete="OnApplicationComplete()" 
+                creationComplete="OnCreationComplete()" 
+                resize="OnResize()" 
+                >
+
+<!-- REVIEW
+LecturnityFlashPlayer.mxml too complex: e. g. has too many global variables
+- Put code to as files??
+- Create a localization object
+- Create a structure view object
+- Create a search object
+-> Object orientation: all objects manage/interpret their data themselves
+
+Comments in LecturnityContentFacade: What is it used for and how is it done?
+-->
+
+
+<!--
+***** Script part
+//-->
+
+    <mx:Script>
+        <![CDATA[
+            import mx.controls.Image;
+            import mx.events.MetadataEvent;
+            import mx.core.UIComponent;
+            import mx.controls.VideoDisplay;
+            import mx.controls.Label;
+            import mx.collections.XMLListCollection;
+            import mx.collections.SortField;
+            import mx.collections.Sort;
+            import mx.validators.ValidationResult;
+
+            //import flash.events.Event;
+            import mx.events.ListEvent;
+            import mx.events.SliderEvent;
+            import mx.containers.HBox;
+            import mx.collections.ArrayCollection;
+
+            // Used for the image smoothing: 
+            import flash.system.Security;
+            // From SLIDESTAR:
+            import flx.external.FlashInterface;
+            import org.osflash.thunderbolt.Logger;
+            // For XML import:
+            import mx.rpc.events.ResultEvent;
+            // For Video:
+            import mx.events.VideoEvent;
+            // ToolTip Manager
+            import mx.managers.ToolTipManager;
+//            // Browser Manager (used to set the title of the Browser window)
+//            import mx.managers.BrowserManager;
+//            import mx.managers.IBrowserManager;
+//            import mx.events.BrowserChangeEvent;
+
+            // Utils
+            import utils.smoothimage.SmoothImage;
+            import utils.iconcombobox.IconComboBox;
+
+            // ExternalInterface for communication ActionScript <=> JavaScript
+            import flash.external.ExternalInterface;
+
+            // Allow all domains
+            flash.system.Security.allowDomain("*");
+
+
+            // Static constants
+            public static const ENABLED:uint = 0;
+            public static const DISABLED:uint = 1;
+            public static const HIDDEN:uint = 2;
+
+
+            // Public FlashVars 'Configurable Variables'
+            [Bindable] public var baseUrl:String;
+            [Bindable] public var streamUrl:String;
+            [Bindable] public var streamStripFlvSuffix:String;
+            [Bindable] public var videoFlvName:String;
+            [Bindable] public var aClipFlvNames:ArrayCollection;
+            [Bindable] public var autoStart:String;
+
+
+            // Localization Array
+            [Bindable] private var locales:Array = ["en_US","de_DE"];
+            [Bindable] private var localeFlags:Array = [
+                                        { label: "", icon: "FlagGB" },
+                                        { label: "", icon: "FlagDE" },
+                                        ];
+            [Bindable] private var localeNames:Array = ["EN","DE"];
+
+
+            // Embedded images and icons
+
+            // Icons for the Tabs 'Overview', 'Search', 'Info' 
+            [Bindable]
+            [Embed(source="assets/tab/viewerOverview.png")]
+            public var ImgOverview:Class;
+            [Bindable]
+            [Embed(source="assets/tab/viewerOverviewOn.png")]
+            public var ImgOverviewOn:Class;
+            [Bindable]
+            [Embed(source="assets/tab/viewerOverviewDown.png")]
+            public var ImgOverviewDown:Class;
+            [Bindable]
+            [Embed(source="assets/tab/viewerSearch.png")]
+            public var ImgSearch:Class;
+            [Bindable]
+            [Embed(source="assets/tab/viewerSearchOn.png")]
+            public var ImgSearchOn:Class;
+            [Bindable]
+            [Embed(source="assets/tab/viewerSearchDown.png")]
+            public var ImgSearchDown:Class;
+            [Bindable]
+            [Embed(source="assets/tab/viewerInfo.png")]
+            public var ImgInfo:Class;
+            [Bindable]
+            [Embed(source="assets/tab/viewerInfoOn.png")]
+            public var ImgInfoOn:Class;
+            [Bindable]
+            [Embed(source="assets/tab/viewerInfoDown.png")]
+            public var ImgInfoDown:Class;
+            // Icons for disabled navigation elements 
+            [Bindable]
+            [Embed(source="assets/viewerThumbnaviStartDisabled.png")]
+            public var ImgFirstDisabled:Class;
+            [Bindable]
+            [Embed(source="assets/viewerThumbnaviPrevDisabled.png")]
+            public var ImgPrevDisabled:Class;
+            [Bindable]
+            [Embed(source="assets/viewerPlayDisabled.png")]
+            public var ImgPlayDisabled:Class;
+            [Bindable]
+            [Embed(source="assets/viewerThumbnaviNextDisabled.png")]
+            public var ImgNextDisabled:Class;
+            [Bindable]
+            [Embed(source="assets/viewerThumbnaviEndDisabled.png")]
+            public var ImgEndDisabled:Class;
+            // Flag icons for localization
+            [Bindable]
+            [Embed(source="assets/miniflag_GB.gif")]
+            public var FlagGB:Class;
+            [Bindable]
+            [Embed(source="assets/miniflag_US.gif")]
+            public var FlagUS:Class;
+            [Bindable]
+            [Embed(source="assets/miniflag_DE.gif")]
+            public var FlagDE:Class;
+            [Bindable]
+            [Embed(source="assets/EvalNote.png")]
+            public var imgEvalNote:Class;
+            // Infinite progress bar for 'mask layer'
+            [Bindable]
+            [Embed(source='assets/LecInfiniteProgress.swf')]
+            public var lecInfiniteProgress:Class;
+            // Animated Progress SWF
+            [Bindable]
+            [Embed(source='assets/viewer_media_slider_track_fltr.swf')]
+            public var swfCls:Class;
+            // Arial font for Evaluation Note
+            [Bindable]
+            [Embed(source="assets/arial.ttf",
+                   fontName='myArialFont',
+                   mimeType='application/x-font')]
+            public var font1:Class;
+
+
+            // Used for the image smoothing: 
+            [Bindable] private var g_loaderContext:LoaderContext;
+
+            // Video Display
+            [Bindable] private var LecVideoDisplay:LecturnityVideoDisplay;
+            // Clip Display array
+            [Bindable] private var LecClipDisplayArray:Array;
+            // Clip Frames array
+            [Bindable] private var LecClipFrameArray:Array
+            // Still Image
+            [Bindable] private var LecStillImage:SmoothImage;
+
+            // Array collection for the list of 'SearchNote' elements
+            [Bindable] private var g_aSearchNotes:ArrayCollection = new ArrayCollection();
+            // Array collection for the list of 'PageInfo' elements
+            [Bindable] private var g_aPages:ArrayCollection = new ArrayCollection();
+            // Array collection for the list of 'HBox' elements in the Document Structure (DS)
+            [Bindable] private var g_aPageEntries:ArrayCollection = new ArrayCollection();
+            // Array collection for the list of 'ClipInfo' elements
+            [Bindable] private var g_aClips:ArrayCollection = new ArrayCollection();
+            // Array collection for 'FullText' elements
+            [Bindable] private var g_aFullTexts:ArrayCollection = new ArrayCollection();
+
+            // Some Player specific variables
+            [Bindable] private var g_nDefaultStructureWidth:int = 320;//335;
+            [Bindable] private var g_nDefaultScrollBarWidth:int = 20;
+            [Bindable] private var g_nSearchViewWidth:int 
+                = g_nDefaultStructureWidth - g_nDefaultScrollBarWidth;
+            [Bindable] private var g_bIsLecSwfLoaded:Boolean = false;
+            [Bindable] private var g_bIsLmdLoaded:Boolean = false;
+            [Bindable] private var g_bIsXmlLoaded:Boolean = false;
+            [Bindable] private var g_bAreFlashVarsChecked:Boolean = true; //Not used <-> false;
+            [Bindable] private var g_bIsCreationComplete:Boolean = false;
+            [Bindable] private var g_bIsLoadingPhase:Boolean = true;
+            [Bindable] private var g_bAreAVStreamsInitialized:Boolean = false;
+            [Bindable] private var g_bAreAVStreamsReady:Boolean = false;
+            [Bindable] private var g_bIsApplicationComplete:Boolean = false;
+            [Bindable] private var g_bIsContentScalable:Boolean = true;
+            [Bindable] private var g_strApplicationHeader:String = "";
+            [Bindable] private var g_strStructureScrollPolicy:String = "off";
+            [Bindable] private var g_strContentScrollPolicy:String = "off";
+            [Bindable] private var g_strStructureVerticalAlignment:String = "top";
+            [Bindable] private var g_strStructureHorizontalAlignment:String = "center";
+//            [Bindable] private var g_strBrowserHeader:String;
+            [Bindable] private var g_strPageOfAll:String = "";
+            [Bindable] private var g_strMetadataAuthor:String = "";
+            [Bindable] private var g_strMetadataDate:String = "";
+            [Bindable] private var g_strMetadataProducer:String = "";
+            [Bindable] private var g_strMetadataKeywords:String = "";
+            [Bindable] private var g_nTitlebarHeight:int = 35;
+            [Bindable] private var g_nControlbarHeight:int = 40;
+            [Bindable] private var g_nStructureOffset:int = 65;
+            [Bindable] private var g_nSpacer:int = 5;
+            [Bindable] private var g_nStructureWidth:int = g_nDefaultStructureWidth;
+            [Bindable] private var g_nPlaceholderWidth:int = g_nStructureWidth;
+            [Bindable] private var g_nPlaceholderHeight:int = 0;
+            [Bindable] private var g_nStructureHeight:int = 250;
+            [Bindable] private var g_nCurrentApplicationWidth:int = 0;
+            [Bindable] private var g_nCurrentApplicationHeight:int = 0;
+            [Bindable] private var g_nAutostartIntervalId:uint = 0;
+            [Bindable] private var g_nResetIntervalId:uint = 0;
+            [Bindable] private var g_nSeekIntervalId:uint = 0;
+            [Bindable] private var g_bIsSeekingDelay:Boolean = false;
+            [Bindable] private var g_bIsTimeSliderChange:Boolean = false;
+            [Bindable] private var g_nLastSeekTimestamp:Number = 0;
+            [Bindable] private var g_nLastSyncTimestamp:Number = 0;
+            [Bindable] private var g_nPageBorderX:int = -1;
+            [Bindable] private var g_nPageBorderY:int = -1;
+            [Bindable] private var g_nPageBorderWidth:int = 0;
+            [Bindable] private var g_nPageBorderHeight:int = 0;
+            [Bindable] private var g_nControlbarGap:int = 0;//5;
+            [Bindable] private var g_bScrollbarGapAdded:Boolean = false;
+            [Bindable] private var g_bDocumentStructureSelectable:Boolean = true;
+
+            // Lecturnity content stuff
+            [Bindable] private var g_strContentPath:String = "content/";
+            [Bindable] private var g_strSwfFilename:String; //= "document.swf";
+            [Bindable] private var g_strAudioFilename:String; //= "document.flv";
+            [Bindable] private var g_strVideoFilename:String; //= "document.flv";
+            [Bindable] private var g_strStillImageFilename:String;
+            [Bindable] private var g_strContentUrl:String;
+            [Bindable] private var g_strAudioVideoUrl:String;
+            [Bindable] private var g_strLecVersion:String;
+            [Bindable] private var g_bIsEvaluation:Boolean = false;
+            [Bindable] private var g_bHasPages:Boolean = true;
+            [Bindable] private var g_bHasVideo:Boolean = false;
+            [Bindable] private var g_bHasClips:Boolean = false;
+            [Bindable] private var g_bHasStillImage:Boolean = false;
+            [Bindable] private var g_bShowClickPages:Boolean = true;
+            [Bindable] private var g_nPages:int = 0;
+            [Bindable] private var g_nClickPages:int = 0;
+            [Bindable] private var g_nClips:int = 0;
+            [Bindable] private var g_nThumbs:int = 0;
+            [Bindable] private var g_nControlbarState:uint = 0;
+            [Bindable] private var g_nStandardButtonState:uint = 0;
+            [Bindable] private var g_nTimeLineState:uint = 0;
+            [Bindable] private var g_nTimeDisplayState:uint = 0;
+            [Bindable] private var g_nDocumentStructureState:uint = 0;
+            [Bindable] private var g_nRecordingLengthMs:int = 0;
+            [Bindable] private var g_nFrames:int = 0;
+            [Bindable] private var g_nFramerate:int = 8;
+            [Bindable] private var g_nLecContentX:int = 0;
+            [Bindable] private var g_nLecContentY:int = 0;
+            [Bindable] private var g_nLecMovieWidth:int = 0;
+            [Bindable] private var g_nLecMovieHeight:int = 0;
+            [Bindable] private var g_fLecMovieScale:Number = 1.0;
+            [Bindable] private var g_bHasFlvAudio:Boolean = false;
+            [Bindable] private var g_nVideoWidth:int = 0;
+            [Bindable] private var g_nVideoHeight:int = 0;
+            [Bindable] private var g_nVideoLengthMs:int = 0;
+            [Bindable] private var g_nStillImageWidth:int = 0;
+            [Bindable] private var g_nStillImageHeight:int = 0;
+            [Bindable] private var g_fProgress:Number = 0.0;
+            [Bindable] private var g_fTimePercentage:Number = 0.0;
+            [Bindable] private var g_bLecIsPlaying:Boolean = false;
+            [Bindable] private var g_bIsAutostartMode:Boolean = false;
+            [Bindable] private var g_bIsTrueStreaming:Boolean = false;
+            [Bindable] private var g_bIsDragging:Boolean = false;
+            [Bindable] private var g_NetConnection:NetConnection = null;
+            [Bindable] private var g_bNetConnectionSuccessful:Boolean = false;
+            [Bindable] private var g_VideoStream:NetStream = null;
+            [Bindable] private var g_Video:Video = null;
+            [Bindable] private var g_aClipStreams:Array;
+            [Bindable] private var g_aVideoClips:Array;
+            [Bindable] private var g_nActiveClipIndex:int = -1;
+            [Bindable] private var g_nStartBufferLength:int = 1;
+            [Bindable] private var g_bVideoIsBuffering:Boolean = false;
+            [Bindable] private var g_bClipIsBuffering:Boolean = false;
+            [Bindable] private var g_fVideoSynchronizationDeltaSec:Number = 0.125;
+            [Bindable] private var g_fClipSynchronizationDeltaSec:Number = 0.500;
+            [Bindable] private var g_fVideoSeekingDelaySec:Number = 1.000;
+            [Bindable] private var g_fClipSeekingDelaySec:Number = 1.000;
+            [Bindable] private var g_nSeekingDelayMs:int = 1000;
+            [Bindable] private var g_nSyncDelayMs:int = 1000;
+            [Bindable] private var g_bScormEnabled:Boolean = false;
+            [Bindable] private var g_bIsInteractivePaused:Boolean = false;
+            [Bindable] private var g_bIsStructuredScreengrabbing:Boolean = false;
+            [Bindable] private var g_bShowVideoOnPages:Boolean = false;
+            [Bindable] private var g_bShowClipsInVideoArea:Boolean = false;
+            [Bindable] private var g_bHideLecturnityIdentity:Boolean = false;
+
+            // Navigation stuff
+            [Bindable] private var g_nCurrentTimeMs:int = 0;
+            [Bindable] private var g_nCurrentPageIndex:int = -1;
+            [Bindable] private var g_nLastPageIndex:int = -1;
+            [Bindable] private var g_nCurrentThumbIndex:int = -1;
+            [Bindable] private var g_nLastThumbIndex:int = -1;
+
+            // Tab navigation
+            [Bindable] private var tabNavigationSelectedIndex:int = 0;
+
+            // Scaling Type Array
+            [Bindable] private var scalingTypeNames:Array = ["100%", "Fit"];
+
+            // A Timer for getting the current play state and time of the LEC document
+            private var g_timer:Timer;
+            private var g_date:Date = new Date();
+
+            // XML stuff:
+            private var LMD_URL:String;
+            private var g_lmd:XML;
+            private var g_lmdUrl:URLRequest;
+            private var g_lmdLoader:URLLoader;
+            private var XML_URL:String;
+            private var g_xml:XML;
+            private var g_xmlUrl:URLRequest;
+            private var g_xmlLoader:URLLoader;
+
+
+
+            //
+            // Public Methods
+            //
+
+            // SCORM related functions
+            // Note: "GetVariable" and "SetVariable" are reserved function names
+            public function GetScormVariable(strVariableName:String):String {
+                //MsgBox("GetVariable(" + strVariableName + ") called!");
+                var strVariableValue:String = "";
+                switch (strVariableName) {
+                    case "g_bHasTesting":
+                        //MsgBox("scormGetHasTesting: " + LecContentSwf.scormGetHasTesting());
+                        strVariableValue = String(LecContentSwf.scormGetHasTesting());
+                        break;
+                    case "g_LMSResumeSupported":
+                        //MsgBox("scormGetLMSResumeSupported: " + LecContentSwf.scormGetLMSResumeSupported());
+                        strVariableValue = String(LecContentSwf.scormGetLMSResumeSupported());
+                        break;
+                    case "g_nTotalCurrentlyAchievePoints":
+                        //MsgBox("scormGetTotalCurrentlyAchievePoints: " + LecContentSwf.scormGetTotalCurrentlyAchievePoints());
+                        strVariableValue = String(LecContentSwf.scormGetTotalCurrentlyAchievePoints());
+                        break;
+                    case "g_successStatus":
+                        //MsgBox("scormGetSuccessStatus: " + LecContentSwf.scormGetSuccessStatus());
+                        strVariableValue = String(LecContentSwf.scormGetSuccessStatus());
+                        break;
+                    case "g_completionStatus":
+                        //MsgBox("scormGetCompletionStatus: " + LecContentSwf.scormGetCompletionStatus());
+                        strVariableValue = String(LecContentSwf.scormGetCompletionStatus());
+                        break;
+                    case "g_resumePos":
+                        //MsgBox("scormGetResumePos: " + LecContentSwf.scormGetResumePos());
+                        strVariableValue = String(LecContentSwf.scormGetResumePos());
+                        break;
+                    case "g_bDoLoadLocationData":
+                        //MsgBox("scormGetDoLoadLocationData: " + LecContentSwf.scormGetDoLoadLocationData());
+                        strVariableValue = String(LecContentSwf.scormGetDoLoadLocationData());
+                        break;
+                    case "g_suspendData":
+                        //MsgBox("scormGetSuspendData: " + LecContentSwf.scormGetSuspendData());
+                        strVariableValue = String(LecContentSwf.scormGetSuspendData());
+                        break;
+                    case "g_bDoLoadSuspendData":
+                        //MsgBox("scormGetDoLoadSuspendData: " + LecContentSwf.scormGetDoLoadSuspendData());
+                        strVariableValue = String(LecContentSwf.scormGetDoLoadSuspendData());
+                        break;
+                    case "g_bSuspendDataLoaded":
+                        //MsgBox("scormGetSuspendDataLoaded: " + LecContentSwf.scormGetSuspendDataLoaded());
+                        strVariableValue = String(LecContentSwf.scormGetSuspendDataLoaded());
+                        break;
+                    case "g_bDoLoadLearnerData":
+                        //MsgBox("scormGetDoLoadLearnerData: " + LecContentSwf.scormGetDoLoadLearnerData());
+                        strVariableValue = String(LecContentSwf.scormGetDoLoadLearnerData());
+                        break;
+                    case "g_bLearnerDataLoaded":
+                        //MsgBox("scormGetLearnerDataLoaded: " + LecContentSwf.scormGetLearnerDataLoaded());
+                        strVariableValue = String(LecContentSwf.scormGetLearnerDataLoaded());
+                        break;
+                    case "g_locationTimeStamp":
+                        //MsgBox("scormGetLocationTimeStamp: " + LecContentSwf.scormGetLocationTimeStamp());
+                        strVariableValue = String(LecContentSwf.scormGetLocationTimeStamp());
+                        break;
+                    case "g_nSessionTime":
+                        //MsgBox("scormGetSessionTime: " + LecContentSwf.scormGetSessionTime());
+                        strVariableValue = String(LecContentSwf.scormGetSessionTime());
+                        break;
+                    case "g_nQuestionsCount":
+                        //MsgBox("scormGetQuestionsCount: " + LecContentSwf.scormGetQuestionsCount());
+                        strVariableValue = String(LecContentSwf.scormGetQuestionsCount());
+                        break;
+                    case "g_learnerResponse":
+                        //MsgBox("scormGetLearnerResponse: " + LecContentSwf.scormGetLearnerResponse());
+                        strVariableValue = String(LecContentSwf.scormGetLearnerResponse());
+                        break;
+                    case "g_questionIndex":
+                        //MsgBox("scormGetQuestionIndex: " + LecContentSwf.scormGetQuestionIndex());
+                        strVariableValue = String(LecContentSwf.scormGetQuestionIndex());
+                        break;
+                    case "g_questionResult":
+                        //MsgBox("scormGetQuestionResult: " + LecContentSwf.scormGetQuestionResult());
+                        strVariableValue = String(LecContentSwf.scormGetQuestionResult());
+                        break;
+                }
+                return strVariableValue;
+            }
+
+            public function SetScormVariable(strVariableName:String, strVariableValue:String):void {
+                //MsgBox("SetVariable(" + strVariableName + ", " + strVariableValue + ") called!");
+                switch (strVariableName) {
+                    case "g_bHasTesting":
+                        //MsgBox("scormSetHasTesting: " + strVariableValue);
+                        LecContentSwf.scormSetHasTesting((strVariableValue == "true") ? true : false);
+                        break;
+                    case "g_LMSResumeSupported":
+                        //MsgBox("scormSetLMSResumeSupported: " + strVariableValue);
+                        LecContentSwf.scormSetLMSResumeSupported((strVariableValue == "true") ? true : false);
+                        break;
+                    case "g_nTotalCurrentlyAchievePoints":
+                        //MsgBox("scormSetTotalCurrentlyAchievePoints: " + strVariableValue);
+                        LecContentSwf.scormSetTotalCurrentlyAchievePoints(int(strVariableValue));
+                        break;
+                    case "g_successStatus":
+                        //MsgBox("scormSetSuccessStatus: " + strVariableValue);
+                        LecContentSwf.scormSetSuccessStatus(String(strVariableValue));
+                        break;
+                    case "g_completionStatus":
+                        //MsgBox("scormSetCompletionStatus: " + strVariableValue);
+                        LecContentSwf.scormSetCompletionStatus(String(strVariableValue));
+                        break;
+                    case "g_resumePos":
+                        //MsgBox("scormSetResumePos: " + strVariableValue);
+                        LecContentSwf.scormSetResumePos(Number(strVariableValue));
+                        break;
+                    case "g_bDoLoadLocationData":
+                        //MsgBox("scormSetDoLoadLocationData: " + strVariableValue);
+                        LecContentSwf.scormSetDoLoadLocationData((strVariableValue == "true") ? true : false);
+                        break;
+                    case "g_suspendData":
+                        //MsgBox("scormSetSuspendData: " + strVariableValue);
+                        LecContentSwf.scormSetSuspendData(String(strVariableValue));
+                        break;
+                    case "g_bDoLoadSuspendData":
+                        //MsgBox("scormSetDoLoadSuspendData: " + strVariableValue);
+                        LecContentSwf.scormSetDoLoadSuspendData((strVariableValue == "true") ? true : false);
+                        break;
+                    case "g_bSuspendDataLoaded":
+                        //MsgBox("scormSetSuspendDataLoaded: " + strVariableValue);
+                        LecContentSwf.scormSetSuspendDataLoaded((strVariableValue == "true") ? true : false);
+                        break;
+                    case "g_bDoLoadLearnerData":
+                        //MsgBox("scormSetDoLoadLearnerData: " + strVariableValue);
+                        LecContentSwf.scormSetDoLoadLearnerData((strVariableValue == "true") ? true : false);
+                        break;
+                    case "g_bLearnerDataLoaded":
+                        //MsgBox("scormSetLearnerDataLoaded: " + strVariableValue);
+                        LecContentSwf.scormSetLearnerDataLoaded((strVariableValue == "true") ? true : false);
+                        break;
+                    case "g_locationTimeStamp":
+                        //MsgBox("scormSetLocationTimeStamp: " + strVariableValue);
+                        LecContentSwf.scormSetLocationTimeStamp(Number(strVariableValue));
+                        break;
+                    case "g_nSessionTime":
+                        //MsgBox("scormSetSessionTime: " + strVariableValue);
+                        LecContentSwf.scormSetSessionTime(int(strVariableValue));
+                        break;
+                    case "g_nQuestionsCount":
+                        //MsgBox("scormSetQuestionsCount: " + strVariableValue);
+                        LecContentSwf.scormSetQuestionsCount(int(strVariableValue));
+                        break;
+                    case "g_learnerResponse":
+                        //MsgBox("scormSetLearnerResponse: " + strVariableValue);
+                        LecContentSwf.scormSetLearnerResponse(String(strVariableValue));
+                        break;
+                    case "g_questionIndex":
+                        //MsgBox("scormSetQuestionIndex: " + strVariableValue);
+                        LecContentSwf.scormSetQuestionIndex(String(strVariableValue));
+                        break;
+                    case "g_questionResult":
+                        //MsgBox("scormSetQuestionResult: " + strVariableValue);
+                        LecContentSwf.scormSetQuestionResult(String(strVariableValue));
+                        break;
+                }
+            }
+
+            // Call methods (called from outside the Flex application)
+            public function CallStopmarkFound():void {
+                //MsgBox("Stopmark found!");
+                // Pause the replay (if not automatically detected by 'CheckPlayState()')
+                if (g_bLecIsPlaying) {
+                    g_bIsInteractivePaused = true;
+                    PauseReplay();
+                }
+            }
+
+            public function CallStopmarkFoundAtFrame(nStopFrame:Number):void {
+                //MsgBox("Stopmark found at frame " + nStopFrame + "!");
+                // Bugfix BLECPUB-1871
+                if (nStopFrame < 2) {
+                    //MsgBox("Stop mark at 0:00")
+                    g_bIsAutostartMode = false;
+                    LecVideoDisplay.Seek(0.0);
+                    g_bIsInteractivePaused = true;
+                    PauseReplay();
+                }
+                // Pause the replay (if not automatically detected by 'CheckPlayState()')
+                if (g_bLecIsPlaying) {
+                    g_bIsInteractivePaused = true;
+                    PauseReplay();
+                }
+            }
+
+            public function CallInteractiveJumpToTimeSec(fTimeSec:Number):void {
+                //MsgBox("Interactive jump to " + fTimeSec + " sec!");
+                // Seek the Audio/Video stream to the desired position
+                LecVideoDisplay.Seek(fTimeSec);
+            }
+
+            public function CallClose():void {
+                // This is only working in IE, but not in Firefox ...
+                //var urlString:String = "javascript:window.opener = self; self.close();";
+                //var urlString:String = "javascript:self.close()";
+                //var request:URLRequest = new URLRequest(urlString);
+                //navigateToURL(request, "_self");
+                
+                // Remove all children from the main Application 
+                // (like an "unloadMovie()" command for a MovieClip) 
+                // --> This is then the same behaviour like in the LEC 3 Flash Player
+                this.removeChild(MainVBox);
+                this.removeChild(languageChooser);
+                this.removeChild(StatusText);
+                this.removeChild(ScrollbarGap);
+            }
+
+            public function CallResize():void {
+                this.OnResize();
+            }
+
+
+            //
+            // Private Methods
+            //
+
+            private function OnInit():void { 
+                // Used for the image smoothing: 
+                g_loaderContext = new LoaderContext();
+                g_loaderContext.checkPolicyFile = true;
+
+                // FlashInterface
+                FlashInterface.publish(this, true);
+                
+                // ExternalInterface
+                if (ExternalInterface.available) {
+                    ExternalInterface.addCallback("GetScormVariable", GetScormVariable); 
+                    ExternalInterface.addCallback("SetScormVariable", SetScormVariable); 
+                    ExternalInterface.addCallback("CallStopmarkFound", CallStopmarkFound);
+                    ExternalInterface.addCallback("CallStopmarkFoundAtFrame", CallStopmarkFoundAtFrame);
+                    ExternalInterface.addCallback("CallInteractiveJumpToTimeSec", CallInteractiveJumpToTimeSec);
+                    ExternalInterface.addCallback("CallClose", CallClose);
+                } else {
+                    // TODO: Correct error message
+                    MsgBox("No ExternalInterface available!");
+                }
+                // Init localization for the ScalingTypeChooser
+                scalingTypeNames[1] = resourceManager.getString('localization', 'Fit');
+                scalingTypeChooser.setDataProvider(scalingTypeNames);
+            }
+
+            private function OnApplicationComplete():void {
+                // Read the 'document.xml' file
+                g_xml = new XML();
+                XML_URL = g_strContentPath + "document.xml";
+                g_xmlUrl = new URLRequest(XML_URL);
+                g_xmlLoader = new URLLoader(g_xmlUrl);
+                g_xmlLoader.addEventListener("complete", OnXmlLoaded);
+
+                // Read the LMD ('document.lmd') file
+                // Bugfix 5088:
+                // This starts _after_ 'document.xml' is completely loaded (--> OnXmlLoaded())
+
+                // ToolTip Manager
+                ToolTipManager.enabled = true;// Optional. Default value is true.
+                ToolTipManager.showDelay = 1000;// Display after 1 second.
+                ToolTipManager.hideDelay = 3000; // Hide after 3 seconds of being viewed.
+
+                // Start Timer
+                g_timer = new Timer(125, 0);
+                g_timer.addEventListener(TimerEvent.TIMER, TimerControlledCheck);
+                g_timer.start();
+            }
+
+            private function OnCreationComplete():void {
+                //MsgBox("Sandbox type: " + String(Security.sandboxType));
+                g_bIsCreationComplete = true;
+            }
+
+            private function OnResize():void {
+                if (g_bIsApplicationComplete) {
+                    // Resize Document Structure
+                    g_nStructureHeight = this.height - g_nControlbarHeight - 55;
+                    if (g_bScrollbarGapAdded)
+                        g_nStructureHeight -= 16;
+                    if ((g_bHasVideo || g_bHasStillImage) && !g_bShowVideoOnPages) {
+                        g_nStructureWidth = (g_nVideoWidth > g_nDefaultStructureWidth) ? g_nVideoWidth : g_nDefaultStructureWidth;
+                        g_nStructureHeight -= (g_nVideoHeight + g_nSpacer);
+                    }
+                    if (g_nStructureHeight < 90)
+                        g_nStructureHeight = 90;
+
+/*
+                    // Resize Search result list
+                    var nResults:int = 5;
+                    if (g_aSearchNotes != null)
+                        nResults = g_aSearchNotes.length;
+                    if (nResults < 5)
+                        nResults = 5;
+                    var nSearchResultHeight:int = 25 * nResults;
+                    if (dataGridSearchResults != null)
+                        dataGridSearchResults.height = nSearchResultHeight;
+*/
+
+                    // Evaluation version and Pure/Structured SG? 
+                    // --> Show evaluation in the document structure
+                    if (g_bIsEvaluation && ((g_bHasVideo && !g_bHasPages) || g_bShowVideoOnPages)) {
+                        LecDocumentViewEvaluationCanvas.visible = true;
+                    }
+
+                    // Set placeholder height and structure scroll policy
+                    var fScale:Number = LecContentSwf.getLecturnityZoomFactor();
+                    if (g_bHasVideo && !g_bHasPages) { // Unstructured pure "Denver" SG Document
+                        g_nPlaceholderHeight = this.height - 75 - g_nControlbarHeight;
+                        g_strStructureScrollPolicy = "auto";
+                    } else {
+                        g_nPlaceholderHeight = this.height - 35 - g_nControlbarHeight;
+                        g_strStructureScrollPolicy = "off";
+                    }
+
+                    // Set content scroll policy depending on scalabiltiy of content
+                    if (g_bIsContentScalable) {
+                        g_strContentScrollPolicy = "off";
+                        // The next line is necessary to prevent a strange behaviour 
+                        // in case of non-scalability (see below)
+                        // (The delay is required for "maximize window")
+                        setTimeout(CallContentResize, 50); 
+                    } else {
+                        g_strContentScrollPolicy = "auto";
+                        // The next 2 lines are necessary to prevent a strange behaviour 
+                        // that in a small browser window a right and a bottom part are cut 
+                        LecContentSwf.width = g_nLecMovieWidth;
+                        LecContentSwf.height = g_nLecMovieHeight;
+                    }
+
+                    // Re-position video or page area if the Document Structure is hidden
+                    if (g_nDocumentStructureState == HIDDEN) {
+                        g_nStructureHeight = 0;
+                        g_nPlaceholderHeight = this.height - 75;
+                        if ((g_bHasPages && !g_bHasVideo) || g_bShowVideoOnPages) {
+                            // Normal document without video 
+                            // or structured SG document 
+                            // --> Center the pages horizontally 
+                            // by resizing the page area
+                            g_nPlaceholderWidth = 0;
+                            ContentCanvas.width = this.width - 36; // empirically found
+                        }
+                        if (g_bHasVideo && !g_bHasPages) {
+                            // Unstructured pure "Denver" SG Document
+                            // --> Center the video horizontally
+                            // by resizing the video area
+                            ContentCanvas.width = 0;
+                            g_nPlaceholderWidth = this.width;
+
+                            if (!g_bIsContentScalable) {
+                                if (StructurePlaceholder.width < g_nVideoWidth)
+                                    g_strStructureHorizontalAlignment = "left";
+                                else
+                                    g_strStructureHorizontalAlignment = "center";
+                                    
+                                if (StructurePlaceholder.height < g_nVideoHeight)
+                                    g_strStructureVerticalAlignment = "top";
+                                else
+                                    g_strStructureVerticalAlignment = "middle";
+                            } else {
+                                g_strStructureHorizontalAlignment = "center";
+                                g_strStructureVerticalAlignment = "middle";
+                            }
+
+                            // Bugfix 5443: Scale the SG video
+                            var scaleX:Number = StructurePlaceholder.width / g_nVideoWidth;
+                            //var scaleY:Number = StructurePlaceholder.height / g_nVideoHeight;
+                            var structureHeight:Number = this.height - 74; // empirically found
+                            var scaleY:Number = structureHeight / g_nVideoHeight;
+                            if (g_bIsContentScalable)
+                                fScale = Math.min(scaleX, scaleY);
+                            else
+                                fScale = 1.0;
+                            // Upscaling allowed? If not, then activate the next 2 lines
+                            //if (fScale > 1.0)
+                            //    fScale = 1.0;
+                            VideoCanvas.width = fScale * g_nVideoWidth;
+                            VideoCanvas.height = fScale * g_nVideoHeight;
+                            LecVideoDisplay.SetSize(fScale * g_nVideoWidth, fScale * g_nVideoHeight);
+
+                            // Evaluation?
+                            
+                            if (g_bIsEvaluation) {
+                                // Make the Eval Note visible
+                                var fAngleRad:Number = Math.atan(g_nVideoHeight / g_nVideoWidth);
+                                var fAngleDeg:Number = fAngleRad * 180.0 / Math.PI;
+                                VideoEvalBanner.rotation = -fAngleDeg;
+                                var newFontSize1:int = Math.round(g_nVideoHeight / 7.3);
+                                VideoEvalBanner.x = 0; 
+                                VideoEvalBanner.y = 0 + g_nVideoHeight - 64 - Math.round(0.75 * newFontSize);
+                                VideoEvalBanner.setStyle("fontSize", newFontSize1);
+                                VideoEvalBanner.alpha = 1.0;
+                                VideoEvalBanner.visible = true;
+                                // Semi-transparent video 
+                                LecVideoDisplay.alpha = 0.80;
+                            }
+                        }
+                    }
+
+                    // Resize scrollbar gap beneath Navigation Bar
+                    // Outcommented, because it does not work with the new Design ... 
+/*
+                    if (this.width < 887) {
+                        if (!g_bScrollbarGapAdded) {
+                            LecDocumentAndNavigationBox.addChild(ScrollbarGap);
+                            g_bScrollbarGapAdded = true;
+                            OnResize();
+                        }
+                    } else {
+                        if (g_bScrollbarGapAdded) {
+                            LecDocumentAndNavigationBox.removeChild(ScrollbarGap);
+                            g_bScrollbarGapAdded = false;
+                            OnResize();
+                        }
+                    }
+*/
+
+                    // Set scaling for ScalingTypeChooser
+                    var strScaling:String = "" + Math.round(100.0 * fScale) + "%";
+                    scalingTypeChooser.setCurrentDisplayedScalingType(strScaling);
+
+
+                    // Next steps are not necessary for unstructured pure SG ("Denver") documents 
+                    if (g_bHasVideo && !g_bHasPages)
+                        return;
+
+                    //Resize/re-position Page Border
+                    // Offsets for the content canvas (empirically found)
+                    var nOffsetX:int = 15;
+                    var nOffsetY:int = 36;
+                    g_nPageBorderWidth = 2 + (fScale * g_nLecMovieWidth);
+                    g_nPageBorderHeight = 2 + (fScale * g_nLecMovieHeight);
+                    g_nPageBorderX = nOffsetX + ContentCanvas.x + (0.5 * (ContentCanvas.width - g_nPageBorderWidth));
+                    g_nPageBorderY = nOffsetY + ContentCanvas.y + (0.5 * (ContentCanvas.height - g_nPageBorderHeight));
+                    // Bugfix 5719: Center content in fixed "100%" case
+                    if (!g_bIsContentScalable) {
+                        g_nLecContentX = Math.round(0.5 * (ContentCanvas.width - g_nLecMovieWidth));
+                        g_nLecContentY = Math.round(0.5 * (ContentCanvas.height - g_nLecMovieHeight));
+                        if (g_nLecContentX < 0)
+                            g_nLecContentX = 0;
+                        if (g_nLecContentY < 0)
+                            g_nLecContentY = 0;
+                    } else {
+                        g_nLecContentX = 0;
+                        g_nLecContentY = 0;
+                    }
+
+                    // Scale clips (if any)
+                    if (g_bHasClips) {
+                        // Don't scale clips if they do not exceed the page area
+                        // (this is not necessary for VideoDisplay Smoothing). 
+                        // Bugfix 5047: But it might be necessary for structured SG Documents 
+                        if (g_bIsStructuredScreengrabbing && fScale > 1.0)
+                            fScale = 1.0;
+                        for (var i:int = 0; i < g_nClips; ++i) {
+                            var clipWidth:Number = fScale * g_aClips[i].nWidth;
+                            var clipHeight:Number = fScale * g_aClips[i].nHeight
+                            var clipX:Number = Math.round(0.5 * (ContentCanvas.width - clipWidth));
+                            var clipY:Number = Math.round(0.5 * (ContentCanvas.height - clipHeight));
+                            if (!g_bIsContentScalable) {
+                                // Bugfix 5719: Center content in fixed "100%" case - only in case of no scrollbars
+                                if ((ContentCanvas.width - g_nLecMovieWidth) < 0)
+                                    clipX = Math.round(0.5 * (g_nLecMovieWidth - clipWidth));
+                                if ((ContentCanvas.height - g_nLecMovieHeight) < 0)
+                                    clipY = Math.round(0.5 * (g_nLecMovieHeight - clipHeight));
+                            }
+                            if ( (g_aClips[i].nWidth == LecContentSwf.getLecContentWidth()) 
+                              && (g_aClips[i].nHeight == LecContentSwf.getLecContentHeight()) ) {
+                                // Clip has same size as page size --> Use values from page
+                                clipWidth = LecContentSwf.getLecCurrentRectangle().width;
+                                clipHeight = LecContentSwf.getLecCurrentRectangle().height;
+                                clipX = LecContentSwf.getLecCurrentRectangle().x;
+                                clipY = LecContentSwf.getLecCurrentRectangle().y;
+                            }
+                            if (LecClipDisplayArray[i] != null) {
+                                // Bugfix 5093
+                                if (fScale < 1.0)
+                                    LecClipDisplayArray[i].SetSmoothing(true);
+                                else
+                                    LecClipDisplayArray[i].SetSmoothing(false);
+                                LecClipDisplayArray[i].SetSize(clipWidth, clipHeight);
+                                //LecClipDisplayArray[i].SetPosition(clipX, clipY);
+                                LecClipDisplayArray[i].SetPosition(0, 0);
+                                if (LecClipFrameArray[i] != null) {
+                                    LecClipFrameArray[i].x = clipX-1;
+                                    LecClipFrameArray[i].y = clipY-1;
+                                    LecClipFrameArray[i].width = clipWidth+2;
+                                    LecClipFrameArray[i].height = clipHeight+2;
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (g_bShowVideoOnPages) {
+                        // Double code (should be merged with the code for clips above)
+                        // Upscaling allowed? If not, then activate the next 2 lines
+                        //if (fScale > 1.0)
+                        //    fScale = 1.0;
+                        var videoWidth:Number = fScale * g_nVideoWidth;
+                        var videoHeight:Number = fScale * g_nVideoHeight;
+                        var videoX:Number = Math.round(0.5 * (ContentCanvas.width - videoWidth));
+                        var videoY:Number = Math.round(0.5 * (ContentCanvas.height - videoHeight));
+                        if (videoX < 0)
+                            videoX = 0;
+                        if (videoY < 0)
+                            videoY = 0;
+                        if (!g_bIsContentScalable) {
+                            // Bugfix 5719: Center content in fixed "100%" case --> next lines outcommented
+                            //videoX = (0.5 * (g_nLecMovieWidth - videoWidth));
+                            //videoY = (0.5 * (g_nLecMovieHeight - videoHeight));
+                        }
+                        if (LecVideoDisplay != null) {
+                            // Bugfix 5093
+                            if (fScale < 1.0)
+                                LecVideoDisplay.SetSmoothing(true);
+                            else
+                                LecVideoDisplay.SetSmoothing(false);
+                            LecVideoDisplay.SetSize(videoWidth, videoHeight);
+                            LecVideoDisplay.SetPosition(videoX, videoY);
+                        }
+                        // Evaluation Note
+                        if (g_bIsEvaluation) {
+                            var newFontSize:int = Math.round(videoHeight / 7.3);
+                            EvaluationBanner.x = videoX; 
+                            EvaluationBanner.y = videoY + videoHeight - Math.round(0.75 * newFontSize);
+                            EvaluationBanner.setStyle("fontSize", newFontSize);
+                            EvaluationBanner.alpha = 1.0;
+                            // Semi-transparent video in case of no document structure
+                            // (to make the Eval Note visible)
+                            if (g_nDocumentStructureState == HIDDEN)
+                                LecVideoDisplay.alpha = 0.80;
+                        }
+                    }
+                }
+            }
+
+            private function OnXmlLoaded(evtObj:Event):void {
+                // Interpret the XML data from the 'document.xml' file
+                g_xml = XML(g_xmlLoader.data);
+                var i:int = 0;
+
+                // Get the SWF file
+                g_strSwfFilename = g_xml.swf.file;
+                if (g_strSwfFilename.length <= 0) {
+                    // Assuming "document.swf"
+                    g_strSwfFilename = "document.swf";
+                }
+                // Audio or Video?
+                if (g_xml.video && g_xml.video.file && (g_xml.video.file.length() > 0))
+                    g_bHasVideo = true;
+                else
+                    g_bHasVideo = false;
+                if (g_bHasVideo) {
+                    g_strVideoFilename = g_xml.video.file;
+                    videoFlvName = g_strVideoFilename;
+                    g_nVideoWidth = g_xml.video.width;
+                    g_nVideoHeight = g_xml.video.height;
+                    g_nVideoLengthMs = g_xml.video.length;
+                    g_bShowVideoOnPages = g_xml.video.showOnPages == "true";
+                } else {
+                    // Audio from FLV
+                    if (g_xml.audio && (g_xml.audio.file.length() > 0)) {
+                        g_strAudioFilename = g_xml.audio.file;
+                        videoFlvName = g_strAudioFilename;
+                        g_bHasFlvAudio = true;
+                    }
+                }
+                // Clips?
+                if (g_xml.clip && (g_xml.clip.length() > 0)) {
+                    g_bHasClips = true;
+                    g_nClips = g_xml.clip.length();
+                    aClipFlvNames = new ArrayCollection();
+                    var clip:ClipInfo;
+                    for (i = 0; i < g_nClips; ++i) {
+                        var objClip:Object = (g_nClips > 1) ? g_xml.clip[i] : g_xml.clip;
+                        // Create a clip info
+                        clip = new ClipInfo(objClip.file, 
+                                            objClip.width, 
+                                            objClip.height, 
+                                            objClip.begin, 
+                                            objClip.end);
+                        g_aClips.addItem(clip);
+                        // Add clip file name to the array with the clip flv names 
+                        // (--> Configurable Variable)
+                        aClipFlvNames.addItem(objClip.file);
+                    }
+                }
+
+                // Clips in video area?
+                g_bShowClipsInVideoArea = g_xml.showClipsInVideoArea == "true";
+
+                // Still Image?
+                if (g_xml.stillImage && g_xml.stillImage.file && (g_xml.stillImage.file.length() > 0)) {
+                    g_bHasStillImage = true;
+                    g_strStillImageFilename = g_xml.stillImage.file;
+                    g_nStillImageWidth = g_xml.stillImage.width;
+                    g_nStillImageHeight = g_xml.stillImage.height;
+                    // Video width/height is used for still image dimension
+                    // (only if no video exist which displays clips in video area)
+                    if (!(g_bShowClipsInVideoArea && g_bHasVideo)) {
+                        g_nVideoWidth = g_xml.stillImage.width;
+                        g_nVideoHeight = g_xml.stillImage.height;
+                    }
+                }
+
+                // Configurable variables
+                // Base URL set?
+                baseUrl = g_xml.baseUrl;
+                // Stream URL set?
+                streamUrl = g_xml.streamUrl;
+                // Strip FLV suffix?
+                streamStripFlvSuffix = g_xml.streamStripFlvSuffix;
+                // Autostart?
+                autoStart = g_xml.autostart;
+
+                // --> Now check the configurable variables
+                CheckConfigurableVariables();
+                
+                // Control Bar State? 
+                g_nControlbarState = GetIndexFromState(g_xml.controlbar.controlbarState);
+                // Standard Button State? 
+                g_nStandardButtonState = GetIndexFromState(g_xml.controlbar.standardButtonState);
+                // Time Line State? 
+                g_nTimeLineState = GetIndexFromState(g_xml.controlbar.timeLineState);
+                // Time Display State? 
+                g_nTimeDisplayState = GetIndexFromState(g_xml.controlbar.timeDisplayState);
+                // Document Structure State? 
+                g_nDocumentStructureState = GetIndexFromState(g_xml.documentStructureState);
+                
+                // Scorm enabled?
+                g_bScormEnabled = (g_xml.scormEnabled == "true") ? true : false;
+
+                // Get frames/framerate and adopt framerate
+                g_nFrames = g_xml.frames;
+                g_nFramerate = g_xml.framerate;
+                this.stage.frameRate = g_nFramerate;
+                // Bugfix 5342: 
+                // Adopt video/clip synchronization delta to frame rate
+                g_fVideoSynchronizationDeltaSec = 1.0 / g_nFramerate;
+                g_fClipSynchronizationDeltaSec = 2.0 / g_nFramerate;
+                if (g_fClipSynchronizationDeltaSec < 0.5)
+                    g_fClipSynchronizationDeltaSec = 0.5;
+
+                // Get the LEC version
+                g_strLecVersion = resourceManager.getString('localization', 'Version') + " " + g_xml.version;
+
+                // Set initial language on LanguageChooser
+                var strLanguageCode:String = g_xml.language;
+                if (strLanguageCode != null) {
+                    if (strLanguageCode == "en") 
+                        languageChooser.setSelectedLanguage(localeNames[0]);
+                    else if (strLanguageCode == "de") 
+                        languageChooser.setSelectedLanguage(localeNames[1]);
+                    else
+                        languageChooser.setSelectedLanguage(localeNames[0]);
+                } else {
+                    // default: EN
+                    languageChooser.setSelectedLanguage(localeNames[0]);
+                }
+
+                // Set initial scaling type on ScalingTypeChooser
+                var iScalingType:int;
+                var strUseSlideSize:String = g_xml.useSlideSize;
+                if ( (strUseSlideSize != null) && (strUseSlideSize.length > 0) ) {
+                    if (strUseSlideSize == "100%")
+                        iScalingType = 0;
+                    else
+                        iScalingType = 1;
+                } else {
+                    // default: Fit (auto zoom)
+                    iScalingType = 1;
+                }
+                scalingTypeChooser.setSelectedScalingTypeIndex(iScalingType);
+                g_bIsContentScalable = (iScalingType > 0) ? true : false;
+                LecContentSwf.isResizable = g_bIsContentScalable;
+                // Hide the display of the ScalingTypeChooser until the first "onResize()" call
+                scalingTypeChooser.setCurrentDisplayedScalingType("");
+
+                // Hide Lecturnity "identity" (logo, text)?
+                var strLecIdentityHidden:String = g_xml.lecIdentityHidden;
+                if (strLecIdentityHidden != null) {
+                    g_bHideLecturnityIdentity = (g_xml.lecIdentityHidden == "true") ? true : false;
+                } 
+
+                // Get the fulltext objects
+                if (g_xml.fulltext.TEXT && g_xml.fulltext.TEXT.length() > 0) {
+                    var text:Object;
+                    var nFullText:int = g_xml.fulltext.TEXT.length();
+                    for (i = 0; i < nFullText; ++i) {
+                        text = (nFullText > 1) ? g_xml.fulltext.TEXT[i] : g_xml.fulltext.TEXT;
+                        var strText:String = text.TEXTITEM;
+                        var nBeginMs:int = text.TIME.@beginMs;
+                        var fullText:FullText = new FullText(strText, nBeginMs);
+                        // Add the FullText object to the list
+                        g_aFullTexts.addItem(fullText);
+                    }
+                }
+
+                g_bIsXmlLoaded = true;
+
+                // Read the LMD ('document.lmd') file
+                g_lmd = new XML();
+                LMD_URL = g_strContentPath + "document.lmd";
+                g_lmdUrl = new URLRequest(LMD_URL);
+                g_lmdLoader = new URLLoader(g_lmdUrl);
+                g_lmdLoader.addEventListener("complete", OnLmdLoaded);
+            }
+
+            private function OnLmdLoaded(evtObj:Event):void {
+                // Interpret the LMD data from the 'document.lmd' file
+                g_lmd = XML(g_lmdLoader.data);
+
+                // Fill the PageInfo list
+                FillPageInfoList();
+
+                // Get FullText and add it to the PageInfo list
+                AddFullTextToPageInfoList();
+
+                // Dynamic creation of the document structure ("Overview" tab)
+                CreateDocumentStructure();
+                // Update the Browser/Application Header
+//                g_strBrowserHeader = "" + g_lmd.metainfo.author + ": " + g_lmd.metainfo.title
+                g_strApplicationHeader = "" 
+                    + UnmaskEscapesFromString(g_lmd.metainfo.author) + ": " 
+                    + UnmaskEscapesFromString(g_lmd.metainfo.title);
+                if (!g_bHideLecturnityIdentity)
+                    g_strApplicationHeader += " - ";
+//                // Change the title in the browser
+//                ChangeBrowserTitle(g_strBrowserHeader);
+                // Fill the "Info" tab
+                g_strMetadataAuthor = "" + UnmaskEscapesFromString(g_lmd.metainfo.author);
+                g_strMetadataDate = UnmaskEscapesFromString(g_lmd.metainfo.recorddate);
+                g_strMetadataProducer = UnmaskEscapesFromString(g_lmd.metainfo.creator);
+                g_strMetadataKeywords = UnmaskEscapesFromString(g_lmd.metainfo.keyword);
+
+                g_bIsLmdLoaded = true;
+            }
+
+            private function OnReloadApplication():void {
+                var urlRequest:URLRequest = new URLRequest(Application.application.url);
+                navigateToURL(urlRequest, "_self");
+            }
+
+
+            // For bugfix 5458:
+            private function UnmaskEscapesFromString(strText:String):String {
+                var strNewText:String = new String(strText);
+                // Replace '\"' (escaped double quote)
+                strNewText = ReplaceEscapeSequence(strNewText, '\\\"', '\"');
+                // Replace '\\' (escaped backslash)
+                strNewText = ReplaceEscapeSequence(strNewText, '\\\\', '\\');
+                return strNewText;
+            }
+
+            private function ReplaceEscapeSequence(strText:String, strEscapeSequence:String, strReplace:String):String {
+                // Note: Using a regular expression and "String.replace(...)" would be the nicer way here
+                // But a regular expression "working as expected" is not found so far. 
+                // For example: the next 2 lines seem to make nothing: 
+                //var myPattern:RegExp = /\\\"/gi;
+                //strNewText.replace(myPattern, '"');
+
+                var strNewText:String = new String(strText);
+                if (strNewText.indexOf(strEscapeSequence) > -1) {
+                    do {
+                        var n:int = strNewText.lastIndexOf(strEscapeSequence);
+                        if (n > -1) {
+                            var len:int = strNewText.length;
+                            var str2:String = strNewText.substr(n+2, len);
+                            var str1:String = strNewText.substr(0, n);
+                            strNewText = str1 + strReplace + str2;
+                        }
+                    } while (n > -1);
+                }
+                return strNewText;
+            }
+
+            private function FillPageInfoList():void {
+                // Determine pages and clips
+                var page:PageInfo;
+                var strKeywords:String;
+                var nClips:int = 0;
+                var i:int = 0;
+                // Clean the ArrayCollection before filling it
+                g_aPages.removeAll();
+                g_nPages = 0;
+
+                // New in 4.0.p6: Click pages ... Should they be hidden?
+                var strShowClickPages:String = g_lmd.fileinfo.showClickPages;
+                if ( (strShowClickPages != null) && (strShowClickPages.length > 0) && (strShowClickPages == "false") )
+                    g_bShowClickPages = false;
+
+                // Create PageInfo entries for pages and clips
+                // - Pages and clips are inside a chapter
+                // - A chapter can contain other chapters
+                // --> Check all possible interlacings of chapters for pages and clips
+                // --> Use an iteration above all chapters
+                var chapterNode:XMLList = g_lmd.structure.chapter;
+                while (chapterNode.length() > 0) {
+                    var nChapters:int = chapterNode.length();
+                    for (var k:int = 0; k < chapterNode.length(); ++k) {
+                        var subChapter:XMLList = (nChapters > 1) ? XMLList(chapterNode[k]) : chapterNode;
+                        var nSubPages:int = subChapter.page.length();
+                        var nSubClips:int = subChapter.clip.length();
+                        var strThumbnail:String = "";
+                        var strChapterTitle:String = subChapter.@title;
+                        var strSubChapterTitle:String;
+                        var firstSubChapterChild:Object = subChapter.children()[0]; 
+                        // Note: PageInfo.nPageNumber and PageInfo.strThumbnail 
+                        // are determined after sorting
+                        for (i = 0; i < nSubPages; ++i) {
+                            var objPage:Object = (nSubPages > 1) ? subChapter.page[i] : subChapter.page;
+                            strSubChapterTitle = (objPage == firstSubChapterChild) ? strChapterTitle : "";
+                            strKeywords = GetKeywordsFromPageObject(objPage);
+                            var bIsClickPage:Boolean = false;
+                            var strClickPage:String = objPage.type;
+                            if ( (strClickPage != null) && (strClickPage.length > 0) && (strClickPage == "click") )
+                                bIsClickPage = true;
+                            page = new PageInfo(i, 
+                                                objPage.begin, 
+                                                objPage.end, 
+                                                UnmaskEscapesFromString(strSubChapterTitle), 
+                                                UnmaskEscapesFromString(objPage.title), 
+                                                UnmaskEscapesFromString(strKeywords), 
+                                                strThumbnail, 
+                                                false, 
+                                                bIsClickPage);
+                            // Add item to the page list
+                            g_aPages.addItem(page);
+                        }
+                        for (i = 0; i < nSubClips; ++i) {
+                            var objClip:Object = (nSubClips > 1) ? subChapter.clip[i] : subChapter.clip;
+                            strSubChapterTitle = (objClip == firstSubChapterChild) ? strChapterTitle : "";
+                            strKeywords = GetKeywordsFromPageObject(objClip);
+                            page = new PageInfo(i, 
+                                                objClip.begin, 
+                                                objClip.end, 
+                                                UnmaskEscapesFromString(strSubChapterTitle), 
+                                                UnmaskEscapesFromString(objClip.title), 
+                                                UnmaskEscapesFromString(strKeywords), 
+                                                strThumbnail, 
+                                                true, 
+                                                false);
+                            // Add item to the page list
+                            g_aPages.addItem(page);
+                        }
+                        g_nPages += nSubPages;
+                        nClips += nSubClips;
+                    }
+
+                    // Iteration for nested chapter(s)
+                    chapterNode = chapterNode.chapter;
+                }
+                g_nThumbs = g_nPages + nClips;
+
+                //MsgBox("FillPageInfoList(): \nPages: " + g_nPages + "  Clips: " + nClips + "  (g_nClips: " + g_nClips +")");
+                // Bugfix 4948: 
+                // If nClips is 0 (read from "document.lmd"), 
+                // but g_nClips (read from "document.xml") is 1, then we have 
+                // a Structured SG Document with an inconsistency in the metadata
+                // 
+                // An additional hint for a Structured SG document is the flag 
+                // "g_bShowVideoOnPages" (read from document.xml).
+                // Setting g_bIsStructuredScreengrabbing = true leads to some correct
+                // behavior elsewhere.
+                if ((nClips == 0 && g_nClips == 1) || g_bShowVideoOnPages)
+                    g_bIsStructuredScreengrabbing = true;
+                // Bugfix 5598: Structured SG clip in video area
+                if (g_bIsStructuredScreengrabbing && g_bShowClipsInVideoArea)
+                    g_bShowVideoOnPages = false;
+
+                // Now sort the PageInfo elements by beginning time
+                // - Create the SortField object for the "nBeginMs" field in the ArrayCollection object
+                var dataSortField:SortField = new SortField();
+                dataSortField.name = "nBeginMs";
+                dataSortField.numeric = true;
+                // - Create the Sort object and add the SortField object
+                var numericDataSort:Sort = new Sort();
+                numericDataSort.fields = [dataSortField];
+                // - Set the ArrayCollection object's sort property to our custom sort, and refresh the ArrayCollection
+                g_aPages.sort = numericDataSort;
+                g_aPages.refresh();
+
+                // Determine correct values for 
+                // PageInfo.nPageNumber and PageInfo.strThumbnail
+                var nPageNr:int = -1;
+                for (i = 0; i < g_nThumbs; ++i) {
+                    if (g_aPages[i].bIsClip) {
+                        // Bugfix 5595: Correct page number
+                        g_aPages[i].nPageNumber = nPageNr;
+                        g_aPages[i].strThumbnail = g_strContentPath + "slide_" + i + "_clip_thumb.png";
+                    } else {
+                        // Bugfix 5262: Correct page number
+                        nPageNr++;
+                        g_aPages[i].nPageNumber = nPageNr;
+                        g_aPages[i].strThumbnail = g_strContentPath + "slide_" + i + "_thumb.png";
+                    }
+
+                    // Determine the length in time of the LEC document
+                    if (g_aPages[i].nEndMs > g_nRecordingLengthMs)
+                        g_nRecordingLengthMs = g_aPages[i].nEndMs;
+                }
+
+                // Bugfix 5302: Remove pages from the PageInfo list which are not visible 
+                // because 2 pages share one and the same frame
+                var nLastPagingFrame:int = -1;
+                var bShortPageRemoved:Boolean = false;
+                // Start at the end of the array 
+                for (i = (g_nThumbs-1); i >= 0; --i) {
+                    if (!g_aPages[i].bIsClip) {
+                        // Determine the paging frame
+                        var fPagingFrame:Number = g_nFramerate * g_aPages[i].nBeginMs / 1000.0;
+                        // Paging frame is the next possible frame
+                        var iPagingFrame:int = Math.floor(fPagingFrame);
+                        var msPerFrame:int = Math.floor(1000.0 / g_nFramerate);
+                        if (g_aPages[i].nBeginMs % msPerFrame != 0)
+                            iPagingFrame += 1;
+                        // 1st Frame is 1 (not 0) --> add one frame
+                        iPagingFrame += 1;
+
+                        if (iPagingFrame == nLastPagingFrame) {
+                            if (i >= 1) {
+                                // Adopt end time of previous page
+                                g_aPages[i-1].nEndMs = g_aPages[i].nEndMs;
+                            }
+                            // Remove this PageInfo element
+                            //MsgBox("Page " + i + " removed at " + g_aPages[i].nBeginMs + " ms");
+                            g_aPages.removeItemAt(i);
+                            g_nPages -= 1;
+                            g_nThumbs -= 1;
+                            bShortPageRemoved = true;
+                        }
+
+                        nLastPagingFrame = iPagingFrame;
+                    }
+                }
+                g_aPages.refresh();
+
+                // Correct page numbers, if necessary
+                if (bShortPageRemoved) {
+                    nPageNr = 0;
+                    for (i = 0; i < g_nThumbs; ++i) {
+                        if (!g_aPages[i].bIsClip) {
+                            // Bugfix 5262: Correct page number
+                            g_aPages[i].nPageNumber = nPageNr;
+                            nPageNr++;
+                        }
+                    }
+                    g_aPages.refresh();
+                }
+
+                // "Click pages": Remove click pages from the PageInfo list if they should not be displayed
+                if (g_bShowClickPages == false) {
+                    // Start at the end of the array
+                    for (i = (g_nThumbs-1); i >= 0; --i) {
+                        if (!g_aPages[i].bIsClip) {
+                            if (g_aPages[i].bIsClickPage) {
+                                if (i >= 1) {
+                                    // Adopt end time of previous page
+                                    g_aPages[i-1].nEndMs = g_aPages[i].nEndMs;
+                                    // Remove this PageInfo element
+                                    g_aPages.removeItemAt(i);
+                                    g_nPages -= 1;
+                                    g_nThumbs -= 1;
+                                    g_nClickPages += 1;
+                                }
+                            }
+                        }
+                    }
+                    g_aPages.refresh();
+                    // Correct page thumbs
+                    nPageNr = 0;
+                    for (i = 0; i < g_nThumbs; ++i) {
+                        if (!g_aPages[i].bIsClip) {
+                            g_aPages[i].strThumbnail = g_strContentPath + "slide_" + nPageNr + "_thumb.png";
+                            nPageNr++;
+                        }
+                    }
+                    g_aPages.refresh();
+                }
+
+            }
+
+            private function CreateDocumentStructure():void {
+               // Clean the ArrayCollection before filling it
+               g_aPageEntries.removeAll();
+               for (var i:int = 0; i < g_nThumbs; ++i) {
+                   // Get the page info
+                   var page:PageInfo = g_aPages[i];
+
+                   //var imgIcon:SmoothImage = new SmoothImage();
+                   //imgIcon.source = page.strThumbnail;
+                   // Create a new PageEntry and add it to the ArrayCollection
+                   var pageEntry:PageEntry = new PageEntry((i+1).toString(), 
+                                                           page.strThumbnail, 
+                                                           page.strChapter, 
+                                                           page.strTitle, 
+                                                           UsefulHelper.formatTimeInSeconds(page.nBeginMs/1000.0), 
+                                                           page.nPageNumber, 
+                                                           page.bIsClip, 
+                                                           page.bIsClickPage);
+                                                           //imgIcon);
+                   g_aPageEntries.addItem(pageEntry);
+               }
+            }
+
+            private function CreateAudioVideoObjects():void {
+                // 'Audio only' is also stored in a LEC VideoDisplay
+                // Create the LEC VideoDisplay for the video
+                var nLengthMs:int = (g_bHasVideo ? g_nVideoLengthMs : g_nRecordingLengthMs);
+                LecVideoDisplay = new LecturnityVideoDisplay(baseUrl, 
+                                                             streamUrl, 
+                                                             g_strAudioVideoUrl, 
+                                                             g_nVideoWidth, 
+                                                             g_nVideoHeight, 
+                                                             nLengthMs, 
+                                                             (streamStripFlvSuffix!="false"));
+                // Add audio/video object to the video canvas
+                if (!g_bShowVideoOnPages) {
+                    StructurePlaceholder.setStyle("verticalGap", 5);
+                    VideoCanvas.addChild(LecVideoDisplay);
+                } else {
+                    ContentCanvas.addChild(LecVideoDisplay);
+                    VideoCanvas.visible = false;
+                    // Required: Set size to 0x0 to be sure that the 
+                    // Document Structure has the correct width and height
+                    // (Not clear, why this is not overwritten by the bindable 
+                    // variables g_nVideoWidth/g_nVideoHeight but it seems that 
+                    // these 2 variables are not changed any more afterwards)
+                    VideoCanvas.width = 0;
+                    VideoCanvas.height = 0;
+                    // If this spacer has still a height "-10" than the 3 Tabs are not visible: 
+                    Spacer1.height = 20;
+                }
+            }
+
+            private function CreateClipObjects():void {
+                LecClipFrameArray = new Array(g_nClips);
+                LecClipDisplayArray = new Array(g_nClips);
+                for (var i:int = 0; i < g_nClips; ++i) {
+                    // Create a black 1px border around the clip (Bugfix 5144)
+                    LecClipFrameArray[i] = new Box();
+                    LecClipFrameArray[i].width = g_aClips[i].nWidth+2;
+                    LecClipFrameArray[i].height = g_aClips[i].nHeight+2;
+                    LecClipFrameArray[i].horizontalScrollPolicy = "off";
+                    LecClipFrameArray[i].verticalScrollPolicy = "off";
+                    LecClipFrameArray[i].setStyle("borderColor", "#000000");
+                    LecClipFrameArray[i].setStyle("borderStyle", "solid");
+                    LecClipFrameArray[i].setStyle("borderThickness", "1");
+                    // Create the LEC VideoDisplay for the clip
+                    LecClipDisplayArray[i] = new LecturnityVideoDisplay(baseUrl, 
+                                                                        streamUrl, 
+                                                                        g_aClips[i].strClipUrl, 
+                                                                        g_aClips[i].nWidth, 
+                                                                        g_aClips[i].nHeight, 
+                                                                        g_aClips[i].nEndMs - g_aClips[i].nBeginMs, 
+                                                                        (streamStripFlvSuffix!="false"));
+                    // Add clip to clip frame
+                    LecClipFrameArray[i].addChild(LecClipDisplayArray[i]);
+                    // Hide the clip
+                    LecClipDisplayArray[i].visible = false;
+                    LecClipFrameArray[i].visible = false;
+                    // Add clip frame and clip object to the content canvas
+                    ContentCanvas.addChild(LecClipFrameArray[i]);
+                }
+            }
+
+            private function CreateStillImageObject():void {
+                LecStillImage = new SmoothImage();
+                LecStillImage.source = g_strContentPath + g_strStillImageFilename;
+                LecStillImage.width = g_nStillImageWidth;
+                LecStillImage.height = g_nStillImageHeight;
+                // Add StillImage object to the video canvas
+                StructurePlaceholder.setStyle("verticalGap", 5);
+                VideoCanvas.addChild(LecStillImage);
+            }
+
+
+            // Timer controlled update functions
+            private function TimerControlledCheck(event:TimerEvent):void {
+                // Check is Lec Swf is loaded
+                if (!g_bIsLecSwfLoaded) {
+                    CheckLecturnitySwfLoaded();
+                }
+
+                // Check if Application is completely loaded
+                if (!g_bIsApplicationComplete) {
+                    CheckApplicationComplete();
+                    UpdateStatusText();
+                } else {
+                    // Application is completely loaded
+                    // --> Check the Play State 
+                    CheckPlayState();
+                }
+            }
+
+            private function CheckLecturnitySwfLoaded():void {
+                // Read Lec movie dimensions (if not already done)
+                if (!g_bIsLecSwfLoaded) {
+                    g_nLecMovieWidth = LecContentSwf.getLecMovieWidth();
+                    g_nLecMovieHeight = LecContentSwf.getLecMovieHeight();
+                    if ((g_nLecMovieWidth > 0) && (g_nLecMovieHeight > 0)) {
+                        // Now the LEC movie is loaded
+                        // Check if the LEC movie contains pages
+                        // (if not then it has a size of 6x6 pixels)
+                        if ((g_nLecMovieWidth > 0 ) && (g_nLecMovieHeight > 0) 
+                          && (g_nLecMovieWidth <= 6) && (g_nLecMovieHeight <= 6))
+                            g_bHasPages = false;
+                        // Set the placeholder for the document structure depending on video
+                        if ((g_bHasVideo && !g_bShowVideoOnPages) || g_bHasStillImage || g_bShowClipsInVideoArea) {
+                            if (g_nPlaceholderWidth < g_nVideoWidth)
+                                g_nPlaceholderWidth = g_nVideoWidth;
+                            else
+                                g_nPlaceholderWidth = g_nDefaultStructureWidth;
+                        } else
+                            g_nPlaceholderWidth = g_nDefaultStructureWidth;
+
+                        // Check for evaluation
+                        g_bIsEvaluation = LecContentSwf.isEvaluation();
+                        if (g_bIsEvaluation && g_bShowVideoOnPages) {
+                            var fAngleRad:Number = Math.atan(g_nLecMovieHeight / g_nLecMovieWidth);
+                            var fAngleDeg:Number = fAngleRad * 180.0 / Math.PI;
+                            EvaluationBanner.rotation = -fAngleDeg;
+                            EvaluationBanner.visible = true;
+                        } else {
+                            ContentCanvas.removeChild(EvaluationBanner);
+                        }
+
+                        g_bIsLecSwfLoaded = true;
+                        // Update view 
+                        OnResize();
+                    } else {
+                        // Try to read the LEC movie diemnsions again
+                        LecContentSwf.readLecMovieDimensions();
+                    }
+                }
+            }
+
+            private function CheckApplicationComplete():void {
+                // Check FlashVars
+                if (g_bIsCreationComplete && !g_bAreFlashVarsChecked)
+                    CheckFlashVars();
+
+                if (g_bIsLecSwfLoaded && g_bIsLmdLoaded && g_bIsXmlLoaded && g_bAreFlashVarsChecked) {
+                    if (!g_bAreAVStreamsInitialized) {
+                        //Init AV streams
+                        InitAudioVideoClips();
+                    } else {
+                        if (!g_bAreAVStreamsReady) {
+                            CheckAVStreams();
+                        } else {
+                            // Now the Application is complete
+                            g_bIsApplicationComplete = true;
+
+                            // Still Image?
+                            if (g_bHasStillImage)
+                                CreateStillImageObject();
+
+                            // Check and update player elements once
+                            // (Permanent update of player elements is done later on 
+                            // in 'UpdatePlayerElements')
+                            CheckPlayerElementsOnce();
+
+                            // Update view
+                            LecContentSwf.callResize();
+                            OnResize();
+
+                            // Bug fix BLECPUB-1865: 
+                            // The loading phase is finished now. 
+                            // It is the correct time to make all elements visible: 
+                            // --> hide the "mask layer"
+                            g_bIsLoadingPhase = false;
+
+                            // Be sure that the TimeSlider is in the left end
+                            TimeSlider.value = 0.0;
+                            // Enforce the display of the video (if any)
+                            if (g_bHasVideo && LecVideoDisplay.IsTrueStreaming()) {
+                                LecVideoDisplay.SeekMs(0);
+                            }
+
+                            // AutoStart? --> Check this after a short delay
+                            g_nAutostartIntervalId = setInterval(DelayedAutoStart, 125);
+                        }
+                    }
+                }
+            }
+
+            private function CheckAVStreams():void {
+                var bIsReady:Boolean = true;
+                if (g_bHasVideo || g_bHasFlvAudio) {
+                    if (LecVideoDisplay != null)
+                        bIsReady = (bIsReady && LecVideoDisplay.IsReady());
+                    else
+                        bIsReady = false;
+                }
+                if (g_bHasClips) {
+                    for (var i:int = 0; i < g_nClips; ++i) {
+                        if ((LecClipDisplayArray != null) && (LecClipDisplayArray[i] != null))
+                            bIsReady = (bIsReady && LecClipDisplayArray[i].IsReady());
+                        else
+                            bIsReady = false;
+                    }
+                }
+
+                g_bAreAVStreamsReady = bIsReady;
+            }
+
+            private function CheckPlayState():void {
+                if (g_bHasPages) {
+                    // Determine the current play time
+                    g_nCurrentTimeMs = LecContentSwf.getPlaytime();
+                    // Check the play state 
+                    //(but not during dragging)
+                    if (!g_bIsDragging) {
+                        if (g_bIsInteractivePaused) {
+                            // Bugfix BLECPUB-1871
+                            PauseReplay();
+                        } else {
+                            if (LecContentSwf.isPlaying) {
+                                if (!g_bLecIsPlaying) {
+                                    //MsgBox("CHANGE: StartReplay!");
+                                    StartReplay();
+                                }
+                                SynchronizeReplay();
+                            } else {
+                                // LecContentSwf is not playing ...
+                                if (g_bLecIsPlaying) {
+                                    // Bugfix 4991: Special case: 
+                                    // Jump to the first page seems to stop the replay of the "Ming" content 
+                                    // of a Structured Screengrabbing Document
+                                    // Bugfix 5143: Not only Structured Screengrabbing Documents - 
+                                    // ALL documents with "Ming" content (which are detemined with g_bHasPages == true) 
+                                    // are affected. 
+                                    if (g_nCurrentTimeMs == 0) {
+                                        // (Re-)start the Ming SWF
+                                        LecContentSwf.play();
+                                    } else {
+                                        //MsgBox("CHANGE: PauseReplay!");
+                                        PauseReplay();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    // This must be a SG only ("Denver") document which contains a video
+                    // Determine the current play time
+                    if (g_bHasVideo) {
+                        g_nCurrentTimeMs = LecVideoDisplay.GetTimeMs();
+                    }
+                }
+
+                // Stop Replay at the very end of the document
+                // (Do not rewind to the beginning)
+                var deltaTimeMs:int = Math.round(1000.0 / g_nFramerate);
+                if (g_bLecIsPlaying && (g_nCurrentTimeMs >= (g_nRecordingLengthMs - deltaTimeMs))) {
+                    LecContentSwf.pause();
+                    PauseReplay();
+                }
+                // If the above is not working: 
+                // Make the check with the last frame
+                var nCurrentFrame:int = 1 + Math.round(g_nFramerate * g_nCurrentTimeMs / 1000.0) + 1;
+                if (g_bLecIsPlaying && (nCurrentFrame >= g_nFrames)) {
+                    LecContentSwf.pause();
+                    PauseReplay();
+                }
+
+                if (!g_bIsTimeSliderChange)
+                    g_fTimePercentage = (g_nRecordingLengthMs > 0) ? (Math.floor(g_nCurrentTimeMs / g_nRecordingLengthMs * 100)) : (0)
+
+                // Is a clip active? 
+                if (g_nClips > 0)
+                    CheckActiveClips(g_nCurrentTimeMs, true);
+
+                // Bugfix 5115: Special case: 
+                // Still image and clips in video area
+                // (Clips are displayed as a video in this case) 
+                if (g_bShowClipsInVideoArea && g_bHasStillImage && g_bHasVideo) {
+                    CheckClipsAndStillImageInVideoArea();
+                }
+
+                // Update Player Elements
+                UpdatePlayerElements();
+            }
+
+            private function UpdatePlayerElements():void {
+                // Update Loading progress in time slider
+                UpdateLoadingProgress();
+
+                if (g_bHasPages) {
+                    if (g_nPages > 0) // Pure SG ("Denver") Documents have no pages
+                        g_nCurrentPageIndex = GetPageIndexFromTimeMs(g_nCurrentTimeMs);
+                    if (g_nThumbs > 0) // Pure SG ("Denver") Documents have no thumbs
+                        g_nCurrentThumbIndex = GetThumbIndexFromTimeMs(g_nCurrentTimeMs);
+                    if (g_nCurrentPageIndex != g_nLastPageIndex) {
+                        g_nLastPageIndex = g_nCurrentPageIndex;
+                    }
+                    if (g_nCurrentThumbIndex != g_nLastThumbIndex) {
+                        // Update structure view
+                        LecDocumentView.selectedIndex = g_nCurrentThumbIndex;
+                        LecDocumentView.validateNow();
+                        LecDocumentView.scrollToIndex(g_nCurrentThumbIndex);
+
+                        g_nLastThumbIndex = g_nCurrentThumbIndex;
+                    }
+
+                    // Update Page number display
+                    // (Do this only if the document contains pages/thumbs)
+                    if ((g_nPages > 0) && (g_nThumbs > 0)) {
+                        var displayPageIndex:int = g_nCurrentThumbIndex+1;
+                        resourceManager.getString('localization', 'Page')
+                        g_strPageOfAll = resourceManager.getString('localization', 'Page') 
+                                         + " " + displayPageIndex + " " 
+                                         + resourceManager.getString('localization', 'Of') 
+                                         + " " + g_nThumbs;
+                        // Set the height of the Placeholder above the displays to zero
+                        TimePlaceHolder.height = 0;
+                    } else {
+                        // Center the time display vertically by setting the height of 
+                        // the Page number display to zero ...
+                        TextCurrentPage.height = 0;
+                        // ... and increace the Placeholder height
+                        TimePlaceHolder.height = 12;
+                    }
+
+                    // For testing purposes: 
+                    // Display video and clip times instead of "Page X of Y"
+                    var bDebugVideoAndClipInfo:Boolean = false;
+                    if (bDebugVideoAndClipInfo) {
+                        // Display something like "C: 1:38   V: 1:38"
+                        // (Clip time considers its own begin time 
+                        // --> this makes the synchronization check easier) 
+                        if (g_bHasVideo || g_bHasFlvAudio)
+                            g_strPageOfAll = "V: " + UsefulHelper.formatTimeInSeconds(LecVideoDisplay.GetTime());
+                        if (g_bHasClips) {
+                            if (g_bHasVideo)
+                                g_strPageOfAll = "   " + g_strPageOfAll;
+                            else
+                                g_strPageOfAll = "";
+                            var nActiveClipIndex:int = GetActiveClipIndex(g_nCurrentTimeMs);
+                            if (nActiveClipIndex >= 0) {
+                                var clipBeginSec:Number = g_aClips[nActiveClipIndex].nBeginMs / 1000.0;
+                                var timeClipSec:Number = LecClipDisplayArray[nActiveClipIndex].GetTime();
+                                g_strPageOfAll = "C: " + UsefulHelper.formatTimeInSeconds(clipBeginSec + timeClipSec) + g_strPageOfAll;
+                            }
+                        }
+                    }
+
+                }
+
+                // Status Text
+                UpdateStatusText();
+
+                // Update view - call OnResize() if necessary
+                if ((this.width != g_nCurrentApplicationWidth) 
+                    || (this.height != g_nCurrentApplicationHeight)) {
+                    g_nCurrentApplicationWidth = this.width;
+                    g_nCurrentApplicationHeight = this.height;
+                    OnResize();
+                }
+            }
+
+            private function UpdateStatusText():void {
+                // Streaming? --> Display "Connecting to server..."
+                if (g_bIsTrueStreaming && (LecVideoDisplay != null) && LecVideoDisplay.IsConnectingToServer()) {
+                    // Make "..." dynamic
+                    var strDots:String = "";
+                    var date:Date = new Date();
+                    var nDots:int = (Math.round(date.getSeconds()) % 4);
+                    for (var i:int = 0; i < nDots; ++i)
+                        strDots += ".";
+                    StatusText.text = resourceManager.getString('localization', 'ConnectingToServer') + strDots
+                    StatusText.visible = true;
+                } else {
+                    StatusText.text = "";
+                    StatusText.visible = false;
+                }
+            }
+
+            private function CheckPlayerElementsOnce():void {
+                // Be sure that the TimeSlider is in the left end
+                TimeSlider.value = 0.0;
+                // Enforce the display of the video (if any)
+                if (g_bHasVideo && LecVideoDisplay.IsTrueStreaming()) {
+                    LecVideoDisplay.SeekMs(0);
+                }
+
+                // Bugfix 5092:
+                // Check, if g_nCurrentTimeMs differs from audio/video time:
+                if (g_bHasPages && (g_bHasVideo || g_bHasFlvAudio)) {
+                    g_nCurrentTimeMs = LecContentSwf.getPlaytime();
+                    if (!g_bLecIsPlaying && (Math.abs(LecVideoDisplay.GetTimeMs() - g_nCurrentTimeMs) > 0.5))
+                        GotoTimestamp(g_nCurrentTimeMs);
+                }
+
+                // Select the "Overview" tab
+                TabChange(0);
+
+                // Now show/hide and enable/disable Player elements
+
+                // Localization combo box
+                var strLanguage:String = languageChooser.getCurrentLanguage();
+                languageChooser.setSelectedLanguage(strLanguage);
+                languageChooser.visible = true;
+
+                // Hide Document Structure if necessary
+                if (g_nDocumentStructureState == HIDDEN) {
+                    TabHolderBox.visible = false;
+                    LecTabNavigator.visible = false;
+                } else {
+                    TabHolderBox.visible = true;
+                    LecTabNavigator.visible = true;
+                }
+
+                // Bugfix 5115: Special case: 
+                // Still image and clips in video area
+                // (Clips are displayed as a video in this case) 
+                if (g_bHasStillImage && g_bShowClipsInVideoArea && g_bHasVideo) {
+                    // Scale still image size to the video size
+                    var stillImageWidth:int = LecStillImage.width;
+                    var stillImageHeight:int = LecStillImage.height;
+                    if ((g_nVideoWidth > 0) && (g_nVideoHeight > 0)) {
+                        var fScaleX:Number = g_nVideoWidth / stillImageWidth;
+                        var fScaleY:Number = g_nVideoHeight / stillImageHeight;
+                        var fScale:Number = Math.min(fScaleX, fScaleY);
+                        LecStillImage.width = Math.floor(fScale * stillImageWidth);
+                        LecStillImage.height = Math.floor(fScale * stillImageHeight);
+                        if (LecStillImage.width < g_nVideoWidth)
+                            LecStillImage.x = Math.round(0.5*(g_nVideoWidth - LecStillImage.width));
+                        if (LecStillImage.height < g_nVideoHeight)
+                            LecStillImage.y = Math.round(0.5*(g_nVideoHeight - LecStillImage.height));
+                    }
+                }
+
+                // Document Sructure disabled? --> Disable Rollover/Selection
+                if (g_nDocumentStructureState == DISABLED) {
+                    LecDocumentViewProtectionCanvas.x = 0;
+                    LecDocumentViewProtectionCanvas.x = 0;
+                } else {
+                    LecDocumentViewCanvas.removeChild(LecDocumentViewProtectionCanvas);
+                }
+
+                // Document Structure hidden/disabled? --> Disable 'Search' tab
+                if (g_nDocumentStructureState != ENABLED) {
+                    tabSearch.disabled = true;
+                }
+
+                // Should Pages be hidden? (in case of a Structured SG Document)
+                if (g_bIsStructuredScreengrabbing) {
+                    LecContentSwf.visible = false;
+                    // Bugfix 5598: Structured SG clip in video area
+                    if (g_bShowClipsInVideoArea)
+                        LecContentSwf.visible = true;
+                }
+                
+                // Control Bar hidden? --> Resize the corresponding object to 0x0
+                if (g_nControlbarState == HIDDEN) {
+                    LecControlBar.width = 0;
+                    LecControlBar.height = 0;
+                    g_nControlbarGap = 0;
+                }
+
+                // Navigation Buttons disabled? --> Replace buttons by images
+                var imgFirstDisabled:Image = new Image();
+                var imgPrevDisabled:Image = new Image();
+                var imgPlayDisabled:Image = new Image();
+                var imgNextDisabled:Image = new Image();
+                var imgEndDisabled:Image = new Image();
+                if (g_nStandardButtonState == ENABLED) {
+                    if (!g_bHasPages) {
+                        // (Unstructured) Screengrabbing Document
+                        // --> Disable Previous/Next buttons
+                        BackButtonsBox.removeChild(btnFirst);
+                        BackButtonsBox.removeChild(btnPrevious);
+                        BackButtonsBox.addChild(btnFirst);
+                        btnFirst.visible = true;
+                        // Previous button
+                        imgPrevDisabled.source = ImgPrevDisabled;
+                        BackButtonsBox.addChild(imgPrevDisabled);
+                        btnPlay.visible = true;
+                        ForwardButtonsBox.removeChild(btnNext);
+                        ForwardButtonsBox.removeChild(btnLast);
+                        // Next button
+                        imgNextDisabled.source = ImgNextDisabled;
+                        ForwardButtonsBox.addChild(imgNextDisabled);
+                        ForwardButtonsBox.addChild(btnLast);
+                        btnLast.visible = true;
+                    } else {
+                        btnFirst.visible = true;
+                        btnPrevious.visible = true;
+                        btnPlay.visible = true;
+                        btnNext.visible = true;
+                        btnLast.visible = true;
+                    }
+                } else if (g_nStandardButtonState == DISABLED) {
+                    // First button
+                    BackButtonsBox.removeChild(btnFirst);
+                    imgFirstDisabled.source = ImgFirstDisabled;
+                    BackButtonsBox.addChild(imgFirstDisabled);
+                    // Previous button
+                    BackButtonsBox.removeChild(btnPrevious);
+                    imgPrevDisabled.source = ImgPrevDisabled;
+                    BackButtonsBox.addChild(imgPrevDisabled);
+                    // Play button
+                    LecControlBar.removeChild(btnPlay);
+                    imgPlayDisabled.source = ImgPlayDisabled;
+                    LecControlBar.addChildAt(imgPlayDisabled, 5);
+                    // Next button
+                    ForwardButtonsBox.removeChild(btnNext);
+                    imgNextDisabled.source = ImgNextDisabled;
+                    ForwardButtonsBox.addChild(imgNextDisabled);
+                    // Last button
+                    ForwardButtonsBox.removeChild(btnLast);
+                    imgEndDisabled.source = ImgEndDisabled;
+                    ForwardButtonsBox.addChild(imgEndDisabled);
+                }
+                else if (g_nStandardButtonState == HIDDEN) {
+                    // Remove navigation buttons
+                    BackButtonsBox.removeChild(btnFirst);
+                    BackButtonsBox.removeChild(btnPrevious);
+                    LecControlBar.removeChild(btnPlay);
+                    ForwardButtonsBox.removeChild(btnNext);
+                    ForwardButtonsBox.removeChild(btnLast);
+                }
+
+                // Time Slider disabled or hidden?
+                if (g_nTimeLineState == DISABLED) {
+                    TimeSliderBox.removeChild(TimeSliderProtectionCanvas);
+                    TimeSliderCanvas.addChild(TimeSliderProtectionCanvas);
+                    AnimatedProgress.x = 10;
+                    AnimatedProgress.y = 7;
+                    TimeSlider.x = 10;
+                    TimeSlider.y = 5;
+                    TimeSliderProtectionCanvas.height = 20;
+                    TimeSliderProtectionCanvas.y = 0;
+                    TimeSliderProtectionCanvas.visible = true;
+                    AnimatedProgress.visible = true;
+                    TimeSlider.visible = true;
+                    TimeSlider.setStyle("styleName", "viewerMediaLecturnitySliderDisabled");
+                } else if (g_nTimeLineState == HIDDEN) {
+                    // Remove the time slider
+                    TimeSliderBox.removeChild(TimeSliderCanvas);
+                    TimeSliderBox.removeChild(TimeSliderProtectionCanvas);
+                } else {
+                    TimeSliderBox.removeChild(TimeSliderProtectionCanvas);
+                    TimeSliderBox.width = 300;
+                    AnimatedProgress.x = 10;
+                    AnimatedProgress.y = 6;
+                    TimeSlider.x = 10;
+                    TimeSlider.y = 4;
+                    AnimatedProgress.visible = true;
+                    TimeSlider.visible = true;
+                }
+
+                // Time Display disabled?
+                if (g_nTimeDisplayState == DISABLED) {
+                    // Disabling hardly possible --> Remove the time display
+                    TimeDisplayBox.removeChild(TextPlaytime);
+                    TimeDisplayBox.removeChild(TextCurrentPage);
+                } else if (g_nTimeDisplayState == HIDDEN) {
+                    // Remove the time display
+                    TimeDisplayBox.removeChild(TextPlaytime);
+                    TimeDisplayBox.removeChild(TextCurrentPage);
+                } else {
+                    TextPlaytime.visible = true;
+                    TextCurrentPage.visible = true;
+                }
+
+                // Show/Hide audio slider, audio mute button and LEC WebPlayer logo
+                if (g_nControlbarState != HIDDEN) {
+                    btnAudioMute.visible = true;
+                    AudioVolumeSliderBox.visible = true;
+                    LecWebPlayerLogo.visible = !g_bHideLecturnityIdentity;
+                }
+                ApplicationHeaderWebPlayer.visible = !g_bHideLecturnityIdentity;
+
+                // Special case: Unstructured pure "Denver" SG documents
+                if (g_bHasVideo && !g_bHasPages) {
+                    // StructurePlaceholder: Remove all sub elements except "VideoCanvas" 
+                    StructurePlaceholder.removeChild(TabHolderBox);
+                    StructurePlaceholder.removeChild(Spacer1);
+                    StructurePlaceholder.removeChild(LecTabNavigator);
+                    //StructurePlaceholder.setStyle("verticalAlign", "middle");
+                    g_strStructureHorizontalAlignment = "center";
+                    g_strStructureVerticalAlignment = "middle";
+                }
+            }
+
+            private function CheckClipsAndStillImageInVideoArea():void {
+                var nClipIndex:int = GetActiveClipIndex(g_nCurrentTimeMs, true);
+                if (nClipIndex < 0) {
+                    // No clip visible --> show still image
+                    LecStillImage.visible = true;
+                } else {
+                    // A clip is visible --> hide still image 
+                    LecStillImage.visible = false;
+                }
+            }
+
+            private function SynchronizeReplay():void {
+                // SG only ("Denver") Documents have no pages
+                // --> no synchronization necessary 
+                if (!g_bHasPages)
+                    return; 
+
+                var timePagesSec:Number = LecContentSwf.getPlaytime()/1000.0;
+                var deltaTimeSec:Number;
+
+                // Consider a synchronization delay 
+                g_date = new Date();
+                var currentTimestamp:Number = g_date.time;
+                if ((currentTimestamp - g_nLastSyncTimestamp) < g_nSyncDelayMs) {
+                    return;
+                }
+
+                var timeVideoSec:Number;
+                if (g_bHasVideo || g_bHasFlvAudio) {
+                    g_bVideoIsBuffering = LecVideoDisplay.IsBuffering();
+                    timeVideoSec = LecVideoDisplay.GetTime();
+                    deltaTimeSec = Math.abs(timePagesSec - timeVideoSec);
+                    if (deltaTimeSec > g_fVideoSynchronizationDeltaSec) {
+                        // Synchronize Pages to Video
+                        if (!g_bVideoIsBuffering && !g_bIsSeekingDelay && !g_bIsDragging) {
+                            LecContentSwf.setPlaytime(timeVideoSec * 1000);
+                            g_nLastSyncTimestamp = currentTimestamp;
+                        }
+                    }
+                }
+
+                if (g_bHasClips) {
+                    var nTimeMs:int = Math.round(timePagesSec * 1000);
+                    if (g_nActiveClipIndex >= 0) {
+                        g_bClipIsBuffering = LecClipDisplayArray[g_nActiveClipIndex].IsBuffering();
+                        var timeClipSec:Number;
+                        var clipBeginSec:Number = g_aClips[g_nActiveClipIndex].nBeginMs / 1000.0;
+                        timeClipSec = LecClipDisplayArray[g_nActiveClipIndex].GetTime();
+                        if (g_bHasVideo || g_bHasFlvAudio)
+                            deltaTimeSec = Math.abs(timeVideoSec - clipBeginSec - timeClipSec);
+                        else
+                            deltaTimeSec = Math.abs(timePagesSec - clipBeginSec - timeClipSec);
+                        if (deltaTimeSec > g_fClipSynchronizationDeltaSec) {
+                            var newTimeClipSec:Number;
+                            // Synchronize Clip to Video/Pages
+                            if (g_bHasVideo || g_bHasFlvAudio) {
+                                // Synchronize to Video
+                                newTimeClipSec = timeVideoSec - clipBeginSec;
+                            } else {
+                                // Synchronize to Pages
+                                newTimeClipSec = timePagesSec - clipBeginSec;
+                            }
+                            if (newTimeClipSec < 0.0)
+                                newTimeClipSec = 0.0;
+                            // Synchronize
+                            if (!g_bVideoIsBuffering && !g_bClipIsBuffering && !g_bIsSeekingDelay && !g_bIsDragging) {
+                                LecClipDisplayArray[g_nActiveClipIndex].Seek(newTimeClipSec);
+                                g_nLastSyncTimestamp = currentTimestamp;
+                            }
+                        }
+                    }
+                }
+            }
+
+            private function GetPageIndexFromTimeMs(nTimeMs:int):int {
+                var nIdx:int = -1;
+                var nPageIndex:int = -1;
+                var page:PageInfo;
+                for (var i:int = 0; i < g_aPages.length; ++i) {
+                    // Get the page info
+                    page = g_aPages[i];
+                    if (!page.bIsClip)
+                        nIdx++;
+                    if ((nTimeMs >=page.nBeginMs) && (nTimeMs < page.nEndMs)) {
+                        nPageIndex = nIdx; 
+                        break;
+                    }
+                }
+
+                if (nPageIndex < 0) {
+                    page = g_aPages[0];
+                    if (nTimeMs < page.nBeginMs)
+                        nPageIndex = 0;
+                }
+                if (nPageIndex < 0) {
+                    page = g_aPages[g_nPages-1]
+                    if (nTimeMs >= page.nEndMs)
+                        nPageIndex = g_nPages-1;
+                }
+
+                trace("Page index: " + nPageIndex + " at " + nTimeMs);
+                return nPageIndex;
+            }
+
+            private function GetThumbIndexFromTimeMs(nTimeMs:int):int {
+                var nThumbIdx:int = -1;
+                var page1:PageInfo;
+                var page2:PageInfo;
+                for (var i:int = 0; i < (g_aPages.length-1); ++i) {
+                    // Get the page info
+                    page1 = g_aPages[i];
+                    var nBeginMs:int = page1.nBeginMs;
+                    page2 = g_aPages[i+1];
+                    var nEndMs:int = page2.nBeginMs;
+                    if ((nTimeMs >= nBeginMs) && (nTimeMs < nEndMs)) {
+                        nThumbIdx = i;
+                        break;
+                    }
+                }
+
+                if (nThumbIdx < 0) {
+                    page1 = g_aPages[0];
+                    if (nTimeMs < page1.nBeginMs)
+                        nThumbIdx = 0;
+                }
+                if (nThumbIdx < 0) {
+                    page2 = g_aPages[g_nThumbs-1]
+                    if (nTimeMs >= page2.nBeginMs)
+                        nThumbIdx = g_nThumbs-1;
+                }
+
+                trace("Thumb index: " + nThumbIdx + " at " + nTimeMs);
+                return nThumbIdx;
+            }
+
+
+            // Navigation functions
+            private function ToggleReplay():void {
+                //if (LecContentSwf.isPlaying) {
+                if (g_bLecIsPlaying) {
+                    if (g_bHasPages)
+                        LecContentSwf.pause();
+                    PauseReplay();
+                } else {
+                    if (g_bHasPages)
+                        LecContentSwf.play();
+                    StartReplay();
+                }
+            }
+
+            private function StartReplay():void {
+                //LecContentSwf.play();
+                if (g_bHasVideo || g_bHasFlvAudio) {
+                    // Set a Seeking Delay before starting Replay
+                    g_bIsSeekingDelay = true;
+                    g_nResetIntervalId = setInterval(ResetSeekingDelay, g_fVideoSeekingDelaySec);
+                    LecVideoDisplay.Play();
+                }
+                if (g_bHasClips) {
+                    if (g_nActiveClipIndex >= 0) {
+                        LecClipDisplayArray[g_nActiveClipIndex].Play();
+                    }
+                }
+
+                g_bIsInteractivePaused = false;
+                g_bLecIsPlaying = true;
+            }
+
+            private function PauseReplay():void {
+                //LecContentSwf.pause();
+                if (g_bHasVideo || g_bHasFlvAudio) {
+                    LecVideoDisplay.Pause();
+                }
+                if (g_bHasClips) {
+                    if (g_nActiveClipIndex >= 0) {
+                        LecClipDisplayArray[g_nActiveClipIndex].Pause();
+                    }
+                }
+
+                g_bLecIsPlaying = false;
+            }
+
+            private function StopReplay():void {
+                if (g_bHasPages)
+                    LecContentSwf.stop();
+                if (g_bHasVideo || g_bHasFlvAudio) {
+                    LecVideoDisplay.Stop();
+                }
+                if (g_bHasClips) {
+                    if (g_nActiveClipIndex >= 0) {
+                        LecClipDisplayArray[g_nActiveClipIndex].Pause();
+                    }
+                }
+
+                g_bLecIsPlaying = false;
+            }
+
+            private function GotoBeginning():void {
+                GotoTimestamp(0);
+            }
+
+            private function GotoEnd():void {
+                // This seems not to work properly for SG only ("Denver") Documents ...
+                // Not clear so far, what to do here 
+                // (Jumping to VideoDisplay.totalTime is no solution)
+                GotoTimestamp(g_nRecordingLengthMs-1);
+            }
+
+            private function GotoPreviousThumb():void {
+                if (g_nCurrentThumbIndex > 0) {
+                    GotoThumb(g_nCurrentThumbIndex-1);
+                }
+            }
+
+            private function GotoNextThumb():void {
+                if (g_nCurrentThumbIndex < (g_nThumbs-1)) {
+                    GotoThumb(g_nCurrentThumbIndex+1);
+                }
+            }
+
+            private function GotoThumb(nThumb:int):void {
+                var page:PageInfo = g_aPages[nThumb];
+                var nTimeMs:int = page.nBeginMs;
+                if (page.bIsClip) {
+                    // Jump to the timestamp
+                    // Bugfix 5149: 
+                    // Do not jump to the timestamp directly, but to the 
+                    // next frame which displays the clip.
+                    // This depends on the frame rate: 
+                    // Example: frame rate 8 --> time interval of 125 msec
+                    // 0-62 msec --> jump back to the timestamp of the current frame is performed
+                    // 63-124 msec --> jump forward to the timestamp of the next frame is performed
+                    // ==> Add 1/2 of the time interval to the desired timestamp 
+                    // to be sure that the clip is visible 
+                    var nHalfTimeInterval:int = Math.ceil(0.5 * (1000.0 / g_nFramerate));
+                    trace("GotoThumb: " + nThumb + " at " + (nTimeMs + nHalfTimeInterval)+ " ms");
+                    GotoTimestamp(nTimeMs + nHalfTimeInterval);
+                } else {
+                    // Jump to the correct frame of the corresponding page
+                    GotoPage(page.nPageNumber);
+                }
+            }
+
+            private function GotoPreviousPage():void {
+                if (g_nCurrentPageIndex > 0) {
+                    GotoPage(g_nCurrentPageIndex-1);
+                }
+            }
+
+            private function GotoNextPage():void {
+                if (g_nCurrentPageIndex < (g_nPages-1)) {
+                    GotoPage(g_nCurrentPageIndex+1);
+                }
+            }
+
+            private function GotoPage(nPage:int):void {
+                var page:PageInfo = GetPageInfoFromIndex(nPage);
+                if (null != page) {
+                    var nTimeMs:int = page.nBeginMs;
+                    trace("GotoPage: " + nPage + " at " + nTimeMs + "ms");
+                    GotoTimestamp(nTimeMs);
+                    if (g_bHasPages && (nPage >= 0) && (nPage < (g_nPages + g_nClickPages)))
+                        LecContentSwf.gotoPage(nPage);
+                }
+            }
+
+            private function GotoTimestamp(nTimeMs:int, bDelayVideo:Boolean=false):void {
+                trace("GotoTimestamp: " + nTimeMs);
+                if (g_bHasPages)
+                    LecContentSwf.setPlaytime(nTimeMs);
+                if (g_bIsInteractivePaused) {
+                    LecContentSwf.play();
+                    //StartReplay(); // Not necessary; 'CheckPlayState()' does that for us
+                }
+                if (g_bHasVideo || g_bHasFlvAudio || g_bHasClips) {
+                    var bDoUpdateAV:Boolean = true;
+                    g_date = new Date();
+                    var currentTimestamp:Number = g_date.time;
+                    if (bDelayVideo && (currentTimestamp - g_nLastSeekTimestamp) < g_nSeekingDelayMs) {
+                        // Update only after 1 second delay
+                        bDoUpdateAV = false;
+                    }
+                    if (bDoUpdateAV) {
+                        g_nLastSeekTimestamp = currentTimestamp;
+                        if (g_bHasVideo || g_bHasFlvAudio) {
+                            var nVideoLengthMs:int = LecVideoDisplay.GetLengthMs();
+                            if (nTimeMs > nVideoLengthMs)
+                                LecVideoDisplay.SeekMs(nVideoLengthMs);
+                             else
+                                LecVideoDisplay.SeekMs(nTimeMs);
+                            // Seeking Delay
+                            g_bIsSeekingDelay = true;
+                            g_nResetIntervalId = setInterval(ResetSeekingDelay, g_fVideoSeekingDelaySec);
+                        }
+                        if (g_bHasClips) {
+                            CheckActiveClips(nTimeMs, false);
+                            if (g_nActiveClipIndex >= 0) {
+                                var nClipOffsetMs:int = nTimeMs - g_aClips[g_nActiveClipIndex].nBeginMs;
+                                // Special case: Structured Screengrabbing documents
+                                if (g_bIsStructuredScreengrabbing) {
+                                    if (nClipOffsetMs < 0) {
+                                        nClipOffsetMs = 0;
+                                    }
+                                    if (nClipOffsetMs > g_aClips[g_nActiveClipIndex].nEndMs) {
+                                        nClipOffsetMs = g_aClips[g_nActiveClipIndex].nEndMs;
+                                    }
+                                }
+                                LecClipDisplayArray[g_nActiveClipIndex].SeekMs(nClipOffsetMs);
+                                // Seeking Delay (if not already done by Video/FlvAudio
+                                if (!(g_bHasVideo || g_bHasFlvAudio)) {
+                                    g_bIsSeekingDelay = true;
+                                    g_nResetIntervalId = setInterval(ResetSeekingDelay, g_fClipSeekingDelaySec);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            private function GetPageInfoFromIndex(nIdx:int, bDoNotUseClickPages:Boolean=false):PageInfo {
+                var page:PageInfo = null;
+                for (var i:int = 0; i < g_aPages.length; ++i) {
+                    var pi:PageInfo = g_aPages[i];
+                    // Ignore clip thumb pages
+                    if (!pi.bIsClip) {
+                        if (pi.nPageNumber == nIdx) {
+                            // Ignore click pages?
+                            if (bDoNotUseClickPages && pi.bIsClickPage) {
+                                continue;
+                            } else {
+                                // Page found
+                                page = pi; 
+                                break;
+                            }
+                        }
+                    }
+                }
+                return page;
+            }
+
+            private function GetPageEntryIndexFromPageNumber(nPageNumber:int, bDoNotUseClickPages:Boolean=false):int {
+                var nIdx:int = -1;
+                for (var i:int = 0; i < g_aPageEntries.length; ++i) {
+                    var pe:PageEntry = g_aPageEntries[i];
+                    // Ignore clip thumb pages
+                    if (!pe.bIsClip) {
+                        if (pe.nPageNumber == nPageNumber) {
+                            // Ignore click pages?
+                            if (bDoNotUseClickPages && pe.bIsClickPage) {
+                                continue;
+                            } else {
+                                nIdx = i;
+                                break;
+                            }
+                        }
+                    }
+                }
+                return nIdx;
+            }
+
+            private function StartDragMode():void {
+                if (g_nTimeLineState == ENABLED) {
+                    g_bIsDragging = true;
+                    // Pause all pages/video/clips during dragging
+                    if (g_bLecIsPlaying) {
+                        if (g_bHasPages) {
+                            LecContentSwf.pause();
+                        }
+                        if (g_bHasVideo || g_bHasFlvAudio) {
+                            LecVideoDisplay.Pause();
+                        }
+                        if (g_bHasClips) {
+                            if (g_nActiveClipIndex >= 0) {
+                                LecClipDisplayArray[g_nActiveClipIndex].Pause();
+                            }
+                        }
+                    }
+                }
+            }
+
+            private function StopDragMode():void {
+                if (g_nTimeLineState == ENABLED) {
+                    g_bIsSeekingDelay = false;
+                    g_bIsDragging = false;
+                    // Resume all pages/video/clips after dragging
+                    if (g_bLecIsPlaying) {
+                        if (g_bHasPages) {
+                            LecContentSwf.play();
+                        }
+                        if (g_bHasVideo || g_bHasFlvAudio) {
+                            LecVideoDisplay.Play();
+                        }
+                        if (g_bHasClips) {
+                            if (g_nActiveClipIndex >= 0) {
+                                LecClipDisplayArray[g_nActiveClipIndex].Play();
+                            }
+                        }
+                    }
+                }
+            }
+
+
+            // Loading Progress
+            private function UpdateLoadingProgress():void {
+                var fContentProgress:Number = LecContentSwf.getLecturnityProgress();
+                var fVideoProgress:Number = 100.0;
+                var fClipsProgress:Number = 100.0;
+
+                if (g_bIsTrueStreaming) {
+                    // Streaming: "GetBufferPercentage()" gets the current buffer loaded 
+                    if (g_bHasVideo) { 
+                        fVideoProgress = LecVideoDisplay.GetBufferPercentage();
+                    }
+                    if (g_bHasClips && g_nClips > 0) {
+                        if (g_nActiveClipIndex > 0) {
+                            fClipsProgress = LecClipDisplayArray[g_nActiveClipIndex].GetBufferPercentage();
+                        }
+                    }
+                } else {
+                    // No Streaming: "GetBufferPercentage()" gets the current bytes loaded 
+                    if (g_bHasVideo) { 
+                        fVideoProgress = LecVideoDisplay.GetBufferPercentage();
+                    }
+                    if (g_bHasClips && g_nClips > 0) {
+                        fClipsProgress = 0.0;
+                        for (var i:int = 0; i < g_nClips; ++i)
+                            fClipsProgress += LecClipDisplayArray[i].GetBufferPercentage();
+                        fClipsProgress = Math.round(fClipsProgress / g_nClips);
+                    }
+                }
+
+                g_fProgress = Math.min(fContentProgress, Math.min(fVideoProgress, fClipsProgress));
+
+                // Bugfix 5138: Special cases:
+                // Disable progress influence on Time Sider
+                // - during Dragging
+                if (g_bIsDragging || g_bIsTimeSliderChange) 
+                    g_fProgress = 100.0;
+                // - in case of streaming and _paused_ replay
+                if (g_bIsTrueStreaming) { 
+                    if (g_bLecIsPlaying) {
+                        // Bugfix 5490 for not paused case 
+                        if (g_fProgress < g_fTimePercentage)
+                            g_fProgress = g_fTimePercentage;
+                    } else {
+                        // paused
+                        g_fProgress = 100.0;
+                    }
+                }
+            }
+
+
+            // Configurable Variables
+            private function CheckFlashVars():void {
+                baseUrl = Application.application.parameters.baseUrl;
+                streamUrl = Application.application.parameters.streamUrl;
+                streamStripFlvSuffix = Application.application.parameters.streamStripFlvSuffix;
+                videoFlvName = Application.application.parameters.videoFlvName;
+                autoStart = Application.application.parameters.autoStart;
+                if (g_nClips > 0) {
+                    aClipFlvNames = new ArrayCollection();
+                    for (var i:int = 0; i < g_nClips; ++i) {
+                        var strClipFlvObject:String = "clip" + i + "FlvName";
+                        var strClipFlvName:String;
+                        try {
+                            strClipFlvName = MyEval(Application.application.parameters, strClipFlvObject).toString();
+                            aClipFlvNames.addItem(strClipFlvName);
+                        }
+                        catch (err:Error) {
+                            // Add an empty string
+                            aClipFlvNames.addItem("");
+                        }
+                    }
+                }
+
+                CheckConfigurableVariables();
+
+                g_bAreFlashVarsChecked = true;
+            }
+
+            private function CheckConfigurableVariables():void {
+                if (baseUrl == null) {
+                    baseUrl = "";
+                }
+                //MsgBox("baseUrl: "+ baseUrl);
+                if (baseUrl.length > 0) {
+                    LecContentSwf.baseURL = baseUrl;
+                    LecContentSwf.setBaseURL(baseUrl);
+                }
+
+                if (streamUrl == null) {
+                    streamUrl = "";
+                }
+                //MsgBox("streamUrl: "+ streamUrl);
+                if (streamStripFlvSuffix == null) {
+                    streamStripFlvSuffix = "true";
+                }
+                if (videoFlvName == null) {
+                    videoFlvName = "";
+                }
+                //MsgBox("videoFlvName: "+ videoFlvName);
+                if (autoStart == null) {
+                    autoStart = "";
+                }
+                //MsgBox("autoStart: "+ autoStart);
+                if (0 < autoStart.length) {
+                    if (autoStart == "true") {
+                        g_bIsAutostartMode = true;
+                    }
+                    if (autoStart == "false") {
+                        g_bIsAutostartMode = false;
+                    }
+                }
+
+                g_strContentUrl = baseUrl + g_strContentPath + g_strSwfFilename;
+
+                CheckAudioVideoUrl();
+
+                g_bAreFlashVarsChecked = true;
+            }
+
+            // Audio/Video stuff
+            private function InitAudioVideoClips():void {
+                // Set audio/video parameter
+                SetAudioVideoParameter();
+
+                // Check Recording length in case of video
+                if (g_bHasVideo || g_bHasFlvAudio) {
+                    if (g_nVideoLengthMs > g_nRecordingLengthMs) {
+                        g_nRecordingLengthMs = g_nVideoLengthMs;
+                    }
+                }
+
+                // Create the LEC AudioVideoDisplay/AudioVideoComponent objects
+                CreateAudioVideoObjects();
+
+                // Init Clips (if any)
+                if (g_nClips > 0) {
+                    // Set clip parameter
+                    for (var i:int = 0; i < g_nClips; ++i)
+                        SetClipParameter(i);
+                    // Create the LEC ClipDisplay/ClipComponent objects
+                    CreateClipObjects();
+                }
+                g_bAreAVStreamsInitialized = true;
+            }
+
+            private function CheckAudioVideoUrl():void {
+                if (videoFlvName != "")
+                    g_strVideoFilename = videoFlvName;
+                if (streamUrl != "") {
+                    if (streamUrl != "null")
+                        g_bIsTrueStreaming = true;
+                    else
+                        g_bIsTrueStreaming = false;
+                    g_strAudioVideoUrl = g_strVideoFilename;
+                } else {
+                    g_strAudioVideoUrl = baseUrl + g_strContentPath + g_strVideoFilename;
+                    g_bIsTrueStreaming = false;
+                }
+            }
+
+
+            private function SetAudioVideoParameter():void {
+                CheckAudioVideoUrl();
+                if (videoFlvName.length > 0) {
+                    var adaptedVideoFlvName:String = CheckFlvSuffix(videoFlvName);
+                    if (g_bIsTrueStreaming)
+                        g_strAudioVideoUrl = adaptedVideoFlvName;
+                    else
+                        g_strAudioVideoUrl = baseUrl + g_strContentPath + adaptedVideoFlvName;
+                }
+            }
+
+            private function SetClipParameter(idx:int):void {
+                g_aClips[idx].strClipUrl = baseUrl + g_strContentPath + g_aClips[idx].strClipFlvFile;
+                if (aClipFlvNames.length > 0) {
+                    var adaptedClipFlvName:String = CheckFlvSuffix(g_aClips[idx].strClipFlvFile);
+                    if (g_bIsTrueStreaming)
+                        g_aClips[idx].strClipUrl = adaptedClipFlvName;
+                    else
+                        g_aClips[idx].strClipUrl = baseUrl + g_strContentPath + adaptedClipFlvName;
+                }
+            }
+
+            private function GetActiveClipIndex(nTimeMs:int, bUseLmdData:Boolean=false):int {
+                // This method returns -1 if no clip is active
+                var idx:int = -1;
+                
+                var i:int = 0;
+
+                if (bUseLmdData) {
+                    // Special case: Use the clip data from "document.lmd"
+                    if (g_aPages.length > 0) {
+                        for (i = 0; i < g_aPages.length; ++i) {
+                            if (g_aPages[i].bIsClip && ((nTimeMs >= g_aPages[i].nBeginMs) && (nTimeMs <= g_aPages[i].nEndMs))) {
+                                idx = i;
+                                break;
+                            }
+                        }
+                    }
+                } else {
+                    // Normal case: Use the clip data from "document.xml" 
+                    if (!g_bHasClips)
+                        return idx;
+
+                    if (g_nClips > 0) {
+                        for (i = 0; i < g_nClips; ++i) {
+                            if ((nTimeMs >= g_aClips[i].nBeginMs) && (nTimeMs <= g_aClips[i].nEndMs)) {
+                                idx = i;
+                                break;
+                            }
+                        }
+                    }
+
+                    // Special case: (Structured) Screengrabbing Document or SG only documents
+                    // The clip rarely starts exact at 0 msec., but it should be visible in the beginning
+                    if ((idx < 0) && (g_bIsStructuredScreengrabbing || !g_bHasPages)) {
+                        // Screengrabbing clip is the only one --> it has index 0
+                        if (nTimeMs < g_aClips[0].nBeginMs)
+                            idx = 0;
+                        if (nTimeMs > g_aClips[0].nEndMs)
+                            idx = 0;
+                    }
+                }
+
+                return idx;
+            }
+
+            private function CheckActiveClips(nTimeMs:int, bDoSeek:Boolean):void {
+                var nNewActiveClipIndex:int = GetActiveClipIndex(nTimeMs);
+                var nLastActiveClipIndex:int = g_nActiveClipIndex;
+                if (nNewActiveClipIndex != nLastActiveClipIndex) {
+                    // Hide and stop the last active clip
+                    if (nLastActiveClipIndex >= 0) {
+                        if (LecClipDisplayArray[nLastActiveClipIndex] != null) {
+                            LecClipDisplayArray[nLastActiveClipIndex].visible = false;
+                            LecClipDisplayArray[nLastActiveClipIndex].SeekMs(0);
+                            LecClipDisplayArray[nLastActiveClipIndex].Pause();
+                            if (LecClipFrameArray[nLastActiveClipIndex] != null) {
+                                LecClipFrameArray[nLastActiveClipIndex].visible = false;
+                            }
+                        }
+                    }
+                    // Show the current active clip
+                    if (nNewActiveClipIndex >= 0) {
+                        if (LecClipDisplayArray[nNewActiveClipIndex] != null) {
+                            LecClipDisplayArray[nNewActiveClipIndex].visible = true;
+                            if (LecClipFrameArray[nNewActiveClipIndex] != null) { 
+                                LecClipFrameArray[nNewActiveClipIndex].visible = true;
+                            }
+                        }
+
+                        if (bDoSeek) {
+                            var fClipTimeSec:Number = (nTimeMs - g_aClips[nNewActiveClipIndex].nBeginMs) / 1000.0;
+                            if (fClipTimeSec < 0.0)
+                                fClipTimeSec = 0.0;
+                            if (fClipTimeSec > (g_aClips[nNewActiveClipIndex].nEndMs/1000.0))
+                                fClipTimeSec = (g_aClips[nNewActiveClipIndex].nEndMs/1000.0);
+                            var fTimeDiff:Number; 
+                            var fCurrentClipTimeSec:Number;
+                            fCurrentClipTimeSec = LecClipDisplayArray[nNewActiveClipIndex].GetTime();
+                            fTimeDiff = Math.abs(fCurrentClipTimeSec - fClipTimeSec);
+                            if (fTimeDiff > g_fClipSynchronizationDeltaSec) {
+                                if (g_fClipSynchronizationDeltaSec > fClipTimeSec)
+                                    fClipTimeSec = 0.0;
+                                LecClipDisplayArray[nNewActiveClipIndex].Seek(fClipTimeSec);
+                            }
+                        }
+                        if (g_bLecIsPlaying && !g_bIsDragging) {
+                            LecClipDisplayArray[nNewActiveClipIndex].Play();
+                        }
+                    }
+                }
+                g_nActiveClipIndex = nNewActiveClipIndex;
+            }
+
+
+            // Misc. functions
+            private function DelayedAutoStart():void {
+                if (g_bIsAutostartMode) {
+                    //MsgBox("AutostartMode");
+                    if (!g_bLecIsPlaying) {
+                        if (g_bHasPages)
+                            LecContentSwf.play();
+                        StartReplay();
+                    }
+                } else {
+                    if (g_bLecIsPlaying) {
+                        if (g_bHasPages)
+                            LecContentSwf.pause();
+                        PauseReplay();
+                        GotoBeginning();
+                    }
+                }
+
+                clearInterval(g_nAutostartIntervalId);
+                g_nAutostartIntervalId = 0;
+
+                // Update view
+                OnResize();
+            }
+
+            private function DelayedSeek(nTimeMs:int , bDelayVideo:Boolean):void {
+                GotoTimestamp(nTimeMs, bDelayVideo);
+                g_bIsTimeSliderChange = false;
+                g_bIsSeekingDelay = false;
+
+                clearInterval(g_nSeekIntervalId);
+                g_nSeekIntervalId = 0;
+            }
+
+            private function ResetSeekingDelay():void {
+                g_bIsSeekingDelay = false;
+                clearInterval(g_nResetIntervalId);
+                g_nResetIntervalId = 0;
+            }
+
+            private function CallContentResize():void {
+               LecContentSwf.width = ContentCanvas.width;
+               LecContentSwf.height = ContentCanvas.height;
+            }
+
+            private function CheckFlvSuffix(flvName:String):String {
+                var newFlvName:String = new String (flvName);
+                if (streamStripFlvSuffix != "false") {
+                    var nIdx:int = newFlvName.indexOf(".flv");
+                    if (!g_bIsTrueStreaming) {
+                        if (nIdx == -1) {
+                            newFlvName = newFlvName + ".flv";
+                            return (newFlvName);
+                        }
+                    } else if (-1 < nIdx) {
+                        return (newFlvName.substring(0, nIdx));
+                    }
+                } else {
+                    return (newFlvName);
+                }
+                return (newFlvName);
+            }
+
+            private function GetIndexFromState(strState:String):uint {
+                var idx:uint = 0;
+                if (strState == "enabled")
+                    idx = ENABLED;
+                else if (strState == "disabled")
+                    idx = DISABLED;
+                else if (strState == "hidden")
+                    idx = HIDDEN;
+                return idx;
+            }
+
+            private function GetStateFromIndex(idx:uint):String {
+                var strState:String = "";
+                switch (idx) {
+                    case ENABLED:
+                        strState = "enabled";
+                        break;
+                    case DISABLED:
+                        strState = "disabled";
+                        break;
+                    case HIDDEN:
+                        strState = "hidden";
+                        break;
+                }
+                return strState;
+            }
+
+            private function MyEval(root:Object, path:String):Object {
+                var currentObject:Object = root;
+                var steps:Array = path.split(".");
+                var l:int = steps.length;
+                for (var i:int = 0; i < l; ++i) {
+                    if (currentObject[steps[i]] != null) {
+                        currentObject = currentObject[steps[i]];
+                    } else {
+                        return null;
+                    }
+                }
+                return currentObject;
+            }
+
+
+            // Search functions
+            private function Search():void {
+                if (LecTextInput == null)
+                    return;
+
+                g_aSearchNotes.removeAll();
+                if (LecTextInput.text != "") {
+                    // Check all pages and thumbs
+                    for (var i:int = 0; i < g_nThumbs; ++i) {
+                        var bTextInTitle:Boolean = false;
+                        var bTextInKeywords:Boolean = false;
+                        var bTextInFullText:Boolean = false;
+                        var bDoNotUseClickPages:Boolean = !g_bShowClickPages;
+                        var page:PageInfo = GetPageInfoFromIndex(i, bDoNotUseClickPages);
+                        if (null == page)
+                            continue;
+
+                        var nTimeMs:int = page.nBeginMs;
+
+                        // Check Title of the page
+                        if (chkTitle.selected) {
+                            bTextInTitle = IsSearchTextInSearchString(page.strTitle, rdbAll.selected);
+                        }
+                        // Check Keywords of the page
+                        if (chkKeywords.selected) {
+                            bTextInKeywords = IsSearchTextInSearchString(page.strKeywords, rdbAll.selected);
+                        }
+                        // Check FullText "exact at the beginning" of the page 
+                        // (or before in the special case where the first page does not begin at 0 msec)
+                        // (Check "after the beginning" of the page is done below)
+                        if (chkFullText.selected) {
+                            var fullText:FullText;
+                            var nFullTextItems:int = page.GetFullTextArray().length;
+                            for (var k:int = 0; k < nFullTextItems; ++k) {
+                                fullText = page.GetFullTextArray()[k];
+                                if (fullText.nBeginMs <= page.nBeginMs) {
+                                    bTextInFullText = bTextInFullText || IsSearchTextInSearchString(fullText.strText, rdbAll.selected);
+                                }
+                            }
+                        }
+
+                        // Add a search note
+                        if (bTextInTitle || bTextInKeywords || bTextInFullText)
+                            AddSearchNoteFromPageInfo(page, bTextInTitle, bTextInKeywords, bTextInFullText);
+
+                        // Now check the Full text "after the beginning" of the page 
+                        // (Check "exact at the beginning" of the page is already done)
+                        if (chkFullText.selected) {
+                            bTextInFullText = false;
+                            var nLastTimeMs:int = -1;
+                            for (k = 0; k < nFullTextItems; ++k) {
+                                fullText = page.GetFullTextArray()[k];
+                                if (fullText.nBeginMs > page.nBeginMs && fullText.nBeginMs < page.nEndMs) {
+                                    bTextInFullText = IsSearchTextInSearchString(fullText.strText, rdbAll.selected);
+                                    // Add a earch note
+                                    if (bTextInFullText && (fullText.nBeginMs != nLastTimeMs)) {
+                                        AddSearchNoteFromPageInfo(page, false, false, true);
+                                        nLastTimeMs = fullText.nBeginMs;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                // Update view
+                OnResize();
+            }
+
+            private function TrimInputText(strTextIn:String):String {
+                // Trim leading and ending whitespaces and reduce subsequent whitespaces to a single one
+                var strTextTmp:String = strTextIn.replace(/^\s+|\s+$/g, "");
+                var strTextOut:String = strTextTmp.replace(/\s+/g, " ");
+                return strTextOut;
+            }
+
+            private function IsSearchTextInSearchString(txtSearch:String, bSearchAllWords:Boolean):Boolean {
+                var bOneTextFound:Boolean = false;
+                var bAllTextFound:Boolean = true;
+
+                // Trim the text from the input text field
+                var strText:String = TrimInputText(LecTextInput.text);
+                // Split the words
+                var aStrWords:Array = strText.split(" ");
+                var nWords:int = aStrWords.length;
+                for (var i:int = 0; i < nWords; ++i) {
+                    var strWord:String = aStrWords[i].toString().toLowerCase();
+                    var bTextFound:Boolean = (txtSearch.toLowerCase().search(strWord) > -1) ? true : false;
+                    bOneTextFound = (bOneTextFound || bTextFound);
+                    bAllTextFound = (bAllTextFound && bTextFound);
+                }
+
+                if (bSearchAllWords)
+                    return bAllTextFound;
+                else
+                    return bOneTextFound; 
+            }
+
+            private function AddSearchNoteFromPageInfo(page:PageInfo, 
+                                                       bTitle:Boolean, 
+                                                       bKeywords:Boolean, 
+                                                       bFullText:Boolean):void {
+                var nTimeMs:int = page.nBeginMs;
+                var nPage:int = page.nPageNumber;
+                // Bugfix 5794: Get correct PageEntry
+                var bDoNotUseClickPages:Boolean = !g_bShowClickPages;
+                var nIdx:int = GetPageEntryIndexFromPageNumber(nPage, bDoNotUseClickPages);
+                if (nIdx > -1) {
+                    var pageEntry:PageEntry = g_aPageEntries[nIdx];
+                    var strTitle:String;
+                    var strType:String;
+                    strTitle = pageEntry.pageEntryStrings[3];
+                    strType = (bTitle) ? resourceManager.getString('localization', 'ShortcutTitle') : "_";
+                    strType += " ";
+                    strType += (bKeywords) ? resourceManager.getString('localization', 'ShortcutKeywords') : "_";
+                    strType += " ";
+                    strType += (bFullText) ? resourceManager.getString('localization', 'ShortcutFullText') : "_";
+                    var searchNote:SearchNote = new SearchNote(nTimeMs, nPage, strTitle, strType);
+                    g_aSearchNotes.addItem(searchNote);
+                }
+            }
+
+            private function GetKeywordsFromPageObject(objPage:Object):String {
+                var strKeywords:String = "";
+                var nKeywords:int = objPage.keyword.length();
+                for (var i:int = 0; i < nKeywords; ++i) {
+                    strKeywords += " ";
+                    strKeywords += (nKeywords > 1) ? objPage.keyword[i] : objPage.keyword;
+                }
+                return strKeywords;
+            }
+
+            private function AddFullTextToPageInfoList():void {
+                if (g_aFullTexts != null && g_aFullTexts.length > 0) {
+                    for (var i:int = 0; i < g_aFullTexts.length; ++i) {
+                        var fullText:FullText = g_aFullTexts[i];
+                        var nTimeMs:int = fullText.nBeginMs;
+                        // Bugfix 5595: Get Thumb index (instead of pagex index)
+                        //var idx:int = GetPageIndexFromTimeMs(nTimeMs);
+                        var idx:int = GetThumbIndexFromTimeMs(nTimeMs);
+                        if (idx > -1) {
+                            g_aPages[idx].AddFullText(fullText);
+                        } else {
+                            // Consider the special case that the first page 
+                            // does not begin at 0 msec
+                            if (nTimeMs < g_aPages[0].nBeginMs)
+                                g_aPages[0].AddFullText(fullText);
+                        }
+                    }
+                    // The original full list is not needed any more
+                    g_aFullTexts.removeAll();
+               }
+            }
+
+
+
+            // Event Listener
+            private function ThumbClickEvent(event:ListEvent):void {
+                var thumbIdx:int = event.rowIndex;
+                if (!g_nDocumentStructureState == DISABLED)
+                    GotoThumb(thumbIdx);
+            }
+
+            private function SearchClickEvent(event:ListEvent):void {
+                var nPageIndex:int = g_aSearchNotes[event.rowIndex].nPage;
+                var nTimeMs:int = g_aSearchNotes[event.rowIndex].nTimeMs;
+                // Bugfix 5595: Always goto the corresponding page 
+                // - or to the timestamp in the case no page index is defined
+                //if (nTimeMs == g_aPages[nPageIndex].nBeginMs)
+                if (nPageIndex >= 0)
+                    GotoPage(nPageIndex);
+                else
+                    GotoTimestamp(nTimeMs);
+            }
+
+            private function TimeSliderChangeEvent(event:SliderEvent, bIsSeeking:Boolean):void {
+                if (g_nTimeLineState == ENABLED) {
+                    if (bIsSeeking) {
+                        // Direct Seeking
+                        GotoTimestamp(Math.round(event.value / 100.0 * g_nRecordingLengthMs), true)
+                    } else {
+                        g_bIsTimeSliderChange = true;
+                        // Delayed Seeking
+                        g_nSeekIntervalId = setInterval(DelayedSeek, 125, Math.round(event.value / 100.0 * g_nRecordingLengthMs), false);
+                    }
+                }
+            }
+
+            // Scaling Type (combo box)
+            private function ScalingTypeComboBox_changeHandler(event:ScalingTypeEvent):void {
+                var iScalingType:int = event.selectedScalingType;
+                g_bIsContentScalable = (iScalingType > 0) ? true : false;
+                LecContentSwf.isResizable = g_bIsContentScalable;
+                
+                // Update view
+                LecContentSwf.callResize();
+                OnResize();
+            }
+
+            // Localization (combo box)
+            private function LocaleComboBox_changeHandler(event:LanguageEvent):void {
+                // Set the localeChain to either the one-element Array
+                // [ "en_US" ] or the one-element Array [ "de_DE" ].
+                var objItem:Object = locales[event.selectedLanguage];
+                resourceManager.localeChain = [objItem];
+                // Reset Search
+                g_aSearchNotes.removeAll();
+                Search();
+                // Adopt ScalingTypeChooser
+                scalingTypeNames[1] = resourceManager.getString('localization', 'Fit');
+                scalingTypeChooser.setDataProvider(scalingTypeNames);
+            }
+
+            // "Overview"/"Search"/"Info" tab
+            private function TabChange(index:int):void {
+                tabNavigationSelectedIndex = index;
+                switch (index) {
+                    case 0:
+                        tabOverview.overSource = ImgOverviewDown;
+                        tabSearch.overSource = ImgSearchOn;
+                        tabInfo.overSource = ImgInfoOn;
+                        tabOverview.selected = true;
+                        tabSearch.selected = false;
+                        tabInfo.selected = false;
+                        return;
+                    case 1:
+                        tabOverview.overSource = ImgOverviewOn;
+                        tabSearch.overSource = ImgSearchDown;
+                        tabInfo.overSource = ImgInfoOn;
+                        tabOverview.selected = false;
+                        tabSearch.selected = true;
+                        tabInfo.selected = false;
+                        return;
+                    case 2:
+                        tabOverview.overSource = ImgOverviewOn;
+                        tabSearch.overSource = ImgSearchOn;
+                        tabInfo.overSource = ImgInfoDown;
+                        tabOverview.selected = false;
+                        tabSearch.selected = false;
+                        tabInfo.selected = true;
+                        return;
+                }
+            }
+
+//            // Title in the browser window
+//            private function ChangeBrowserTitle(strTitle:String):void {
+//                // Init the BrowserManager
+//                var bm:IBrowserManager = BrowserManager.getInstance();
+//                //bm.addEventListener(BrowserChangeEvent.URL_CHANGE, ParseUrl);
+//                bm.init("", "");
+//                bm.setTitle(strTitle);
+//            }
+
+            // Open LEC Home web site
+            private function OpenLecturnityHome():void {
+                //getURL("http://www.lecturnity.de");
+                var request:URLRequest = new URLRequest("http://" + resourceManager.getString('localization', 'LecturnityWebAddress'));
+                navigateToURL(request, "_blank");
+            }
+
+            // Message Box (comparible with the JavaScript 'alert' call)
+            private function MsgBox(strMsg:String=null):void {
+                if (strMsg != null)
+                    mx.controls.Alert.show(strMsg);
+                else
+                    mx.controls.Alert.show("!");
+            }
+
+        ]]>
+    </mx:Script>
+
+
+<!--
+***** Localization
+//-->
+    <mx:Metadata>
+        [ResourceBundle("localization")]
+    </mx:Metadata> 
+
+
+<!--
+***** Style part
+//-->
+    <mx:Style source="styles.css"/>
+
+
+
+<!--
+***** MXML part
+//-->
+
+    <mx:VBox id="MainVBox" 
+             width="100%" 
+             height="100%" 
+             backgroundColor="#363B48" 
+             paddingTop="0" 
+             >
+    
+        <mx:HBox id="HeaderHBox" 
+                 styleName="viewerHeaderBackground" 
+                 height="34" 
+                 width="100%" 
+                 horizontalGap="-5" 
+                 horizontalScrollPolicy="off" 
+                 verticalScrollPolicy="off" 
+                 paddingLeft="38" 
+                 >
+            <mx:Text id="ApplicationHeaderMetadata" 
+                     text="{g_strApplicationHeader}" 
+                     color="#ffffff" 
+                     styleName="stdNormal" 
+                     />
+            <mx:Text id="ApplicationHeaderWebPlayer" 
+                     visible="false"
+                     text="{resourceManager.getString('localization', 'ApplicationHeader')}" 
+                     color="#829FE3" 
+                     styleName="stdNormal" 
+                     />
+        </mx:HBox>
+        
+        <!-- really don't know why this is needed. but it is needed - johannes. -->
+        <mx:Spacer height="-12" />
+
+        <!-- VBox for a) Document Structure (& Video) & Content and b) Navigation Bar-->
+        <mx:VBox id="LecDocumentAndNavigationBox" 
+                 verticalGap="{g_nControlbarGap}" 
+                 horizontalAlign="center" 
+                 top="0"
+                 left="0" 
+                 right="0" 
+                 bottom="0"
+                 width="100%" 
+                 height="100%"
+                 >
+
+            <!-- HBox for a) Document Structure (& Video) and b) Content -->
+            <mx:HBox id="LecDocumentStructureAndContentBox" 
+                     width="100%" 
+                     height="100%" 
+                     horizontalGap="5"
+                     verticalGap="0"
+                     paddingLeft="5" 
+                     paddingRight="5"
+                     >
+    
+                <!-- VBox for Document Structure (& Video) -->
+                <mx:VBox id="StructurePlaceholder" 
+                         width="{g_nPlaceholderWidth}" 
+                         height="{g_nPlaceholderHeight}" 
+                         horizontalAlign="{g_strStructureHorizontalAlignment}" 
+                         verticalAlign="{g_strStructureVerticalAlignment}" 
+                         verticalGap="-10" 
+                         horizontalScrollPolicy="auto" 
+                         verticalScrollPolicy="{g_strStructureScrollPolicy}" 
+                         >
+
+                    <mx:HBox id="TabHolderBox" 
+                             width="100%" 
+                             height="30" 
+                             styleName="viewerTabHeaderBackground"
+                             >
+                        <mx:Spacer width="35" 
+                        />
+                        <local:GfxButton selected="true" 
+                                         id="tabOverview" 
+                                         afterClick="{TabChange(0)}" 
+                                         title="{resourceManager.getString('localization', 'Overview')}" 
+                                         fontColorDown="#87A9F8" 
+                                         height="30" 
+                                         width="80" 
+                                         source="@Embed('assets/tab/viewerOverview.png')" 
+                                         overSource="@Embed('assets/tab/viewerOverviewOn.png')" 
+                                         selectedSource="@Embed('assets/tab/viewerOverviewDown.png')" 
+                                         downSource="@Embed('assets/tab/viewerOverviewDown.png')" 
+                                         />
+                        <local:GfxButton id="tabSearch" 
+                                         afterClick="{TabChange(1)}" 
+                                         title="{resourceManager.getString('localization', 'Search')}" 
+                                         fontColorDown="#87A9F8" 
+                                         height="30" 
+                                         width="69" 
+                                         source="@Embed('assets/tab/viewerSearch.png')" 
+                                         overSource="@Embed('assets/tab/viewerSearchOn.png')" 
+                                         selectedSource="@Embed('assets/tab/viewerSearchDown.png')" 
+                                         downSource="@Embed('assets/tab/viewerSearchDown.png')" 
+                                         />
+                        <local:GfxButton id="tabInfo" 
+                                         afterClick="{TabChange(2)}" 
+                                         title="{resourceManager.getString('localization', 'Info')}" 
+                                         fontColorDown="#87A9F8" 
+                                         height="30" 
+                                         width="59" 
+                                         source="@Embed('assets/tab/viewerInfo.png')" 
+                                         overSource="@Embed('assets/tab/viewerInfoOn.png')" 
+                                         selectedSource="@Embed('assets/tab/viewerInfoDown.png')" 
+                                         downSource="@Embed('assets/tab/viewerInfoDown.png')" 
+                                         />
+                    </mx:HBox>
+                    
+                    
+                    <!-- really don't know why this is needed. but it is needed - johannes. -->
+                    <mx:Spacer id="Spacer1" height="-10" />
+
+                    <!-- Tab Navigator for Document Structure / Info / Search -->
+                    <mx:ViewStack id="LecTabNavigator" 
+                                     visible = "false" 
+                                     width="100%" 
+                                     height="100%" 
+                                     backgroundColor="#C9D8FC" 
+                                     selectedIndex="{tabNavigationSelectedIndex}" 
+                                     >
+
+                        <!-- Document Structure Tab -->
+                        <mx:Canvas id="LecDocumentViewCanvas" 
+                                   label="{resourceManager.getString('localization', 'Overview')}" 
+                                   width="100%" 
+                                   height="100%" 
+                                   horizontalScrollPolicy="off" 
+                                   verticalScrollPolicy="off" 
+                                   >
+                            <!-- Eval Note Canvas -->
+                            <local:ImageRepeatCanvas id="LecDocumentViewEvaluationCanvas" 
+                                                          repeatImage="{imgEvalNote}" 
+                                                          width="100%" 
+                                                          height="100%" 
+                                                          visible="false" 
+                            />
+                            <mx:DataGrid id="LecDocumentView" 
+                                         borderStyle="none" 
+                                         dataProvider="{g_aPageEntries}" 
+                                         variableRowHeight="true" 
+                                         backgroundAlpha="0.0" 
+                                         selectionColor="#829FE3"
+                                         rollOverColor="#AFC7FA" 
+                                         alternatingItemColors="{[]}" 
+                                         showHeaders="false" 
+                                         sortableColumns="false" 
+                                         selectable="{g_bDocumentStructureSelectable}" 
+                                         editable="false" 
+                                         itemClick="ThumbClickEvent(event);" 
+                                         width="100%" 
+                                         height="100%" 
+                                         horizontalScrollPolicy="auto"
+                                         verticalScrollPolicy="auto" 
+                                         styleName="smallNormal"
+                                         >
+                                <mx:columns>
+                                    <mx:DataGridColumn dataField="pageEntryStrings" 
+                                                       itemRenderer="DocumentStructureItemRenderer" 
+                                                       headerText="" 
+                                    />
+                                </mx:columns>
+                            </mx:DataGrid>
+                            <!-- Transparent Protection Canvas for disabled Document Structure -->
+                            <mx:Canvas id="LecDocumentViewProtectionCanvas" 
+                                       backgroundColor="#FF0000" 
+                                       alpha="0.0" 
+                                       width="{g_nStructureWidth}" 
+                                       height="{g_nStructureHeight}" 
+                            />
+                        </mx:Canvas>
+
+                        <!-- Search Tab -->
+                        <mx:VBox verticalAlign="top" 
+                                 width="100%" 
+                                 height="100%" 
+                                 horizontalScrollPolicy="off" 
+                                 verticalScrollPolicy="off" 
+                                 backgroundColor="#7C8AA0" 
+                                 paddingLeft="0" 
+                                 paddingRight="0" 
+                                 >
+                            <mx:HBox horizontalAlign="center" 
+                                     paddingLeft="10" 
+                                     paddingRight="10" 
+                                     paddingTop="10"
+                                     >
+                                <mx:TextInput id="LecTextInput" 
+                                              styleName="searchInput"
+                                              width="210" 
+                                              height="25" 
+                                              textAlign="left" 
+                                              enter="Search();" 
+                                              toolTip="{resourceManager.getString('localization', 'SearchTip')}" 
+                                />
+                                <local:GfxButton source="@Embed('assets/buttonSearch.png')" 
+                                    overSource="@Embed('assets/buttonSearchOn.png')" 
+                                    downSource="@Embed('assets/buttonSearchDown.png')" 
+                                    title="{resourceManager.getString('localization', 'Search2')}" 
+                                    titleOffsetLeft="10" 
+                                    fontColor="#ffffff" 
+                                    fontColorOver="#4875DC" 
+                                    fontColorDown="#4875DC" 
+                                    width="70" height="25" 
+                                    afterClick="Search();" 
+                                    />
+                            </mx:HBox>
+                            <mx:HBox horizontalAlign="center" 
+                                     paddingLeft="10" 
+                                     paddingRight="10" 
+                                     horizontalGap="18" 
+                                     >
+                                <mx:Label text="{(resourceManager.getString('localization', 'Type')+':')}" 
+                                          height="16" 
+                                          paddingTop="2" 
+                                          verticalCenter="true" 
+                                          styleName="smallNormalLight" 
+                                />
+                                <mx:CheckBox id="chkTitle" 
+                                             label="{resourceManager.getString('localization', 'Title')}" 
+                                             selected="true" 
+                                             verticalCenter="true" 
+                                             styleName="searchCheckbox" 
+                                />
+                                <mx:CheckBox id="chkKeywords" 
+                                             label="{resourceManager.getString('localization', 'Keywords')}" 
+                                             selected="true" 
+                                             verticalCenter="true" 
+                                             styleName="searchCheckbox" 
+                                />
+                                <mx:CheckBox id="chkFullText" 
+                                             label="{resourceManager.getString('localization', 'FullText')}" 
+                                             selected="true" 
+                                             verticalCenter="true" 
+                                             styleName="searchCheckbox" 
+                                />
+                            </mx:HBox>
+                            <mx:HBox width="100%" 
+                                     paddingLeft="8" 
+                                     paddingRight="8" 
+                                     >
+                                <mx:HRule strokeColor="#98A4B4" 
+                                          strokeWidth="1" 
+                                          width="100%" 
+                                          />
+                            </mx:HBox>
+                            
+                            <mx:HBox horizontalAlign="center" 
+                                     paddingLeft="10" 
+                                     paddingRight="10" 
+                                     horizontalGap="18" 
+                                     >
+                                <mx:Label text="{resourceManager.getString('localization', 'SearchFor')}" 
+                                          height="20" 
+                                          verticalCenter="true" 
+                                          styleName="smallNormalLight" 
+                                />
+                                <mx:RadioButton id="rdbAll" 
+                                                groupName="grpRadio" 
+                                                label="{resourceManager.getString('localization', 'AllWords')}" 
+                                                selected="false" 
+                                                height="20" 
+                                                verticalCenter="true" 
+                                                styleName="searchCheckbox" 
+                                />
+                                <mx:RadioButton id="rdbOne" 
+                                                groupName="grpRadio" 
+                                                label="{resourceManager.getString('localization', 'OneWord')}" 
+                                                selected="true" 
+                                                height="20" 
+                                                verticalCenter="true" 
+                                                styleName="searchCheckbox" 
+                                />
+                            </mx:HBox>
+                            <mx:Spacer height="2" 
+                                       />
+                            <mx:VBox horizontalAlign="center" 
+                                     paddingLeft="0" 
+                                     paddingRight="0" 
+                                     width="100%" 
+                                     height="100%" 
+                                     verticalGap="0"
+                                     >
+                                <mx:Grid styleName="viewerSearchHeader" 
+                                         height="21" 
+                                         width="100%" 
+                                         horizontalGap="0" 
+                                         verticalGap="0" 
+                                         horizontalScrollPolicy="off" 
+                                         verticalScrollPolicy="off" 
+                                         >
+                                    <mx:GridRow>
+                                        <mx:GridItem width="70" 
+                                                     paddingLeft="10" 
+                                                     paddingTop="1" 
+                                                     horizontalScrollPolicy="off" 
+                                                     >
+                                            <mx:Label text="{resourceManager.getString('localization', 'Timestamp')}" 
+                                                      color="#ffffff" 
+                                                      styleName="smallNormal" 
+                                                      />
+                                        </mx:GridItem>
+                                        <mx:GridItem width="{(g_nSearchViewWidth - 70 - 40)}" 
+                                                     paddingLeft="5" 
+                                                     paddingTop="1" 
+                                                     horizontalScrollPolicy="off" 
+                                                     >
+                                            <mx:Label text="{resourceManager.getString('localization', 'Title')}" 
+                                                      color="#ffffff" 
+                                                      styleName="smallNormal" 
+                                                      />
+                                        </mx:GridItem>
+                                        <mx:GridItem width="40" 
+                                                     paddingLeft="5" 
+                                                     paddingTop="1" 
+                                                     horizontalScrollPolicy="off" 
+                                                     >
+                                            <mx:Label text="{resourceManager.getString('localization', 'Type')}" 
+                                                      color="#ffffff" 
+                                                      styleName="smallNormal" 
+                                                      />
+                                        </mx:GridItem>
+                                    </mx:GridRow>
+                                </mx:Grid>
+                                <mx:DataGrid id="dataGridSearchResults" 
+                                             dataProvider="{g_aSearchNotes}" 
+                                             sortableColumns="false" 
+                                             editable="false" 
+                                             alternatingItemColors="{[]}" 
+                                             itemClick="SearchClickEvent(event);" 
+                                             styleName="smallNormal" 
+                                             width="100%" 
+                                             height="100%" 
+                                             borderStyle="none" 
+                                             backgroundAlpha="1.0" 
+                                             backgroundColor="#C9D8FC"
+                                             selectionColor="#829FE3"
+                                             rollOverColor="#AFC7FA" 
+                                             showHeaders="false" 
+                                             horizontalScrollPolicy="off" 
+                                             verticalScrollPolicy="auto" 
+                                             verticalGridLineColor="#C9D8FC"
+                                             >
+                                    <mx:columns>
+                                        <mx:DataGridColumn dataField="strTime" 
+                                                           headerText="{resourceManager.getString('localization', 'Timestamp')}" 
+                                                           width="70" 
+                                                           paddingLeft="10" 
+                                        />
+                                        <mx:DataGridColumn dataField="strTitle" 
+                                                           headerText="{resourceManager.getString('localization', 'Title')}" 
+                                                           width="{(g_nSearchViewWidth - 70 - 40)}" 
+                                        />
+                                        <mx:DataGridColumn dataField="strType"
+                                                           headerText="{resourceManager.getString('localization', 'Type')}" 
+                                        />
+                                    </mx:columns>
+                                </mx:DataGrid>
+                            </mx:VBox>
+                            <!-- this is not present in the new design. - johannes.
+                            <mx:HBox width="{g_nSearchViewWidth}" 
+                                     paddingLeft="10" 
+                                     paddingRight="10" 
+                                     horizontalAlign="right">
+                                <mx:Text id="LecHits" 
+                                         text="{g_aSearchNotes.length + ' ' + resourceManager.getString('localization', 'Hits')}" 
+                                         verticalCenter="true" 
+                                         styleName="smallNormal" 
+                                />
+                            </mx:HBox>
+                            //-->
+                        </mx:VBox>
+
+                        <!-- Info Tab -->
+                        <mx:Grid paddingLeft="30" 
+                                 paddingRight="30" 
+                                 paddingTop="30" 
+                                 paddingBottom="10"
+                                 width="100%" 
+                                 height="100%" 
+                                 horizontalScrollPolicy="auto" 
+                                 verticalScrollPolicy="auto" 
+                                 backgroundColor="#7C8AA0"
+                                 >
+                            <mx:GridRow>
+                                <mx:GridItem>
+                                    <mx:Label width="100" 
+                                              text="{resourceManager.getString('localization', 'Author')}" 
+                                              styleName="infoLeft" 
+                                    />
+                                </mx:GridItem>
+                                <mx:GridItem>
+                                    <mx:Text width="100%" 
+                                             text="{g_strMetadataAuthor}" 
+                                             styleName="infoRight" 
+                                    />
+                                </mx:GridItem>
+                            </mx:GridRow>
+                            <mx:GridRow>
+                                <mx:GridItem>
+                                    <mx:Label width="100" 
+                                              text="{resourceManager.getString('localization', 'Date')}" 
+                                              styleName="infoLeft" 
+                                    />
+                                </mx:GridItem>
+                                <mx:GridItem>
+                                    <mx:Text width="100%" 
+                                             text="{g_strMetadataDate}" 
+                                             styleName="infoRight" 
+                                    />
+                                </mx:GridItem>
+                            </mx:GridRow>
+                            <mx:GridRow>
+                                <mx:GridItem>
+                                    <mx:Label width="100" 
+                                              text="{resourceManager.getString('localization', 'Producer')}" 
+                                              styleName="infoLeft" 
+                                    />
+                                </mx:GridItem>
+                                <mx:GridItem>
+                                    <mx:Text width="100%" 
+                                             text="{g_strMetadataProducer}" 
+                                             styleName="infoRight" 
+                                    />
+                                </mx:GridItem>
+                            </mx:GridRow>
+                            <mx:GridRow>
+                                <mx:GridItem>
+                                    <mx:Label width="100" 
+                                              text="{resourceManager.getString('localization', 'Keywords')}" 
+                                              styleName="infoLeft" 
+                                    />
+                                </mx:GridItem>
+                                <mx:GridItem>
+                                    <mx:Text width="100%" 
+                                             text="{g_strMetadataKeywords}" 
+                                             styleName="infoRight" 
+                                    />
+                                </mx:GridItem>
+                            </mx:GridRow>
+                        </mx:Grid>
+
+                    </mx:ViewStack>
+
+                    <!-- Video area -->
+                    <mx:Canvas id="VideoCanvas" 
+                               backgroundColor="#000000"
+                               width="{g_nVideoWidth}" 
+                               height="{g_nVideoHeight}" 
+                               horizontalScrollPolicy="off" 
+                               verticalScrollPolicy="off" 
+                               >
+                        <mx:Label id="VideoEvalBanner" 
+                                  text="LECTURNITY Evaluation" 
+                                  width="100%" 
+                                  height="100%" 
+                                  styleName="evaluationText" 
+                                  visible="false" 
+                        />
+                    </mx:Canvas>
+
+                </mx:VBox>
+                
+                <!-- Content -->
+                <mx:Canvas id="ContentCanvas" 
+                            borderColor="#AAB3B3" 
+                            borderStyle="none" 
+                            width="100%" 
+                            height="100%" 
+                            horizontalCenter="0" 
+                            verticalCenter="0"
+                            backgroundColor="#515967" 
+                            paddingLeft="0" 
+                            paddingRight="0" 
+                            paddingTop="0" 
+                            paddingBottom="0" 
+                            horizontalScrollPolicy="{g_strContentScrollPolicy}" 
+                            verticalScrollPolicy="{g_strContentScrollPolicy}" 
+                            >
+                    <!-- "Dummy" Content box (for fixed content size: this provokes scrollbars ...) -->
+                    <mx:Box id="LecContentBox" 
+                            x="{g_nLecContentX}" 
+                            y="{g_nLecContentY}" 
+                            width="{g_nLecMovieWidth}" 
+                            height="{g_nLecMovieHeight}" 
+                    />
+                    <local:LecturnityContentFacade id="LecContentSwf" 
+                                                   baseURL="{baseUrl + g_strContentPath}" 
+                                                   source="{g_strContentUrl}" 
+                                                   x="{g_nLecContentX}" 
+                                                   y="{g_nLecContentY}" 
+                                                   width="100%" 
+                                                   height="100%" 
+                                                   horizontalScrollPolicy="off" 
+                                                   verticalScrollPolicy="off" 
+                    />
+                    <mx:Label id="EvaluationBanner" 
+                              text="LECTURNITY Evaluation" 
+                              width="100%" 
+                              height="100%" 
+                              styleName="evaluationText" 
+                              visible="false" 
+                    />
+                </mx:Canvas>
+    
+            </mx:HBox>
+
+            <!-- Navigation Bar -->
+            <mx:HBox id="LecControlBar" 
+                     horizontalAlign="left" 
+                     verticalAlign="middle" 
+                     visible="{g_nControlbarState != HIDDEN}" 
+                     horizontalScrollPolicy="auto" 
+                     verticalScrollPolicy="off" 
+                     width="100%" 
+                     height="{g_nControlbarHeight}" 
+                     styleName="viewerMenuBar" 
+                     horizontalGap="0" 
+                     >
+
+                <!-- VBox for Playtime/Totaltime and "Page n of m" -->
+                <mx:VBox id="TimeDisplayBox" 
+                         horizontalAlign="center" 
+                         verticalAlign="middle" 
+                         verticalGap="0" 
+                         >
+                    <!-- Playtime and Totaltime -->
+                    <mx:Canvas id="TimePlaceHolder" 
+                             visible="{g_nControlbarState != HIDDEN}" 
+                             width="80" 
+                             height="12" 
+                    />
+                    <mx:Text id="TextPlaytime" 
+                             styleName="textTitle" 
+                             visible="false" 
+                             width="80" 
+                             height="16" 
+                             textAlign="right" 
+                             htmlText="{UsefulHelper.formatTimeInSeconds(g_nCurrentTimeMs/1000.0) +'&lt;font color=\'#FFFFFF\'&gt; / '+ UsefulHelper.formatTimeInSeconds(g_nRecordingLengthMs/1000.0)+'&lt;/font&gt;'}" 
+                    />
+                    <mx:Text id="TextCurrentPage" 
+                             styleName="smallGrey"
+                             visible="false" 
+                             width="80" 
+                             height="16" 
+                             textAlign="right" 
+                             text="{g_strPageOfAll}" 
+                    />
+                </mx:VBox>
+
+                <!-- Time Slider -->
+                <mx:VBox id="TimeSliderBox" 
+                        horizontalAlign="center" 
+                        verticalGap="0" 
+                        visible="{g_nControlbarState != HIDDEN}" 
+                        >
+                    <!-- A canvas to hold Animated Progress and Time Slider -->
+                    <mx:Canvas id="TimeSliderCanvas">
+                        <!-- Animated Progress SWF behind Time Slider -->
+                        <mx:Image id="AnimatedProgress" 
+                                  source="{swfCls}" 
+                                  visible="false" 
+                                  width="230" 
+                                  height="14" 
+                        />
+                        <!-- The Time Slider itself -->
+                        <controls:FXProgressSlider id="TimeSlider" 
+                                                   visible="false" 
+                                                   width="230" 
+                                                   height="10" 
+                                                   maximum="100" 
+                                                   sliderThumbHeight="14" 
+                                                   sliderThumbWidth="14" 
+                                                   sliderThumbUseCenterAsReferencePoint="true" 
+                                                   sliderThumbOverTrack="true" 
+                                                   styleName="viewerMediaLecturnitySlider" 
+                                                   progress="{g_fProgress}" 
+                                                   value="{g_fTimePercentage}" 
+                                                   change="{TimeSliderChangeEvent(event, false)}" 
+                                                   thumbDrag="{TimeSliderChangeEvent(event, true)}" 
+                                                   thumbRelease="{StopDragMode()}" 
+                                                   thumbPress="{StartDragMode()}" 
+                        />
+                    </mx:Canvas>
+                    <!-- Transparent Protection Canvas for disabled Time Slider -->
+                    <mx:Canvas id="TimeSliderProtectionCanvas" 
+                               visible="false" 
+                               width="250" 
+                               height="19" 
+                               alpha="0.0" 
+                               backgroundColor="#FF0000" 
+                    />
+                </mx:VBox>
+
+                <mx:Spacer width="23" />
+
+                <!-- First Page/Previous Page buttons -->
+                <mx:HBox id="BackButtonsBox" 
+                         horizontalGap="-1" 
+                         visible="{g_nControlbarState != HIDDEN}"
+                         >
+                    <mx:Button id="btnFirst" 
+                               visible="false" 
+                               styleName="viewerButtonThumbNaviFirst" 
+                               toolTip="{resourceManager.getString('localization', 'JumpToBeginning')}" 
+                               click="GotoBeginning()" 
+                    />
+                    <mx:Button id="btnPrevious" 
+                               visible="false" 
+                               styleName="viewerButtonThumbNaviPrevious" 
+                               toolTip="{resourceManager.getString('localization', 'JumpToPreviousPage')}" 
+                               click="GotoPreviousThumb()" 
+                    />
+                </mx:HBox>
+
+                <mx:Spacer width="16" />
+
+                <!-- Play/Pause button -->
+                <mx:Button id="btnPlay" 
+                           visible="false" 
+                           styleName="viewerButtonMediaPlay" 
+                           toggle="true" 
+                           selected="{g_bLecIsPlaying}" 
+                           toolTip="{resourceManager.getString('localization', 'PlayPause')}" 
+                           click="ToggleReplay()" 
+                />
+
+                <mx:Spacer width="16" />
+
+                <!-- Next Page/Last Page buttons -->
+                <mx:HBox id="ForwardButtonsBox" 
+                         horizontalGap="-1" 
+                         visible="{g_nControlbarState != HIDDEN}"
+                         >
+                    <mx:Button id="btnNext" 
+                               visible="false" 
+                               styleName="viewerButtonThumbNaviNext" 
+                               toolTip="{resourceManager.getString('localization', 'JumpToNextPage')}" 
+                               click="GotoNextThumb()" 
+                    />
+                    <mx:Button id="btnLast" 
+                               visible="false" 
+                               styleName="viewerButtonThumbNaviLast" 
+                               toolTip="{resourceManager.getString('localization', 'JumpToEnd')}" 
+                               click="GotoEnd()" 
+                    />
+                </mx:HBox>    
+
+                <mx:Spacer width="24" />   
+
+                <!-- Audio Mute button -->
+                <mx:Button id="btnAudioMute" 
+                           styleName="viewerButtonMediaAudio" 
+                           visible="false" 
+                           toggle="true" 
+                           selected="{LecContentSwf.muteAudio}" 
+                           toolTip="{resourceManager.getString('localization', 'AudioMute')}" 
+                           click="{(LecContentSwf.muteAudio)?(LecContentSwf.muteAudio=false):(LecContentSwf.muteAudio=true)}" 
+                />
+
+                <mx:Spacer width="15" />
+
+                <!-- Audio Volume Slider -->
+                <mx:Box id="AudioVolumeSliderBox" 
+                        styleName="viewerAudioSliderContainer" 
+                        visible="false" 
+                        verticalAlign="middle" 
+                        horizontalAlign="center" 
+                        width="70" 
+                        height="14"
+                        >
+                    <controls:FXProgressSlider id="AudioVolumeSlider" 
+                                               width="70" 
+                                               height="7" 
+                                               maximum="100" 
+                                               progress="100"
+                                               sliderThumbHeight="14" 
+                                               sliderThumbWidth="14" 
+                                               sliderThumbUseCenterAsReferencePoint="true" 
+                                               sliderThumbOverTrack="true" 
+                                               styleName="viewerAudioSlider" 
+                                               value="{LecContentSwf.volume}" 
+                                               change="{LecContentSwf.volume=event.value}" 
+                                               thumbDrag="{LecContentSwf.volume=event.value}" 
+                                               />
+                </mx:Box>
+
+                <mx:Spacer width="100%" />
+
+                <!-- LEC WebPlayer Logo -->
+                <mx:Canvas id="LecWebPlayerLogo" 
+                           width="110" 
+                           height="30" 
+                           visible="false" 
+                         >
+                    <mx:Label text="LECTURNITY®" 
+                              x="0" 
+                              y="0" 
+                              buttonMode="true" 
+                              useHandCursor="true" 
+                              mouseChildren="false" 
+                              toolTip="{resourceManager.getString('localization', 'LecturnityWebAddress')}" 
+                              click="OpenLecturnityHome()" 
+                              styleName="lecturnityLogo" 
+                    />
+                    <mx:Label text="webplayer" 
+                              x="0" 
+                              y="15" 
+                              toolTip="{g_strLecVersion}" 
+                              styleName="lecturnityWebplayer" 
+                    />
+                    <mx:Canvas backgroundColor="#383C49" 
+                               x = "2" 
+                               y = "5" 
+                               width = "3" 
+                               height = "3" 
+                    />
+                    <mx:Canvas backgroundColor="#006CB7" 
+                               x = "2" 
+                               y = "3" 
+                               width = "3" 
+                               height = "3" 
+                    />
+                </mx:Canvas>
+
+            </mx:HBox>
+
+        </mx:VBox>
+
+    </mx:VBox>
+
+    <!-- Border around Content -->
+    <!-- (Not displayed at the moment - but helpful for centering clips in the content area)
+    <mx:Canvas id="ContentBorder" 
+               x="{g_nPageBorderX}" 
+               y="{g_nPageBorderY}" 
+               width="{g_nPageBorderWidth}" 
+               height="{g_nPageBorderHeight}" 
+               borderStyle="solid" 
+               borderColor="#000000" 
+    />
+    // -->
+
+    <!-- Scaling Type Chooser-->
+    <local:ScalingTypeChooser id="scalingTypeChooser" 
+                              x="{this.width-182}" 
+                              y="5" 
+                              dataProvider="{scalingTypeNames}" 
+                              scalingTypeChanged="ScalingTypeComboBox_changeHandler(event)" 
+                              />
+    <!-- Localization: Language Chooser-->
+    <local:LanguageChooser id="languageChooser" 
+                           x="{this.width-72}" 
+                           y="5" 
+                           dataProvider="{localeNames}" 
+                           languageChanged="LocaleComboBox_changeHandler(event)" 
+                           />
+
+    <!-- Status text -->
+    <mx:Text id="StatusText" 
+             styleName="textTitle" 
+             visible="false" 
+             x="30" 
+             y="{this.height-32}" 
+             width="320" 
+             height="16" 
+             textAlign="left" 
+             text="" 
+    />
+
+    <!-- Scrollbar gap -->
+    <mx:Canvas id="ScrollbarGap" 
+               width="886" 
+               height="10" 
+               visible="false" 
+    />
+
+    <!-- Mask layer -->
+    <mx:Canvas id="MaskLayer" 
+               x="0" 
+               y="0" 
+               width="100%" 
+               height="100%" 
+               borderStyle="none" 
+               backgroundColor="#A0A0A0" 
+               horizontalCenter="0" 
+               verticalCenter="0" 
+               visible="{g_bIsLoadingPhase}" 
+            >
+        <mx:Canvas id="MaskCanvas" 
+                   x="0" 
+                   y="0" 
+                   width="122" 
+                   height="62" 
+                   borderStyle="none" 
+                   horizontalCenter="0" 
+                   verticalCenter="0" 
+               >
+            <mx:Image id="LecInfiniteProgressBar" 
+                      source="{lecInfiniteProgress}" 
+                      x="0" 
+                      y="0" 
+                      width="122" 
+                      height="62" 
+            />
+        </mx:Canvas>
+    </mx:Canvas>
+
+</mx:Application>

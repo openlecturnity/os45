@@ -1,0 +1,7 @@
+; filesdk.def : Deklariert die Modul-Parameter für die DLL.
+
+LIBRARY      "filesdk"
+
+EXPORTS
+    ; Explizite Exporte können hier eingefügt werden
+	; FileSdk_VerifyInternationalFilename

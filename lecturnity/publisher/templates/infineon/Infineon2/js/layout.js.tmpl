@@ -1,0 +1,279 @@
+var g_isSliding = false;
+var g_wasPlaying = false;
+
+var g_TimeLabel = null;
+var g_lastDisplayedTimeMs = -1000;
+var g_layoutIgnoreTimeChange = false;
+
+var g_layoutTimeSlider = null;
+var g_layoutVolumeSlider = null;
+var g_layoutCurrentSlide = -1;
+
+var g_layoutLogoCode = '';
+
+var g_slidesOffset = %BrowserInnerWidth% - 23 - g_slidesWidth;
+
+var isIE = false;
+
+if (document.all)
+  isIE = true;
+
+function layout_init()
+{
+  layout_displayOverview();
+}
+
+function s(id)
+{
+  if (isNS4)
+    return eval('document.' + id);
+  else
+    return document.getElementById(id).style;
+}
+
+function o(id)
+{
+  if (isNS4)
+    return s(id);
+  return document.getElementById(id);
+}
+
+function sn(id)
+{
+  if (isNS4)
+    return eval('document.' + id);
+  else
+    return document.getElementsByName(id)[0].style;
+}
+
+function on(id)
+{
+  if (isNS4)
+    return sn(id);
+  return document.getElementsByName(id)[0];
+}
+
+function layout_getSlideForTime(msTime)
+{
+  var newSlideNr = -1;
+  for (var i=0; i<g_thumbCount-1; ++i)
+  {
+      // alert("checking between " + top.g_thumbEntries[i].timeStamp + " and " + top.g_thumbEntries[i+1].timeStamp);
+      if (msTime >= g_thumbEntries[i].timeStamp &&
+          msTime < g_thumbEntries[i+1].timeStamp)
+      {
+        newSlideNr = i;
+      }
+  }
+  if (newSlideNr == -1)
+  {
+    if (msTime < g_thumbEntries[0].timeStamp)
+      newSlideNr = 0;
+    else
+      newSlideNr = g_thumbCount - 1;
+  }
+
+  return newSlideNr;
+}
+
+function layout_onPlay()
+{
+  control_playPause();
+}
+
+function layout_onMute()
+{
+  control_mute();
+}
+
+function layout_onHome()
+{
+  control_seekTime(0);
+}
+
+function layout_onBack()
+{
+  var currentSlide = layout_getCurrentSlide();
+  if (currentSlide > 0)
+    control_seekTime(g_thumbEntries[currentSlide - 1].timeStamp);
+  else
+    layout_onHome();
+}
+
+function layout_onEnd()
+{
+  control_seekTime(g_mediaDurations[0]);
+}
+
+function layout_onForward()
+{
+  var currentSlide = layout_getCurrentSlide();
+  if (currentSlide < g_thumbCount - 1)
+    control_seekTime(g_thumbEntries[currentSlide + 1].timeStamp);
+  else
+    layout_onEnd();
+}
+
+function layout_getSlide(timeMs)
+{
+  var slideNr = -1;
+  for (var i=0; i<g_thumbCount-1; ++i)
+  {
+    if ((timeMs >= g_thumbEntries[i].timeStamp &&
+        timeMs < g_thumbEntries[i+1].timeStamp) ||
+	  (i == 0 && timeMs < g_thumbEntries[i+1].timeStamp))
+      slideNr = i;
+  }
+  if (slideNr == -1)
+    slideNr = g_thumbCount-1;
+  return slideNr;
+}
+
+function layout_getCurrentSlide()
+{
+  var timeMs = control_getTimeMs();
+  return layout_getSlide(timeMs);
+}
+
+function layout_displayOverview()
+{
+  // Hide/show areas
+  s('infoFrame').visibility = 'hidden';
+  s('thumbsFrame').visibility = 'visible';
+
+  // Fix colors
+  s('infoTab').backgroundColor = '#E8ECF4';
+  s('overviewTab').backgroundColor = '#FFFFFF';
+
+  // Change font weight
+  s('infoTab').fontWeight = 'normal';
+  s('overviewTab').fontWeight = 'bold';
+
+  // And Z-Index
+  s('infoTab').zIndex = 5;
+  s('overviewTab').zIndex = 7;
+}
+
+function layout_displayInfo()
+{
+  s('thumbsFrame').visibility = 'hidden';
+  s('infoFrame').visibility = 'visible';
+
+  s('infoTab').backgroundColor = '#FFFFFF';
+  s('overviewTab').backgroundColor = '#E8ECF4';
+
+  s('infoTab').fontWeight = 'bold';
+  s('overviewTab').fontWeight = 'normal';
+
+  s('infoTab').zIndex = 7;
+  s('overviewTab').zIndex = 5;
+}
+
+function layout_onResize()
+{
+  var borderTop = 117;
+  var borderBottom = 22;
+  var borderLeft = 25;
+  var borderRight = 25;
+  var marginTop = 17;
+  var margin = 20;
+  var webplayerHeight = 35;
+  var statusbarHeight = 24;
+  var tabHeight = 20;
+  var titleHeight = 82;
+  
+  // Resizing mechanism.
+  // How much space do we need for the header contents, excluding margins?
+  // This is also the width for the media player.
+  var playerWidth = %PlayerWidth%;
+  var headerWidth = %PlayerWidth%; // minimum width
+  if (g_hasVideo)
+  {
+    playerWidth = g_videoWidth;
+    if (g_videoWidth > headerWidth)
+      headerWidth = g_videoWidth;
+  }
+  if (g_hasStillImage)
+  {
+    playerWidth = g_stillImageWidth;
+    if (g_stillImageWidth > headerWidth)
+      headerWidth = g_stillImageWidth;
+  }
+
+  var height;
+  if (!isIE)
+    height = window.innerHeight + webplayerHeight;
+  else
+    height = document.body.offsetHeight + webplayerHeight;
+
+  // Calculate inner space for player components
+  var playerHeight = statusbarHeight;
+  if (g_hasVideo)
+    playerHeight += g_videoHeight;
+  else if (g_hasStillImage)
+    playerHeight += g_stillImageHeight;
+
+  // Which leaves us with...
+  var infoPanelHeight = height - borderTop - marginTop - titleHeight - tabHeight - (margin+8) - playerHeight - borderBottom - webplayerHeight;
+  if (infoPanelHeight < 83)
+    infoPanelHeight = 83;
+
+  // Let's go.
+  var ieOffset = isIE ? 2 : 0;
+
+  s('thumbsFrame').width = headerWidth - 0;
+  s('thumbsFrame').height = infoPanelHeight - 2;
+  s('infoFrame').width = headerWidth - 0;
+  s('infoFrame').height = infoPanelHeight - 2;
+  s('containerDiv').width = headerWidth + 6 + ieOffset;
+  s('containerDiv').height = infoPanelHeight + 4 + ieOffset;
+
+  var playerTop = height - webplayerHeight - borderBottom - playerHeight;
+  s('playerDiv').top = playerTop - 4;
+  s('playerDiv').width = headerWidth + (4*ieOffset);
+  s('playerDiv').height = playerHeight + (4*ieOffset);
+
+  if (g_hasStillImage)
+    playerTop += g_stillImageHeight;
+  s('masterPlayerDiv').top = playerTop;
+  if (!g_hasVideo)
+    s('masterPlayerDiv').width = headerWidth;
+
+  if (g_hasStillImage)
+  {
+    s('stillImageDiv').top = playerTop - g_stillImageHeight;
+    s('stillImageDiv').width = g_stillImageWidth;
+    s('stillImageDiv').height = g_stillImageHeight;
+    if (g_stillImageWidth < %PlayerWidth%)
+      s('stillImageDiv').left = 25 + 0.5 * (%PlayerWidth% - g_stillImageWidth);
+  }
+
+  // Resize the player plugin, if necessary
+  try
+  {
+    // Windows Media
+    if (s('MasterPlayer').width != playerWidth)
+      s('MasterPlayer').width = playerWidth;
+  }
+  catch (e)
+  {
+  }
+  try
+  {
+    // Real Media
+    if (sn('PlayerImageWindow').width != playerWidth)
+    {
+      sn('PlayerImageWindow').width = playerWidth;
+      sn('PlayerStatusBar').width = playerWidth;
+    }
+  }
+  catch (e)
+  {
+  }
+
+  var slidesOffset = borderLeft + headerWidth + margin;
+  if (g_slidesOffset < slidesOffset)
+    g_slidesOffset = slidesOffset;
+    
+  s('titleDiv').left = 25;
+}

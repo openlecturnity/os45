@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:VBox implements="mx.controls.listClasses.IDropInListItemRenderer" 
+         xmlns:mx="http://www.adobe.com/2006/mxml" 
+         xmlns:local="*" 
+         xmlns:super="utils.superimage.*" 
+         horizontalScrollPolicy="off" 
+         verticalScrollPolicy="off" 
+         verticalGap="0" 
+         >
+
+    <mx:Script>
+        <![CDATA[
+            import mx.controls.dataGridClasses.DataGridListData;
+            import mx.controls.listClasses.BaseListData;
+            // Utils
+            import utils.superimage.SuperImage;
+
+            private var _data:Object;//
+
+            // Internal variable for the property value.
+            private var _listData:BaseListData;
+//            private var _dgListData : DataGridListData;
+
+
+            // Make the listData property bindable.
+            [Bindable("dataChange")]
+
+            // Define the getter method.
+            public function get listData():BaseListData {
+                return _listData;
+            }
+
+            // Define the setter method,
+            public function set listData(value:BaseListData):void {
+                this._listData = value;
+            }
+
+//            public function onDataChanged(event:Event) : void {
+//                _dgListData = listData as DataGridListData;
+//            }
+
+            override public function set data(value:Object):void {
+//                _data = value;
+                super.data = value;
+                update(DataGridListData(listData).dataField);
+            }
+
+            private function update(dataField:String):void {
+                if (data) {
+                    this.setStyle("paddingLeft", 3);
+                    this.setStyle("verticalAlign", "middle");
+                    irHBox.setStyle("line", 10);
+
+                    irPageNumber.text = data[dataField][0];
+                    irImgThumb.source = data[dataField][1];
+                    irChapter.text    = data[dataField][2];
+                    irTitle.text      = data[dataField][3];
+                    irTime.text       = data[dataField][4];
+
+//                    var fScale:Number = 1.0;
+//                    irImgThumb.scaleX = fScale;
+//                    irImgThumb.scaleY = fScale;
+                    var nPageNumberWidth:int = 24;
+                    var nThumbnailWidth:int = 100;
+                    var nTimeWidth:int = 50;
+                    var nLabelWidth:int = parent.width - nThumbnailWidth - nPageNumberWidth;
+                    if (nLabelWidth < 30)
+                        nLabelWidth = 30;
+                    irChapter.width = parent.width;
+                    if (irChapter.text.length > 0)
+                        irChapter.height = 33;
+                    else
+                        irChapter.height = 0;
+                    irPageNumber.width = nPageNumberWidth;
+                    irTitle.width = nLabelWidth - nTimeWidth;
+                    irTitle.height = 50;
+                    irTime.width = nTimeWidth;
+                    irTime.height = 16;
+                }
+            }
+            
+            public function setSelected():void {
+            	this.setStyle("backgroundColor","#ff0000");
+            }
+
+//            override public function get data( ):Object {
+//                return _data;
+//            }
+
+        ]]>
+    </mx:Script>
+
+    <mx:Label id="irChapter" 
+              text="" 
+              textAlign="left" 
+              truncateToFit="true" 
+              styleName="stdBold"
+              paddingBottom="10"
+              paddingTop="5"
+              width="100%" 
+    />
+
+    <mx:HBox id="irHBox" 
+             verticalAlign="top" 
+             >
+        <mx:Label id="irPageNumber" 
+                  text="" 
+                  textAlign="center" 
+                  truncateToFit="true" 
+                  styleName="stdSmaller" 
+                  paddingTop="17"
+        />
+        <super:SuperImage id="irImgThumb" 
+                          source="" 
+                          borderStyle="none"
+        />
+        <mx:Text id="irTitle" 
+                  text="" 
+                  textAlign="left" 
+                  truncateToFit="true" 
+                  height="48" 
+                  styleName="stdSmaller"
+                  selectable="false" 
+        />
+        <mx:Label id="irTime" 
+                  text="" 
+                  textAlign="right" 
+                  truncateToFit="true" 
+                  paddingTop="28"
+                  paddingRight="5"
+                  styleName="stdSmaller" 
+        />
+    </mx:HBox>
+</mx:VBox>

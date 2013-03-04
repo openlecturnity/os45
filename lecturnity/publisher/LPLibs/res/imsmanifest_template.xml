@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest identifier="SingleSharableResoure_MultipleFileManifest" version="1.1" xmlns="http://www.imsglobal.org/xsd/imscp_v1p1"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:imscp="http://www.imsglobal.org/xsd/imscp_v1p1"
+	xmlns:adlcp="http://www.adlnet.org/xsd/adlcp_v1p3" 
+	xmlns:imsss="http://www.imsglobal.org/xsd/imsss"
+	xsi:schemaLocation="http://www.imsglobal.org/xsd/imscp_v1p1 imscp_v1p1.xsd 
+						http://www.adlnet.org/xsd/adlcp_v1p3 adlcp_v1p3.xsd
+						http://www.imsglobal.org/xsd/imsss imsss_v1p0.xsd">
+
+  <metadata>            
+    <schema>ADL SCORM</schema>            
+    <schemaversion>2004 3rd Edition</schemaversion>            
+    <lom xmlns="http://ltsc.ieee.org/xsd/LOM" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://ltsc.ieee.org/xsd/LOM lomStrict.xsd">
+	<general>
+		<title>
+			<string language="%ScormLanguage%">%Title%</string>
+		</title>
+		<description>
+			<string language="%ScormLanguage%">LECTURNITY Presentation: %Author% - %Title% (%RecordDate%)</string>
+		</description>
+		%Keywords%
+	</general>
+	<lifeCycle>
+		<version>
+			<string language="x-none">%ScormVersion%</string>
+		</version>
+		<status>
+			<source>LOMv1.0</source>
+			<value>%ScormStatus%</value>
+		</status>
+	</lifeCycle>
+	<metaMetadata>
+		<metadataSchema>LOMv1.0</metadataSchema>
+		<metadataSchema>SCORM_CAM_v1.3</metadataSchema>
+		<language>%ScormLanguage%</language>
+	</metaMetadata>
+	<technical>
+		<format>text/html</format>
+		<location>.</location>
+		<duration>
+			<duration>%RecordLengthNew%</duration>
+		</duration>
+	</technical>
+	<educational>
+		<interactivityType>
+			<source>LOMv1.0</source>
+			<value>active</value>
+		</interactivityType>
+		<learningResourceType>
+			<source>LOMv1.0</source>
+			<value>slide</value>
+		</learningResourceType>
+		<typicalLearningTime>
+			<duration>%RecordLengthNew%</duration>
+			<description> 
+				<string language="x-none">length of time to experience this movie.</string>
+			</description>
+		</typicalLearningTime>
+		<interactivityLevel>
+			<source>LOMv1.0</source>
+			<value>high</value>
+		</interactivityLevel>
+		<intendedEndUserRole>
+			<source>LOMv1.0</source>
+			<value>learner</value>
+		</intendedEndUserRole>
+	</educational>
+	<rights>
+		<cost>
+			<source>LOMv1.0</source>
+			<value>%ScormCost%</value>
+		</cost>
+		<copyrightAndOtherRestrictions>
+			<source>LOMv1.0</source>
+			<value>%ScormCopyrightRestrictions%</value>
+		</copyrightAndOtherRestrictions>
+	</rights>
+	<classification>
+		<purpose>
+			<source>LOMv1.0</source>
+			<value>discipline</value>
+		</purpose>
+		<description>
+			<string language="x-none">%ScormClsfDescriptionDiscipline%</string>
+		</description>
+		<keyword>
+			<string language="x-none">%ScormClsfKeywordDiscipline%</string>
+		</keyword>
+	</classification>
+	<classification>
+		<purpose>
+			<source>LOMv1.0</source>
+			<value>idea</value>
+		</purpose>
+		<description>
+			<string language="x-none">%ScormClsfDescriptionIdea%</string>
+		</description>
+		<keyword>
+			<string language="x-none">%ScormClsfKeywordIdea%</string>
+		</keyword>
+	</classification>
+	<classification>
+		<purpose>
+			<source>LOMv1.0</source>
+			<value>prerequisite</value>
+		</purpose>
+		<description>
+			<string language="x-none">%ScormClsfDescriptionPrerequisite%</string>
+		</description>
+		<keyword>
+			<string language="x-none">%ScormClsfKeywordPrerequisite%</string>
+		</keyword>
+	</classification>
+	<classification>
+		<purpose>
+			<source>LOMv1.0</source>
+			<value>educational objective</value>
+		</purpose>
+		<description>
+			<string language="x-none">%ScormClsfDescriptionEducationalObjective%</string>
+		</description>
+		<keyword>
+			<string language="x-none">%ScormClsfKeywordEducationalObjective%</string>
+		</keyword>
+	</classification>
+	<classification>
+		<purpose>
+			<source>LOMv1.0</source>
+			<value>accessibility restrictions</value>
+		</purpose>
+		<description>
+			<string language="x-none">%ScormClsfDescriptionAccessibilityRestrictions%</string>
+		</description>
+		<keyword>
+			<string language="x-none">%ScormClsfKeywordAccessibilityRestrictions%</string>
+		</keyword>
+	</classification>
+	<classification>
+		<purpose>
+			<source>LOMv1.0</source>
+			<value>educational level</value>
+		</purpose>
+		<description>
+			<string language="x-none">%ScormClsfDescriptionEducationalLevel%</string>
+		</description>
+		<keyword>
+			<string language="x-none">%ScormClsfKeywordEducationalLevel%</string>
+		</keyword>
+	</classification>
+	<classification>
+		<purpose>
+			<source>LOMv1.0</source>
+			<value>skill level</value>
+		</purpose>
+		<description>
+			<string language="x-none">%ScormClsfDescriptionSkillLevel%</string>
+		</description>
+		<keyword>
+			<string language="x-none">%ScormClsfKeywordSkillLevel%</string>
+		</keyword>
+	</classification>
+	<classification>
+		<purpose>
+			<source>LOMv1.0</source>
+			<value>security level</value>
+		</purpose>
+		<description>
+			<string language="x-none">%ScormClsfDescriptionSecurityLevel%</string>
+		</description>
+		<keyword>
+			<string language="x-none">%ScormClsfKeywordSecurityLevel%</string>
+		</keyword>
+	</classification>
+    </lom>			
+  </metadata>
+
+  <organizations default="Org">
+    <organization identifier="Org">
+      <title>%Title%</title>
+      <item identifier="INDEX" identifierref="sco_0">
+        <title>%Author%: %Title%</title>
+      </item>
+    </organization>
+  </organizations>
+
+  <resources>
+    <!-- The index file of the LECTURNITY presentation -->
+    <resource adlcp:scormType="sco" identifier="sco_0" type="webcontent" href="%IndexFileName%">
+      <file href="%IndexFileName%" />
+
+      <!-- These are the other files needed for the web page -->
+%ScoResources%
+    </resource>
+  </resources>
+</manifest> 

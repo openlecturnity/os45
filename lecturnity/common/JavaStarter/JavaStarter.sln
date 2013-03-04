@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JavaStarter", "JavaStarter.vcproj", "{32D548A1-04CC-4C45-A293-E7AC799C1957}"
+	ProjectSection(ProjectDependencies) = postProject
+		{E0E31804-F388-486F-B435-0435C35EEE88} = {E0E31804-F388-486F-B435-0435C35EEE88}
+		{D59530D8-8310-4295-B319-7399743FBD09} = {D59530D8-8310-4295-B319-7399743FBD09}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lutils", "..\lutils\lutils.vcproj", "{D59530D8-8310-4295-B319-7399743FBD09}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "keygenlib", "..\keygenlib\keygenlib.vcproj", "{E0E31804-F388-486F-B435-0435C35EEE88}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{32D548A1-04CC-4C45-A293-E7AC799C1957}.Debug|Win32.ActiveCfg = Debug|Win32
+		{32D548A1-04CC-4C45-A293-E7AC799C1957}.Debug|Win32.Build.0 = Debug|Win32
+		{32D548A1-04CC-4C45-A293-E7AC799C1957}.Release|Win32.ActiveCfg = Release|Win32
+		{32D548A1-04CC-4C45-A293-E7AC799C1957}.Release|Win32.Build.0 = Release|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.Debug|Win32.Build.0 = Debug|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.Release|Win32.ActiveCfg = Release|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.Release|Win32.Build.0 = Release|Win32
+		{E0E31804-F388-486F-B435-0435C35EEE88}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E0E31804-F388-486F-B435-0435C35EEE88}.Debug|Win32.Build.0 = Debug|Win32
+		{E0E31804-F388-486F-B435-0435C35EEE88}.Release|Win32.ActiveCfg = Release|Win32
+		{E0E31804-F388-486F-B435-0435C35EEE88}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

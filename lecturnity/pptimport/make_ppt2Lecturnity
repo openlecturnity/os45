@@ -1,0 +1,60 @@
+#!/bin/bash
+
+cd $SANDBOX/make
+if test ! -f error.txt ; then
+   echo "PowerPoint 2003 AddIn creation - replacement of COMPILE_VERSION..."
+   #Const COMPILE_VERSION = 2003
+   # set compile version to 2003
+   cd $SANDBOX/imc/pptexport
+   
+   for pptModule in `find . -maxdepth 1 -name "*.cls"`
+   	do mv $pptModule $pptModule.sav
+   	cat $pptModule.sav | sed -b s/\#Const\ COMPILE_VERSION\ =\ 2007/\#Const\ COMPILE_VERSION\ =\ 2003/ > $pptModule
+   done
+   
+   for pptModule in `find . -maxdepth 1 -name "*.bas"`
+   	do mv $pptModule $pptModule.sav
+   	cat $pptModule.sav | sed -b s/\#Const\ COMPILE_VERSION\ =\ 2007/\#Const\ COMPILE_VERSION\ =\ 2003/ > $pptModule
+   done
+fi
+   
+cd $SANDBOX/make
+if test ! -f error.txt ; then
+   # Create ppa
+   echo "PowerPoint 2003 AddIn creation - Save AddIn..."
+   cd $SANDBOX/lecturnity/pptimport
+   cscript CreateAddIn.wsf 2003
+   # &> $SANDBOX/make/patch_log.txt
+fi
+   
+   
+cd $SANDBOX/make
+if test ! -f error.txt ; then
+   # Overwrite changed files with original ones
+   echo "PowerPoint 2003 AddIn creation - Reset changes..."
+   cd $SANDBOX/imc/pptexport
+   for pptModule in `find . -maxdepth 1 -name "*.sav"`
+   	do mv $pptModule `basename $pptModule .sav`
+   done
+fi
+
+cd $SANDBOX/make
+if test ! -f error.txt ; then
+   # Create ppam
+   echo "PowerPoint 2007 AddIn creation - Save AddIn..."
+   cd $SANDBOX/lecturnity/pptimport
+   cscript CreateAddIn.wsf 2007
+   # &> $SANDBOX/make/patch_log.txt
+fi
+
+
+cd $SANDBOX/make
+if test ! -f error.txt ; then
+   # Add files to ppam
+   echo "PowerPoint 2007 AddIn creation - Add files for correct menu entry..."
+   cd $SANDBOX/lecturnity/pptimport
+   mv ppt2Lecturnity_2007.ppam ppt2Lecturnity_2007.ppam.zip
+   zip ppt2Lecturnity_2007.ppam.zip customUI/customUI.xml
+   zip ppt2Lecturnity_2007.ppam.zip _rels/.rels
+   mv ppt2Lecturnity_2007.ppam.zip ppt2Lecturnity_2007.ppam
+fi   

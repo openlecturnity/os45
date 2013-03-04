@@ -1,0 +1,13 @@
+<customUI xmlns="http://schemas.microsoft.com/office/2006/01/customui">
+	<ribbon>
+		<tabs>
+			<tab id="LecTab" label="LECTURNITY">
+				<group id="LecGroup" label="Lecturnity" > 
+					<button id="LecOpenWith" getLabel="ChangeOpenWithLabel" size="normal" onAction="OpenWithLec"/>
+					<button id="LecSaveAs" getLabel="ChangeSaveAsLabel" size="normal" onAction="SaveAsLec"/>
+				</group>
+			</tab>
+		</tabs>
+	</ribbon>
+</customUI>
+

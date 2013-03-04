@@ -1,0 +1,110 @@
+Microsoft Developer Studio Workspace File, Format Version 6.00
+# WARNUNG: DIESE ARBEITSBEREICHSDATEI DARF NICHT BEARBEITET ODER GELÖSCHT WERDEN!
+
+###############################################################################
+
+Project: "LPLibs"=.\LPLibs\LPLibs.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name MfcUtils
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name drawsdk_static
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name ZipArchive
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name lutils
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "MfcUtils"=..\common\MfcUtils\MfcUtils.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "Publisher"=.\Publisher.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+    Begin Project Dependency
+    Project_Dep_Name LPLibs
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name MfcUtils
+    End Project Dependency
+    Begin Project Dependency
+    Project_Dep_Name lutils
+    End Project Dependency
+}}}
+
+###############################################################################
+
+Project: "ZipArchive"=..\common\ZipArchive\ZipArchive.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "drawsdk_static"=..\common\drawsdk\drawsdk_static.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "lutils"=..\common\lutils\lutils.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Global:
+
+Package=<5>
+{{{
+}}}
+
+Package=<3>
+{{{
+}}}
+
+###############################################################################
+

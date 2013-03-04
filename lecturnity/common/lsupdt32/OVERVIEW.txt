@@ -1,0 +1,106 @@
+LsUpdt32 DLL
+============
+
+Kurze Übersicht der Dateien in der LsUpdt32-DLL.
+
+Autor: Martin Danielsson
+
+$Revision: 1.3 $
+$Date: 2005-12-09 10:16:36 $
+
+Announcement.cpp
+   Enthält die Klasse CAnnouncement; eine Container-Klasse für
+   Informationen zu einem Announcement aus der patchinfo.xml-Datei.
+   Das eigentliche Parsen der XML-Datei passiert jedoch in...
+
+
+AutoUpdateDialog.cpp
+   Die Klasse CAutoUpdateDialog: Der kleine, unscheinbare
+   "Bitte-Warten-Dialog", der aber die eigentliche Logik hinter dem
+   Update-Mechanismus enthält. Die wichtigste Methode ist "DoCheck()",
+   welche zunächst prüft, ob es Zeit ist, ein Update-Check
+   durchzuführen, und anschließend die Methode "DoModal()" aus CDialog
+   aufruft, um das Fenster anzuzeigen. CAutoUpdateDialog enthält allen
+   entscheidenden Code für Auto-Update, so z.B. wann welche Flags wie
+   gesetzt werden, und auch das Herunterladen und Parsen der
+   patchinfo.xml-Dateien passiert in CAutoUpdateDialog. Das
+   Herunterladen geschieht jedoch mit Hilfe der Klasse LInternet aus
+   lutils.
+
+
+DownloadDlg.cpp
+   Die Klasse CDownloadDlg. Implementiert einen Dialog, der
+   selbständig Dateien über http (und wahrscheinlich auch über ftp?)
+   herunterladen kann und unter einen bestimmten Dateinamen speichern
+   kann. Der Dialog hat einen Worker-Thread, der das Herunterladen
+   übernimmt, so dass der Fortschrittsbalken (mit
+   Geschwindikeitsanzeige) korrekt aktualisiert werden kann.
+
+
+lsupdt32.cpp
+   Die Klasse CLsUpdt32Dll. Die Basisklasse der DLL, die eigentlich
+   eine MFC-DLL ist, aber von Nicht-MFC-Applikation angesteuert werden
+   kann. Hier sind einige globale Funktionen implementiert, wie
+   z.B. das Lesen und Schreiben der Einstellungen für die
+   Auto-Update-Funktion. Weiter sind hier auch die beiden nach außen
+   sichtbaren (nicht-MFC-) Funktionen implementiert,
+   LecturnityUpdateCheck() und
+   LecturnityUpdateConfigure(). LecturnityUpdateCheck() wird jedoch
+   meist aus lutils heraus aufgerufen; siehe dort (lautoupdate.h). Nur
+   aus dem Konfigurationsdialog heraus wird noch
+   LecturnityUpdateCheck() aufgerufen.
+
+
+lsupdt32.def
+   Definitionsdatei für die externe Schnittstelle der DLL.
+
+
+lsupdt32.rc
+   Resourcen.
+
+
+NewsAvailableDialog.cpp
+   Klasse CNewsAvailableDialog. Der Dialog, der dann angezeigt wird,
+   wenn neue Nachrichten vorhanden sind. Besonderheit: Checkbox
+   "Disable Check for Announcements". Zustand der Checkbox wird in
+   AutoUpdateDialog.cpp abgefragt, und auch nur dort werden Instanzen
+   dieser Klasse erzeugt.
+
+
+NotAdminDialog.cpp
+   Dialog (CNotAdminDialog), der dann angezeigt wird, wenn zwar ein
+   neues Update vorhanden ist, aber der Benutzer gerade nicht über
+   Administrator-Rechte verfügt. Er wird durch diesen Dialog
+   aufgefordert, einen Systemadministrator zu kontaktieren, damit das
+   Update eingespielt werden kann. Besonderheiten: Zwei Checkboxen, um
+   entweder in <n> Tagen wieder nach Updates zu schauen, oder um das
+   Prüfen nach Updates ganz auszuschalten. Wird ebenfalls in
+   CAutoUpdateDlg verwendet. Diese Checkboxen sind der Grund, warum es
+   für diese Dialoge Extra-Klassen braucht.
+
+
+PatchAvailableDialog.cpp
+   Klasse CPatchAvailableDialog. Wird dann angezeigt, wenn ein Patch
+   vorhanden ist. Auch hier gibt es eine Möglichkeit, AutoUpdates
+   auszuschalten. Dem Dialog wird beim Erzeugen eine URL zu den
+   Release Notes des herunterzuladenden Patches mitgegeben. Diese wird
+   dann per ::ShellExecute aufgerufen, wenn die Schaltfläche
+   "Release-Notes" angeklickt wird.
+
+
+StdAfx.cpp
+   Für die vorkompilierten Header.
+
+
+updateconfigure.cpp
+   Die Klasse CUpdateConfigure. Wird von CPropertyPage abgeleitet und
+   in CLsUpdt32Dll::Configure() über eine CPropertySheet-Instanz
+   dargestellt. Im Prinzip ist es stumpfsinnig, eine
+   CPropertyPage-Instanz für die Darstellung eines normalen Dialogs zu
+   benutzen, aber Windows macht es so, und die Optik ist an sich nicht
+   schlecht. Sollte man irgendwann auch noch mehr Einstellungen
+   tätigen können für Auto-Update, so kann man einfach eine zweite
+   Seite implementieren und diese ebenfalls zu dem
+   CPropertySheet-Objekt hinzufügen. CUpdateConfigure stellt ein GUI
+   für die Veränderung der Einstellungen für die
+   Auto-Update-Konfigurationzur Verfügung.

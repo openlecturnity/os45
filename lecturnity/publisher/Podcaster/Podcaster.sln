@@ -1,0 +1,65 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Podcaster", "Podcaster.vcproj", "{2FBC23AD-84AB-476A-8AE1-E06C56458187}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BFD1AAE4-F1D9-4E91-AB2E-AE5C26140617} = {BFD1AAE4-F1D9-4E91-AB2E-AE5C26140617}
+		{9E8ABB21-227B-4625-88EE-93319D7C68F9} = {9E8ABB21-227B-4625-88EE-93319D7C68F9}
+		{E601EE19-A00D-4803-A16D-77565599D946} = {E601EE19-A00D-4803-A16D-77565599D946}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "puttylib", "puttylib\puttylib.vcproj", "{BFD1AAE4-F1D9-4E91-AB2E-AE5C26140617}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sshdll", "sshlib\sshdll.vcproj", "{9E8ABB21-227B-4625-88EE-93319D7C68F9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BFD1AAE4-F1D9-4E91-AB2E-AE5C26140617} = {BFD1AAE4-F1D9-4E91-AB2E-AE5C26140617}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lsutl32", "..\..\common\lsutl32\lsutl32.vcproj", "{E601EE19-A00D-4803-A16D-77565599D946}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D59530D8-8310-4295-B319-7399743FBD09} = {D59530D8-8310-4295-B319-7399743FBD09}
+		{E0E31804-F388-486F-B435-0435C35EEE88} = {E0E31804-F388-486F-B435-0435C35EEE88}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "keygenlib", "..\..\common\keygenlib\keygenlib.vcproj", "{E0E31804-F388-486F-B435-0435C35EEE88}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D59530D8-8310-4295-B319-7399743FBD09} = {D59530D8-8310-4295-B319-7399743FBD09}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lutils", "..\..\common\lutils\lutils.vcproj", "{D59530D8-8310-4295-B319-7399743FBD09}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2FBC23AD-84AB-476A-8AE1-E06C56458187}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2FBC23AD-84AB-476A-8AE1-E06C56458187}.Debug|Win32.Build.0 = Debug|Win32
+		{2FBC23AD-84AB-476A-8AE1-E06C56458187}.Release|Win32.ActiveCfg = Release|Win32
+		{2FBC23AD-84AB-476A-8AE1-E06C56458187}.Release|Win32.Build.0 = Release|Win32
+		{BFD1AAE4-F1D9-4E91-AB2E-AE5C26140617}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BFD1AAE4-F1D9-4E91-AB2E-AE5C26140617}.Debug|Win32.Build.0 = Debug|Win32
+		{BFD1AAE4-F1D9-4E91-AB2E-AE5C26140617}.Release|Win32.ActiveCfg = Release|Win32
+		{BFD1AAE4-F1D9-4E91-AB2E-AE5C26140617}.Release|Win32.Build.0 = Release|Win32
+		{9E8ABB21-227B-4625-88EE-93319D7C68F9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9E8ABB21-227B-4625-88EE-93319D7C68F9}.Debug|Win32.Build.0 = Debug|Win32
+		{9E8ABB21-227B-4625-88EE-93319D7C68F9}.Release|Win32.ActiveCfg = Release|Win32
+		{9E8ABB21-227B-4625-88EE-93319D7C68F9}.Release|Win32.Build.0 = Release|Win32
+		{E601EE19-A00D-4803-A16D-77565599D946}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E601EE19-A00D-4803-A16D-77565599D946}.Debug|Win32.Build.0 = Debug|Win32
+		{E601EE19-A00D-4803-A16D-77565599D946}.Release|Win32.ActiveCfg = Release|Win32
+		{E601EE19-A00D-4803-A16D-77565599D946}.Release|Win32.Build.0 = Release|Win32
+		{E0E31804-F388-486F-B435-0435C35EEE88}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E0E31804-F388-486F-B435-0435C35EEE88}.Debug|Win32.Build.0 = Debug|Win32
+		{E0E31804-F388-486F-B435-0435C35EEE88}.Release|Win32.ActiveCfg = Release|Win32
+		{E0E31804-F388-486F-B435-0435C35EEE88}.Release|Win32.Build.0 = Release|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.Debug|Win32.Build.0 = Debug|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.Release|Win32.ActiveCfg = Release|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

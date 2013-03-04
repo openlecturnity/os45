@@ -1,0 +1,82 @@
+<job id="PatchCreate30">
+   <script language="VBScript">
+   
+      ' Add All modules to the VB project of ppt2Lecturnity.ppt and save it as ppa
+
+      Set objArgs = WScript.Arguments
+
+      ' The first argument is to select the correct ppa version 
+      ' (2003 for PowerPoint 2003 and older, 2007 for PowerPoint 2007
+      if objArgs.Count < 1 Then
+         WScript.echo "Less aguments"
+      end if
+   
+      
+      Dim objFSO
+      Set objFSO = CreateObject("Scripting.FileSystemObject")
+      
+      Dim szCurrentDir
+      szCurrentDir = objFSO.GetParentFolderName(Wscript.ScriptFullName)
+
+      ' Actual used classes and modules
+      Dim vbaFiles(15)
+      vbaFiles(0) = "aofDoc.cls"
+      vbaFiles(1) = "aofLayer.cls"
+      vbaFiles(2) = "aofPoints.cls"
+      vbaFiles(3) = "aofShape.cls"
+      vbaFiles(4) = "aofSlide.cls"
+      vbaFiles(5) = "aofTemplate.cls"
+      vbaFiles(6) = "aofTextItem.cls"
+      vbaFiles(7) = "cEventClass.cls"
+      vbaFiles(8) = "CommonFunctions.bas"
+      vbaFiles(9) = "CommonStructs.bas"
+      vbaFiles(10) = "ExternFunctions.bas"
+      vbaFiles(11) = "GlobalDefines.bas"
+      vbaFiles(12) = "GlobalVariables.bas"
+      vbaFiles(13) = "ImportFunctions.bas"
+      vbaFiles(14) = "ppt2Lecturnity.bas"
+      
+      ' Open PowerPoint
+      Dim pInstaller
+      Set pInstaller = CreateObject("PowerPoint.Application")
+      pInstaller.Visible = true   
+      
+      ' Open template file for ppa or ppam
+      Dim pptTemplate
+      Dim szPptName
+      szPptName= szCurrentDir & "\..\..\imc\pptexport\ppt2Lecturnity-template.ppt"
+
+      Set pptTemplate = pInstaller.Presentations.Open(szPptName)
+      
+      Dim sourcePath
+      sourcePath = szCurrentDir & "\..\..\imc\pptexport\"
+   
+      ' Import all files into the VisualBasic editor of the PowerPoint template file
+      Dim sourceFileName 
+      Dim vbaFile
+      For Each vbaFile In vbaFiles
+         if not IsEmpty(vbaFile) Then
+            sourceFile = sourcePath & vbaFile
+            pptTemplate.VBProject.VBComponents.Import(sourceFile)
+         End If
+      Next
+      
+
+      Dim szPpaName
+      if objArgs(0) = "2007" Then
+         szPpaName = szCurrentDir & "\ppt2Lecturnity_2007.ppam"
+         ' Save as ppam (FileFormat = 30(ppSaveAsOpenXMLAddIn), EmbedTrueTypeFonts = 0(msoFalse))
+         pptTemplate.SaveAs szPpaName, 30, 0
+      else
+         szPpaName = szCurrentDir & "\ppt2Lecturnity.ppa"
+         ' Save as ppa (FileFormat = 8(ppSaveAsAddIn), EmbedTrueTypeFonts = 0(msoFalse))
+         pptTemplate.SaveAs szPpaName, 8, 0
+      end if
+
+      ' Close presentation
+      pptTemplate.Close
+      ' Close PowerPoint
+      pInstaller.Quit
+   </script>
+
+</job>

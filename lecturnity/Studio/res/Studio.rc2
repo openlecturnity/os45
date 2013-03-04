@@ -1,0 +1,17 @@
+//
+// Studio.RC2 - Ressourcen, die von Microsoft Visual C++ nicht direkt bearbeitet werden
+//
+
+#ifdef APSTUDIO_INVOKED
+#error Diese Datei kann nicht in Microsoft Visual C++ bearbeitet werden.
+#endif //APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Add manually edited resources here...
+#include "..\..\lecturnity\common\XT_Toolkit_2009\Source\Styles\Office2007Blue\Office2007Blue.rc"
+#include "..\..\lecturnity\common\XT_Toolkit_2009\Source\Styles\Office2007Aqua\Office2007Aqua.rc"
+#include "..\..\lecturnity\common\XT_Toolkit_2009\Source\Styles\Office2007Black\Office2007Black.rc"
+#include "..\..\lecturnity\common\XT_Toolkit_2009\Source\Styles\Office2007Silver\Office2007Silver.rc"
+/////////////////////////////////////////////////////////////////////////////
+

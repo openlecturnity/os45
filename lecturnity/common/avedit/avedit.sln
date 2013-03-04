@@ -1,0 +1,72 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "avedit", "avedit.vcproj", "{6196C3B1-F0FF-49AF-949F-A626E449F9CD}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{7FFFA3F6-860B-43A3-8233-9102385A6B35} = {7FFFA3F6-860B-43A3-8233-9102385A6B35}
+		{D59530D8-8310-4295-B319-7399743FBD09} = {D59530D8-8310-4295-B319-7399743FBD09}
+		{E601EE19-A00D-4803-A16D-77565599D946} = {E601EE19-A00D-4803-A16D-77565599D946}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lutils", "..\lutils\lutils.vcproj", "{D59530D8-8310-4295-B319-7399743FBD09}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lsutl32", "..\lsutl32\lsutl32.vcproj", "{E601EE19-A00D-4803-A16D-77565599D946}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{E0E31804-F388-486F-B435-0435C35EEE88} = {E0E31804-F388-486F-B435-0435C35EEE88}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "keygenlib", "..\keygenlib\keygenlib.vcproj", "{E0E31804-F388-486F-B435-0435C35EEE88}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BaseClasses", "..\DxBaseClasses\baseclasses.vcproj", "{7FFFA3F6-860B-43A3-8233-9102385A6B35}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{6196C3B1-F0FF-49AF-949F-A626E449F9CD}.Debug|Win32.ActiveCfg = Debug|Win32
+		{6196C3B1-F0FF-49AF-949F-A626E449F9CD}.Debug|Win32.Build.0 = Debug|Win32
+		{6196C3B1-F0FF-49AF-949F-A626E449F9CD}.Release|Win32.ActiveCfg = Release|Win32
+		{6196C3B1-F0FF-49AF-949F-A626E449F9CD}.Release|Win32.Build.0 = Release|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.Debug|Win32.Build.0 = Debug|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.Release|Win32.ActiveCfg = Release|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.Release|Win32.Build.0 = Release|Win32
+		{E601EE19-A00D-4803-A16D-77565599D946}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E601EE19-A00D-4803-A16D-77565599D946}.Debug|Win32.Build.0 = Debug|Win32
+		{E601EE19-A00D-4803-A16D-77565599D946}.Release|Win32.ActiveCfg = Release|Win32
+		{E601EE19-A00D-4803-A16D-77565599D946}.Release|Win32.Build.0 = Release|Win32
+		{E0E31804-F388-486F-B435-0435C35EEE88}.Debug|Win32.ActiveCfg = Debug|Win32
+		{E0E31804-F388-486F-B435-0435C35EEE88}.Debug|Win32.Build.0 = Debug|Win32
+		{E0E31804-F388-486F-B435-0435C35EEE88}.Release|Win32.ActiveCfg = Release|Win32
+		{E0E31804-F388-486F-B435-0435C35EEE88}.Release|Win32.Build.0 = Release|Win32
+		{7FFFA3F6-860B-43A3-8233-9102385A6B35}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7FFFA3F6-860B-43A3-8233-9102385A6B35}.Debug|Win32.Build.0 = Debug|Win32
+		{7FFFA3F6-860B-43A3-8233-9102385A6B35}.Release|Win32.ActiveCfg = Release|Win32
+		{7FFFA3F6-860B-43A3-8233-9102385A6B35}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

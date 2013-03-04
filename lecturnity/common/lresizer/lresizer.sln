@@ -1,0 +1,37 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lresizer", "lresizer.vcproj", "{28A26BFF-16C1-47E1-8D3B-DDA887C4C6FA}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+	ProjectSection(ProjectDependencies) = postProject
+		{7FFFA3F6-860B-43A3-8233-9102385A6B35} = {7FFFA3F6-860B-43A3-8233-9102385A6B35}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BaseClasses", "..\DxBaseClasses\baseclasses.vcproj", "{7FFFA3F6-860B-43A3-8233-9102385A6B35}"
+	ProjectSection(WebsiteProperties) = preProject
+		Debug.AspNetCompiler.Debug = "True"
+		Release.AspNetCompiler.Debug = "False"
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{28A26BFF-16C1-47E1-8D3B-DDA887C4C6FA}.Debug|Win32.ActiveCfg = Debug|Win32
+		{28A26BFF-16C1-47E1-8D3B-DDA887C4C6FA}.Debug|Win32.Build.0 = Debug|Win32
+		{28A26BFF-16C1-47E1-8D3B-DDA887C4C6FA}.Release|Win32.ActiveCfg = Release|Win32
+		{28A26BFF-16C1-47E1-8D3B-DDA887C4C6FA}.Release|Win32.Build.0 = Release|Win32
+		{7FFFA3F6-860B-43A3-8233-9102385A6B35}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7FFFA3F6-860B-43A3-8233-9102385A6B35}.Debug|Win32.Build.0 = Debug|Win32
+		{7FFFA3F6-860B-43A3-8233-9102385A6B35}.Release|Win32.ActiveCfg = Release|Win32
+		{7FFFA3F6-860B-43A3-8233-9102385A6B35}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

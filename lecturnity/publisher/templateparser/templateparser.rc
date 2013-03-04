@@ -1,0 +1,209 @@
+//Microsoft Developer Studio generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Deutsch (Deutschland) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)
+#ifdef _WIN32
+LANGUAGE LANG_GERMAN, SUBLANG_GERMAN
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE DISCARDABLE 
+BEGIN
+    "\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_SELECT_TEMPLATE DIALOG DISCARDABLE  0, 0, 350, 225
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Vorlage"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LISTBOX         IDC_TEMPLATELIST,7,58,333,60,LBS_NOINTEGRALHEIGHT | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Bitte wählen Sie die Vorlage für die Erstellung eines StreamingMedia-Dokuments aus. \nMit Hilfe der Schaltfläche ""Durchsuchen..."" können Sie weitere Vorlagen einbinden.",
+                    IDC_STATIC,7,7,333,36
+    LTEXT           "Vorlage:",IDC_STATIC,7,47,27,8
+    PUSHBUTTON      "&Durchsuchen...",IDC_BROWSE,7,204,61,14
+    LTEXT           "Autor:",IDC_STATIC,7,125,50,8
+    LTEXT           "Copyright:",IDC_STATIC,7,135,50,8
+    LTEXT           "",IDC_AUTHOR,60,125,280,8
+    LTEXT           "",IDC_COPYRIGHT,60,135,280,8
+    LTEXT           "Pfad:",IDC_STATIC,7,145,50,8
+    LTEXT           "",IDC_PATH,60,145,280,27
+    LTEXT           "Beschreibung:",IDC_STATIC,7,175,50,8
+    LTEXT           "",IDC_DESCRIPTION,59,175,280,27
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_SELECT_TEMPLATE, DIALOG
+    BEGIN
+        RIGHTMARGIN, 340
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    TPERR_FILE_NOT_FOUND    "Die Datei '%s' wurde nicht gefunden, oder sie ist fehlerhaft."
+    TPERR_SECTION_NOT_FOUND "config.xml: Der Abschnitt '%s' wurde nicht gefunden.\nMöglicherweise ist das Template defekt."
+    TPERR_EVAL_ERROR        "config.xml: Beim Evaluieren des Schlüsselwortes '%s' ist ein Fehler aufgetreten."
+    TPERR_COPY_FAILED       "config.xml: Beim Kopieren der Datei '%s' ist ein Fehler aufgetreten."
+    TPERR_READ_TEMPLATE     "config.xml: Die Vorlagen-Datei '%s' konnte nicht gelesen werden."
+    TPERR_WRITE_TEMPLATE    "config.xml: Das Schreiben der Datei '%s' schlug fehl."
+    TPERR_CREATE_DIR        "config.xml: Beim Erstellen eines Verzeichnisses in '%s' ist ein Fehler aufgetreten.\nIst das Verzeichnis schreibgeschützt?"
+    TPERR_READ_FILES        "config.xml: Beim Auslesen der zu verarbeitenden Dateien ist ein Fehler aufgetreten."
+    IDS_TEMPLATE            "Vorlagenauswahl"
+    IDS_UNDEFINED           "<unbekannt>"
+    IDS_CONFIG_FILEFILTER   "Vorlagen-Konfigurationsdateien (config.xml)|config.xml|Alle Dateien (*.*)|*.*||"
+    IDS_NOTVALID            "Die Datei '%s' scheint keine gültige\nVorlagen-Datei zu sein, oder sie ist bereits vorhanden."
+    IDS_TITLE_LC            "title_de"
+    IDS_DESCRIPTION_LC      "description_de"
+END
+
+#endif    // Deutsch (Deutschland) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Englisch (USA) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_SELECT_TEMPLATE DIALOG DISCARDABLE  0, 0, 350, 225
+STYLE WS_CHILD | WS_DISABLED | WS_CAPTION
+CAPTION "Template"
+FONT 8, "MS Sans Serif"
+BEGIN
+    LISTBOX         IDC_TEMPLATELIST,7,58,333,60,LBS_NOINTEGRALHEIGHT | 
+                    WS_VSCROLL | WS_TABSTOP
+    LTEXT           "Please select a template for the production of a StreamingMedia document. \nBy clicking the ""Browse"" button you may add further templates.",
+                    IDC_STATIC,7,7,333,36
+    LTEXT           "Template:",IDC_STATIC,7,47,32,8
+    PUSHBUTTON      "&Browse...",IDC_BROWSE,7,204,61,14
+    LTEXT           "Author:",IDC_STATIC,7,125,50,8
+    LTEXT           "Copyright:",IDC_STATIC,7,135,50,8
+    LTEXT           "",IDC_AUTHOR,60,125,280,8
+    LTEXT           "",IDC_COPYRIGHT,60,135,280,8
+    LTEXT           "Path:",IDC_STATIC,7,145,50,8
+    LTEXT           "",IDC_PATH,60,145,280,27
+    LTEXT           "Description:",IDC_STATIC,7,175,50,8
+    LTEXT           "",IDC_DESCRIPTION,59,175,280,27
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO DISCARDABLE 
+BEGIN
+    IDD_SELECT_TEMPLATE, DIALOG
+    BEGIN
+        RIGHTMARGIN, 340
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE DISCARDABLE 
+BEGIN
+    TPERR_FILE_NOT_FOUND    "The file '%s' was not found, or it is corrupt."
+    TPERR_SECTION_NOT_FOUND "config.xml: The section '%s' was not found.\nThe template is possibly corrupt."
+    TPERR_EVAL_ERROR        "config.xml: An error occurred while evaluating the keyword '%s'."
+    TPERR_COPY_FAILED       "config.xml: Copying the file '%s' failed."
+    TPERR_READ_TEMPLATE     "config.xml: Reading the template file '%s' failed."
+    TPERR_WRITE_TEMPLATE    "config.xml: Writing the file '%s' failed."
+    TPERR_CREATE_DIR        "config.xml: Creating a directory in '%s' failed.\nIs the directory write protected?"
+    TPERR_READ_FILES        "config.xml: An error occurred while reading which files to handle."
+    IDS_TEMPLATE            "Template selection"
+    IDS_UNDEFINED           "<not defined>"
+    IDS_CONFIG_FILEFILTER   "Template Configuration files (config.xml)|config.xml|All files (*.*)|*.*||"
+    IDS_NOTVALID            "The file '%s' does not seem to be a valid\ntemplate configuration file, or it already exists."
+    IDS_TITLE_LC            "title_en"
+    IDS_DESCRIPTION_LC      "description_en"
+END
+
+#endif    // Englisch (USA) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

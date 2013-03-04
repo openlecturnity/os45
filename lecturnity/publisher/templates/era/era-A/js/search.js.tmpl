@@ -1,0 +1,340 @@
+var isIE = false;
+if (document.all)
+  isIE = true;
+
+var g_currentThumb = '';
+var g_activeThumbSlide = 0;
+var g_stateMimimized = true;
+var g_top = 105;
+var g_height = 300;
+var g_topMin = 415;
+
+function search_getState()
+{
+    return g_stateMimimized;
+}
+
+function search_setPos(top, height)
+{
+    g_top = top;
+    g_height = height;
+}
+
+function search_setMinTop(top)
+{
+    g_topMin = top;
+}
+
+function thumbs_displayThumb(thumbDiv)
+{
+  g_currentThumb = thumbDiv;
+  setTimeout("thumbs_delayedDisplay('" + thumbDiv + "')", 100);
+}
+
+function thumbs_delayedDisplay(thumbDiv)
+{
+  if (g_currentThumb == thumbDiv)
+    document.getElementById(thumbDiv).style.visibility = 'visible';
+}
+
+function thumbs_hideThumb(thumbDiv)
+{
+  document.getElementById(thumbDiv).style.visibility = 'hidden';
+  g_currentThumb = '';
+}
+
+function thumb_s(id)
+{
+  return document.getElementById(id).style;
+}
+
+function thumb_o(id)
+{
+  return document.getElementById(id);
+}
+
+function thumbs_activateSlide(slideNr)
+{
+  if (slideNr == g_activeThumbSlide)
+    return;
+  
+  if (g_activeThumbSlide > 0)
+  { 
+    thumb_s('slideNr' + g_activeThumbSlide).backgroundColor = '%InfoPanelBgColor%';
+    thumb_s('slideImg' + g_activeThumbSlide).backgroundColor = '%InfoPanelBgColor%';
+    thumb_s('slideTitle' + g_activeThumbSlide).backgroundColor = '%InfoPanelBgColor%';
+    thumb_s('slideTime' + g_activeThumbSlide).backgroundColor = '%InfoPanelBgColor%';
+  }
+  
+  thumb_s('slideNr' + slideNr).backgroundColor = '%ActiveSlideBgColor%';
+  thumb_s('slideImg' + slideNr).backgroundColor = '%ActiveSlideBgColor%';
+  thumb_s('slideTitle' + slideNr).backgroundColor = '%ActiveSlideBgColor%';
+  thumb_s('slideTime' + slideNr).backgroundColor = '%ActiveSlideBgColor%';
+  
+  // Set Anchor
+  if (slideNr > 1)
+    parent.thumbsFrame.location.href = "__thumbs.html#slideAnchor" + (slideNr-1);
+  else
+    parent.thumbsFrame.location.href = "__thumbs.html#slideAnchor" + slideNr;
+  
+  g_activeThumbSlide = slideNr;
+}
+
+function thumbs_jumpTo(slideNr)
+{
+  parent.control_seekTime(parent.g_thumbEntries[slideNr-1].timeStamp);
+}
+
+function thumbs_outputThumb(thumbNr)
+{
+  if(thumb_o('searchDivOuter'))
+    thumbs_outputThumb_template_3_4(thumbNr)
+  else   
+    thumbs_outputThumb_template_1_2(thumbNr)
+ }
+   
+function thumbs_outputThumb_template_1_2(thumbNr)
+{
+  var index = thumbNr - 1;
+  var ieOffset = isIE ? 0 : 2;
+  var playerWidth = Math.max(300, Math.max(%VideoWidth%, %StillImageWidth%));
+
+  document.writeln('<div id="overviewThumb' + thumbNr + '" style="position: absolute; top: ' + (index*25 + 25) + 'px; left: 3px; visibility:hidden;">');
+  
+  document.writeln('  <div id="slideDivisor' + thumbNr + '" class="textdiv" style="position: absolute; top: 0px; height: 3px; width: 260px; left: 0px; border: 0px;"><p style="margin: 0px; border: 0px; padding-left: 5px; padding-right: 5px; padding-top: 0px; text-align: right;"><a name="slideAnchor' + thumbNr + '"></a></p></div>');
+  document.writeln('  <div id="slideNr' + thumbNr + '" class="textdiv" style="position: absolute; top: 3px; height: 22px; width: 25px; left: 0px; border: 0px;"><p style="margin: 0px; border: 0px; padding-left: 5px; padding-right: 5px; padding-top: 4px; text-align: right;">' + thumbNr + '</p></div>');
+
+  // document.writeln('  <div id="slideImg' + thumbNr + '" class="textdiv" style="position: absolute; top: 3px; height: 22px; width: 30px; left: 25px; border: 0px; z-index: 5;" onMouseOver="javascript:thumbs_displayThumb(\'thumb' + thumbNr + '\');" onMouseOut="javascript:thumbs_hideThumb(\'thumb' + thumbNr + '\');"><p style="padding-top: 2px;"><a href="javascript:thumbs_jumpTo(' + thumbNr + ');"><img id="slideImgImg' + thumbNr + '" src="images/slide.png" border="0"></a></p></div>');
+  document.writeln('  <div id="slideImg' + thumbNr + '" class="textDiv" style="position:absolute; top:3px; height:22px; width:30px; left:25px; border: 0px; z-index: 5;" onMouseOver="javascript:thumbs_displayThumb(\'thumb' + thumbNr + '\');" onMouseOut="javascript:thumbs_hideThumb(\'thumb' + thumbNr + '\');"><p style="margin: 0px; border: 0px; padding: 0px;"><div class="outer" style="width:' + (23-ieOffset) + 'px; height:' + (19-ieOffset) + 'px;"></div><div class="inner" style="width:' + (15-ieOffset) + 'px; height:' + (11-ieOffset) + 'px;"></div></p></div>');
+
+  if (parent.g_layoutNavigationDocumentStructure == 0)
+    document.writeln('  <div id="slideTitle' + thumbNr + '" class="textdiv" style="position: absolute; top: 3px; height: 22px; width: ' + (playerWidth - 122) + 'px; left: 55px; border: 0px; z-index:2;"><p style="margin: 0px; border: 0px; padding-top: 4px;"><a href="javascript:thumbs_jumpTo(' + thumbNr + ');" title="' + parent.g_thumbEntries[index].fullTitle + '">' + parent.g_thumbEntries[index].fullTitle + '</a></div>');
+  else
+    document.writeln('  <div id="slideTitle' + thumbNr + '" class="textdiv" style="position: absolute; top: 3px; height: 22px; width: ' + (playerWidth - 122) + 'px; left: 55px; border: 0px; z-index:2;"><p style="margin: 0px; border: 0px; padding-top: 4px;">' + parent.g_thumbEntries[index].fullTitle + '</div>');
+  document.writeln('  <div id="slideTime' + thumbNr + '" class="textdiv" style="position: absolute; top: 3px; height: 22px; width: 42px; left: ' + (playerWidth - 67) + 'px; border: 0px; text-align: right;"><p style="margin: 0px; border: 0px; padding-top: 4px;">' + parent.msToTime(parent.g_thumbEntries[index].timeStamp) + '</p></div>');
+
+  document.writeln('  <div id="searchMatch' + thumbNr + '" class="textdiv" style="position: absolute; top: 28px; width: ' + (playerWidth - 122) + 'px; left: 55px; border: 0px; z-index:2;"><p style="margin: 0px; border: 0px; padding-top: 4px;">' +'&nbsp;'+ '</div>');
+  
+  document.writeln('</div>');
+  
+  document.writeln('<div id="thumb' + thumbNr + '" style="position: absolute; top: ' + (index * 25 + 24) + 'px; left: 46px; visibility: hidden; border: 0px; z-index: 10;">');
+  document.writeln('  <div style="position: absolute; left: 0px; top: 0px;"><img src="images/bubble.png"></div>');
+  document.writeln('  <div style="position: absolute; left: 7px; top: 6px;"><img src="slides/' + parent.g_thumbEntries[index].thumbUrl + '"></div>');
+  document.writeln('</div>');
+} 
+
+function thumbs_outputThumb_template_3_4(thumbNr)
+{
+  var index = thumbNr - 1;
+
+  document.writeln('<div id="overviewThumb' + thumbNr + '" style="position: absolute; top: ' + (index*25 + 5) + 'px; left: 3px; visibility:hidden;">');
+  
+  document.writeln('  <div id="slideDivisor' + thumbNr + '" class="textdiv" style="position: absolute; top: 0px; height: 3px; width: 260px; left: 0px; border: 0px;"><p style="margin: 0px; border: 0px; padding-left: 5px; padding-right: 5px; padding-top: 0px; text-align: right;"><a name="slideAnchor' + thumbNr + '"></a></p></div>');
+  document.writeln('  <div id="slideNr' + thumbNr + '" class="textdiv" style="position: absolute; top: 3px; height: 22px; width: 25px; left: 0px; border: 0px;"><p style="margin: 0px; border: 0px; padding-left: 5px; padding-right: 5px; padding-top: 4px; text-align: right;">' + thumbNr + '</p></div>');
+  if (parent.g_layoutNavigationDocumentStructure == 0)
+  {
+    document.writeln('  <div id="slideImg' + thumbNr + '" class="textdiv" style="position:absolute; top:3px; height:22px; width:30px; left:25px; border: 0px; z-index: 5;" onMouseOver="javascript:thumbs_displayThumb(\'thumb' + thumbNr + '\');" onMouseOut="javascript:thumbs_hideThumb(\'thumb' + thumbNr + '\');"><p style="margin: 0px; border: 0px; padding: 0px;"><a href="javascript:thumbs_jumpTo(' + thumbNr + ');"><img id="slideImgImg' + thumbNr + '" src="images/slide.png" border="0"></a></p></div>');
+    document.writeln('  <div id="slideTitle' + thumbNr + '" class="textdiv" style="position: absolute; top: 3px; height: 22px; width: 183px; left: 55px; border: 0px; z-index:2;"><p style="margin: 0px; border: 0px; padding-top: 4px;"><a href="javascript:thumbs_jumpTo(' + thumbNr + ');" title="' + parent.g_thumbEntries[index].fullTitle + '">' + parent.g_thumbEntries[index].title + '</a></div>');
+  }
+  else
+  {
+    document.writeln('  <div id="slideImg' + thumbNr + '" class="textdiv" style="position:absolute; top:3px; height:22px; width:30px; left:25px; border: 0px; z-index: 5;" onMouseOver="javascript:thumbs_displayThumb(\'thumb' + thumbNr + '\');" onMouseOut="javascript:thumbs_hideThumb(\'thumb' + thumbNr + '\');"><p style="margin: 0px; border: 0px; padding: 0px;"><img id="slideImgImg' + thumbNr + '" src="images/slide.png" border="0"></p></div>');
+    document.writeln('  <div id="slideTitle' + thumbNr + '" class="textdiv" style="position: absolute; top: 3px; height: 22px; width: 183px; left: 55px; border: 0px; z-index:2;"><p style="margin: 0px; border: 0px; padding-top: 4px;"><div title="' + parent.g_thumbEntries[index].fullTitle + '">' + parent.g_thumbEntries[index].title + '</div></div>');
+  }
+  document.writeln('  <div id="slideTime' + thumbNr + '" class="textdiv" style="position: absolute; top: 3px; height: 22px; width: 42px; left: 238px; border: 0px; text-align: right;"><p style="margin: 0px; border: 0px; padding-top: 4px;">' + parent.msToTime(parent.g_thumbEntries[index].timeStamp) + '</p></div>');
+
+  document.writeln('  <div id="searchMatch' + thumbNr + '" class="searchtextdiv" style="position: absolute; top: 28px; width: 183px; left: 55px; border: 0px; z-index:2;"><p style="margin: 0px; border: 0px; padding-top: 4px;">' +'&nbsp;'+ '</div>');
+  
+  document.writeln('</div>');
+  
+  document.writeln('<div id="thumb' + thumbNr + '" style="position: absolute; top: ' + (index * 25 + 24) + 'px; left: 46px; visibility: hidden; border: 0px; z-index: 10;">');
+  document.writeln('  <div style="position: absolute; left: 0px; top: 0px;"><img src="images/bubble.png"></div>');
+  document.writeln('  <div style="position: absolute; left: 7px; top: 6px;"><img src="slides/' + parent.g_thumbEntries[index].thumbUrl + '"></div>');
+  document.writeln('</div>');
+}
+
+function handleEnterKey (event)
+{
+   var keyCode = event.keyCode ? event.keyCode : event.which ? event.which : event.charCode;
+      if (keyCode == 13) {
+         search();
+         return false;
+      } 
+      else return true;
+} 
+
+function clearResults() 
+{
+   thumb_s('notFoundDiv').visibility = 'hidden';
+   if(thumb_o('searchDivOuter'))
+      thumb_s('searchDivOuter').visibility = 'hidden';
+   document.searchForm.searchField.value = '';
+
+   var position = 0;
+   for(i=0; i<parent.g_searchEntries.length ;i++) {
+      // disable entry
+      thumb_s('overviewThumb' + (i+1)).visibility = 'hidden';
+      // reset position (necessary to avoid scrollbar)
+      thumb_s('overviewThumb' + (i+1)).top = position+'px';
+      thumb_s('thumb' + (i+1)).top = (position+19)+'px';
+
+      // clear previous results
+      var paragraphNode = thumb_o('searchMatch' + (i+1)).firstChild;
+      while(paragraphNode.firstChild)
+         paragraphNode.removeChild(paragraphNode.firstChild);
+   }
+}
+
+// trim leading and ending whitespaces and reduce subsequent whitespaces to a single one
+String.prototype.trim = function() {
+   var result = this.replace(/^\s+|\s+$/g, ""); 
+   return result.replace(/\s+/g, " "); 
+};
+      
+function search() {
+   if (typeof parent.g_searchEntries=="undefined") {
+      alert("search not supported - g_searchEntries is missing in variable.js");
+      return;
+   }
+     
+   word = document.searchForm.searchField.value.trim();
+   
+   // ignore empty search request, but clear results
+   if(word.length==0) {
+      clearResults();
+      return;
+   }
+   
+   g_stateMimimized = false;
+    parent.d_s('parent.main', 'searchFrame').top = g_top;
+    parent.d_s('parent.main', 'searchFrame').height = g_height;
+    //document.searchForm.minButton.style.visibility = 'visible';
+    document.getElementById("minButton").style.visibility = 'visible';
+    document.body.style.overflow = 'auto';
+
+   // extract words from query
+   var words = word.split(" ");
+
+   // create regular expression for search
+   var regExpString = "("+words[0];
+   for(i=1; i<words.length; i++) {
+      regExpString  += "|"+words[i];
+   }
+   regExpString  += ")";
+   var regexp = new RegExp(regExpString, "gi");
+
+   if(thumb_o('searchDivOuter'))
+      thumb_s('searchDivOuter').visibility = 'visible';
+
+   var found = false;
+   var position = -27;
+   // adjustment for template 3 + 4
+   if(thumb_o('searchDivOuter'))
+     position -= 28;
+   thumb_s('notFoundDiv').visibility = 'hidden';
+   
+   for(i=0; i<parent.g_searchEntries.length ;i++) {
+      // disable entry
+      thumb_s('overviewThumb' + (i+1)).visibility = 'hidden';
+      // reset position (necessary to avoid scrollbar)
+      thumb_s('overviewThumb' + (i+1)).top = position+'px';
+      thumb_s('thumb' + (i+1)).top = (position+19)+'px';
+
+      // clear previous results
+      var paragraphNode = thumb_o('searchMatch' + (i+1)).firstChild;
+      while(paragraphNode.firstChild)
+         paragraphNode.removeChild(paragraphNode.firstChild);
+
+      // search all textual content
+      var count = 0;
+      // note: g_searchEntries[i] contains (text, timestanmp, text, timestamp, ...) 
+      for(j=0; j<parent.g_searchEntries[i].length; j+=2) {
+         var foundInPage = false;
+         var match;
+         var lastPos = 0;
+         var linkNode;
+         
+         // perform search and list results
+         while (match = regexp.exec(parent.g_searchEntries[i][j].trim())) {                     
+            // output not matching part (prefix)
+            var textPre = match.input.substring(lastPos,match.index);            
+            if(!foundInPage && textPre.length+match[0].length > 35) {
+               // reduce long string at beginning
+               textPre = textPre.substring(textPre.length+match[0].length - 35);
+               // remove potentially incompleted word at beginning 
+               textPre = textPre.replace(/^\S*\s/,"");
+            }
+            
+            if(!foundInPage) {
+               // create and add link node
+               linkNode = document.createElement("a")
+               // set link target (timestamp)
+               var hrefAttribute = document.createAttribute("href");
+               hrefAttribute.nodeValue = "javascript:parent.control_seekTime("+parent.g_searchEntries[i][j+1]+");";
+               linkNode.setAttributeNode(hrefAttribute);
+               // set title (shown as tooltip)
+               var titleAttribute = document.createAttribute("title");
+               titleAttribute.nodeValue = parent.msToTime(parent.g_searchEntries[i][j+1]);
+               linkNode.setAttributeNode(titleAttribute);
+               
+               paragraphNode.appendChild(linkNode);
+            }
+            
+            linkNode.appendChild(document.createTextNode(textPre));
+			
+            // output and highlight result
+            var font = document.createElement("font");
+            font.style.color = 'red';
+            font.style.fontWeight = 'bold';
+            font.appendChild(document.createTextNode(match[0]));
+            linkNode.appendChild(font);
+
+            lastPos = match.index + match[0].length;
+            found = true;
+            foundInPage = true;
+         }
+
+         if(foundInPage) {
+            // output not matching part at end (postfix)
+            var textPost = parent.g_searchEntries[i][j].substring(lastPos);
+            linkNode.appendChild(document.createTextNode(textPost));
+            // new line
+            paragraphNode.appendChild(document.createElement("br"));
+            position += 14;
+
+            // make page results visible               
+            if(count++ == 0) {
+               // show entry and adjust positions
+               position += 40;
+               thumb_s('overviewThumb' + (i+1)).visibility = 'visible';
+               thumb_s('overviewThumb' + (i+1)).top = position+'px';
+               thumb_s('thumb' + (i+1)).top = (position+19)+'px';
+//            } else if(count>5) {
+//               // show no more results
+//               paragraphNode.appendChild(document.createTextNode("%MoreResults%"));
+//               paragraphNode.appendChild(document.createElement("br"));
+//               position += 12;
+//               break;
+            } 
+         }
+//      if(count==1) {
+//         // remove number in front of a single result
+//         paragraphNode.firstChild.nodeValue = paragraphNode.firstChild.nodeValue.substring(3); 
+//      }
+      }
+   }
+
+   if(!found)
+      thumb_s('notFoundDiv').visibility = 'visible';
+}
+function mimimize()
+{
+    clearResults();
+    g_stateMimimized = true;
+    parent.d_s('parent.main', 'searchFrame').top = g_topMin;
+    parent.d_s('parent.main', 'searchFrame').height = 30;
+    //document.searchForm.minButton.style.visibility = 'hidden';
+    document.getElementById("minButton").style.visibility = 'hidden';
+    document.body.style.overflow = 'hidden';
+    
+}

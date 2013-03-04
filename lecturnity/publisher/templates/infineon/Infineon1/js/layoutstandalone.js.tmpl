@@ -1,0 +1,110 @@
+var g_isSliding = false;
+var g_wasPlaying = false;
+
+var g_lastDisplayedTimeMs = -1000;
+var g_layoutIgnoreTimeChange = false;
+
+var g_layoutTimeSlider = null;
+var g_layoutVolumeSlider = null;
+var g_layoutCurrentSlide = -1;
+
+var g_slidesOffset = 0;
+
+var g_layoutStandaloneLayout = 1;
+var g_layoutLogoCode = '';
+
+var isIE = false;
+
+if (document.all)
+  isIE = true;
+
+function layout_init()
+{
+}
+
+function s(id)
+{
+  if (isNS4)
+    return eval('document.' + id);
+  else
+    return document.getElementById(id).style;
+}
+
+function o(id)
+{
+  if (isNS4)
+    return s(id);
+  return document.getElementById(id);
+}
+
+function layout_getSlideForTime(msTime)
+{
+  return 0;
+}
+
+function layout_onPlay()
+{
+  control_playPause();
+}
+
+function layout_onMute()
+{
+  control_mute();
+}
+
+function layout_onHome()
+{
+  control_seekTime(0);
+}
+
+function layout_onBack()
+{
+  return;
+}
+
+function layout_onEnd()
+{
+  control_seekTime(g_mediaDurations[0]);
+}
+
+function layout_onForward()
+{
+  return;
+}
+
+function layout_getSlide(timeMs)
+{
+  return 0;
+}
+
+function layout_getCurrentSlide()
+{
+  var timeMs = control_getTimeMs();
+  return layout_getSlide(timeMs);
+}
+
+function layout_onResize()
+{
+  var borderTop = 117;
+  var borderBottom = 22;
+  var borderLeft = 25;
+  var borderRight = 25;
+  var webplayerHeight = 35;
+  var statusbarHeight = 24;
+
+  var docWidth;
+  if (!isIE)
+    docWidth = window.innerWidth;
+  else
+    docWidth = document.body.offsetWidth;
+  var docHeight;
+  if (!isIE)
+    docHeight = window.innerHeight + webplayerHeight;
+  else
+    docHeight = document.body.offsetHeight + webplayerHeight;
+
+  s('masterPlayerDiv').top = docHeight - webplayerHeight - borderBottom - statusbarHeight - g_videoHeight;
+  s('masterPlayerDiv').left = borderLeft + 0.5*(docWidth - borderRight - g_videoWidth - borderLeft);
+
+  return;
+}

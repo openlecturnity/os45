@@ -1,0 +1,126 @@
+var g_isSliding = false;
+var g_wasPlaying = false;
+
+var g_TimeLabel = null;
+var g_lastDisplayedTimeMs = -1000;
+var g_layoutIgnoreTimeChange = false;
+
+var g_layoutTimeSlider = null;
+var g_layoutVolumeSlider = null;
+var g_layoutCurrentSlide = -1;
+
+var g_layoutLogoCode = '%LogoImage%';
+
+var g_slidesOffset = 0;
+
+var isIE = false;
+
+if (document.all)
+  isIE = true;
+
+function layout_init()
+{
+}
+
+function s(id)
+{
+  if (isNS4)
+    return eval('document.' + id);
+  else
+    return document.getElementById(id).style;
+}
+
+function o(id)
+{
+  if (isNS4)
+    return s(id);
+  return document.getElementById(id);
+}
+
+function layout_getSlideForTime(msTime)
+{
+  var newSlideNr = -1;
+  for (var i=0; i<g_thumbCount-1; ++i)
+  {
+      // alert("checking between " + parent.g_thumbEntries[i].timeStamp + " and " + parent.g_thumbEntries[i+1].timeStamp);
+      if (msTime >= g_thumbEntries[i].timeStamp &&
+          msTime < g_thumbEntries[i+1].timeStamp)
+      {
+        newSlideNr = i;
+      }
+  }
+  if (newSlideNr == -1)
+  {
+    if (msTime < g_thumbEntries[0].timeStamp)
+      newSlideNr = 0;
+    else
+      newSlideNr = g_thumbCount - 1;
+  }
+
+  return newSlideNr;
+}
+
+function layout_onPlay()
+{
+  control_playPause();
+}
+
+function layout_onMute()
+{
+  control_mute();
+}
+
+function layout_onHome()
+{
+  control_seekTime(0);
+}
+
+function layout_onBack()
+{
+  var currentSlide = layout_getCurrentSlide();
+  if (currentSlide > 0)
+    control_seekTime(g_thumbEntries[currentSlide - 1].timeStamp);
+  else
+    layout_onHome();
+}
+
+function layout_onEnd()
+{
+  control_seekTime(g_mediaDurations[0]);
+}
+
+function layout_onForward()
+{
+  var currentSlide = layout_getCurrentSlide();
+  if (currentSlide < g_thumbCount - 1)
+    control_seekTime(g_thumbEntries[currentSlide + 1].timeStamp);
+  else
+    layout_onEnd();
+}
+
+function layout_getSlide(timeMs)
+{
+  var slideNr = -1;
+  for (var i=0; i<g_thumbCount-1; ++i)
+  {
+    if ((timeMs >= g_thumbEntries[i].timeStamp &&
+        timeMs < g_thumbEntries[i+1].timeStamp) ||
+	  (i == 0 && timeMs < g_thumbEntries[i+1].timeStamp))
+      slideNr = i;
+  }
+  if (slideNr == -1)
+    slideNr = g_thumbCount-1;
+  return slideNr;
+}
+
+function layout_getCurrentSlide()
+{
+  var timeMs = control_getTimeMs();
+  return layout_getSlide(timeMs);
+}
+
+
+function layout_onResize()
+{
+   return;
+}

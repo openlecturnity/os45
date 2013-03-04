@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" 
+    width="100" 
+    height="30"
+    creationComplete="creationComplete()" 
+    xmlns:local="*"
+    >
+    
+    <mx:Metadata> 
+        [Event(name="scalingTypeChanged", type="ScalingTypeEvent")] 
+    </mx:Metadata>
+    
+    <mx:Script>
+        <![CDATA[
+            import mx.core.IFlexDisplayObject;
+            import mx.managers.PopUpManager;
+            
+            [Bindable] private var scalingTypes:Array = [];
+            [Bindable] private var currentScalingType:String = "";
+            private var inputPos:Point;
+            private var timer:Timer = new Timer(200);
+            
+            public function set dataProvider(data:Array):void {
+                this.scalingTypes = data;
+            }
+            
+            public function setDataProvider(data:Array):void {
+                //this.scalingTypes = data;
+                this.scalingTypes = new Array(data.length);
+                for (var i:int=0; i<scalingTypes.length; i++) {
+                    scalingTypes[i] = data[i];
+                }
+            }
+            
+            public function setCurrentDisplayedScalingType(strDisplay:String):void {
+                currentScalingType = strDisplay;
+            }
+            
+            public function setSelectedScalingType(scalingType:String):void {
+                for (var i:int=0; i<scalingTypes.length; i++){
+                    if (scalingTypes[i] == scalingType){
+                        list.selectedIndex = i;
+                        this.currentScalingType = scalingTypes[i];
+                    } 
+                }
+            }
+            
+            public function setSelectedScalingTypeIndex(idx:int):void {
+                list.selectedIndex = idx;
+                this.currentScalingType = scalingTypes[idx];
+            }
+
+            public function getCurrentScalingType():String {
+                return this.currentScalingType;
+            }
+
+            private function creationComplete():void {
+                calculatePositions();
+                PopUpManager.addPopUp(list as IFlexDisplayObject,this);
+            }
+            
+            private function calculatePositions():void {
+                inputPos = ref.localToGlobal(new Point(ref.x,ref.y));
+                list.x = inputPos.x - 88;
+                list.y = inputPos.y + 25;
+                list.height = 23*scalingTypes.length;
+                list.width = 70;
+            }
+
+            private function openMenu():void {
+                if (timer.running == false) {
+                    calculatePositions();
+                    this.list.visible = true;
+                }
+            }
+            
+            private function clickOutsideList():void {
+                if (list.visible == true){
+                    timer.start();
+                    timer.addEventListener(
+                        TimerEvent.TIMER,
+                        function(e:TimerEvent):void{
+                            timer.stop(); 
+                        }
+                    );
+                    list.visible = !list.visible; 
+                } 
+            }
+            
+            private function onScalingTypeChoose():void {
+                this.currentScalingType = this.scalingTypes[list.selectedIndex];
+                this.dispatchEvent(new ScalingTypeEvent("scalingTypeChanged", list.selectedIndex));
+                this.list.visible = false;
+            }
+        ]]>
+    </mx:Script>
+
+    <mx:Text text="{currentScalingType}" 
+             styleName="scalingTypeCurrent" 
+             y="2" 
+             />
+    <local:GfxButton id="ref" 
+                     afterClick="openMenu()" 
+                     width="25" 
+                     height="25" 
+                     x="42" 
+                     source="@Embed('assets/viewerLanguage.png')" 
+                     overSource="@Embed('assets/viewerLanguageOn.png')" 
+                     downSource="@Embed('assets/viewerLanguageDown.png')" 
+                     />
+    <mx:List id="list" 
+             itemClick="onScalingTypeChoose()" 
+             visible="false" 
+             mouseDownOutside="clickOutsideList()" 
+             dataProvider="{scalingTypes}" 
+             styleName="scalingTypeList" 
+             />
+</mx:Canvas>

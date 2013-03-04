@@ -1,0 +1,53 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PPT2Flash", "PPT2Flash.vcproj", "{BDEC9723-1EC2-4CD8-95F8-A29857A30332}"
+	ProjectSection(ProjectDependencies) = postProject
+		{DE5E899E-EE4F-43E4-A99C-5ADA8B42FF72} = {DE5E899E-EE4F-43E4-A99C-5ADA8B42FF72}
+		{61180F6F-D8A2-4E49-AA70-B336A6C50B72} = {61180F6F-D8A2-4E49-AA70-B336A6C50B72}
+		{D59530D8-8310-4295-B319-7399743FBD09} = {D59530D8-8310-4295-B319-7399743FBD09}
+		{8CA24AE8-5974-497B-8AA0-F2CABD919BDC} = {8CA24AE8-5974-497B-8AA0-F2CABD919BDC}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lutils", "..\..\common\lutils\lutils.vcproj", "{D59530D8-8310-4295-B319-7399743FBD09}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "filesdk", "..\..\common\filesdk\filesdk.vcproj", "{8CA24AE8-5974-497B-8AA0-F2CABD919BDC}"
+	ProjectSection(ProjectDependencies) = postProject
+		{61180F6F-D8A2-4E49-AA70-B336A6C50B72} = {61180F6F-D8A2-4E49-AA70-B336A6C50B72}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "drawsdk", "..\..\common\drawsdk\drawsdk.vcproj", "{61180F6F-D8A2-4E49-AA70-B336A6C50B72}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "libming", "..\..\..\LPming\win32\libming.vcproj", "{DE5E899E-EE4F-43E4-A99C-5ADA8B42FF72}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BDEC9723-1EC2-4CD8-95F8-A29857A30332}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BDEC9723-1EC2-4CD8-95F8-A29857A30332}.Debug|Win32.Build.0 = Debug|Win32
+		{BDEC9723-1EC2-4CD8-95F8-A29857A30332}.Release|Win32.ActiveCfg = Release|Win32
+		{BDEC9723-1EC2-4CD8-95F8-A29857A30332}.Release|Win32.Build.0 = Release|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.Debug|Win32.Build.0 = Debug|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.Release|Win32.ActiveCfg = Release|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.Release|Win32.Build.0 = Release|Win32
+		{8CA24AE8-5974-497B-8AA0-F2CABD919BDC}.Debug|Win32.ActiveCfg = Debug|Win32
+		{8CA24AE8-5974-497B-8AA0-F2CABD919BDC}.Debug|Win32.Build.0 = Debug|Win32
+		{8CA24AE8-5974-497B-8AA0-F2CABD919BDC}.Release|Win32.ActiveCfg = Release|Win32
+		{8CA24AE8-5974-497B-8AA0-F2CABD919BDC}.Release|Win32.Build.0 = Release|Win32
+		{61180F6F-D8A2-4E49-AA70-B336A6C50B72}.Debug|Win32.ActiveCfg = Debug|Win32
+		{61180F6F-D8A2-4E49-AA70-B336A6C50B72}.Debug|Win32.Build.0 = Debug|Win32
+		{61180F6F-D8A2-4E49-AA70-B336A6C50B72}.Release|Win32.ActiveCfg = Release|Win32
+		{61180F6F-D8A2-4E49-AA70-B336A6C50B72}.Release|Win32.Build.0 = Release|Win32
+		{DE5E899E-EE4F-43E4-A99C-5ADA8B42FF72}.Debug|Win32.ActiveCfg = Debug|Win32
+		{DE5E899E-EE4F-43E4-A99C-5ADA8B42FF72}.Debug|Win32.Build.0 = Debug|Win32
+		{DE5E899E-EE4F-43E4-A99C-5ADA8B42FF72}.Release|Win32.ActiveCfg = Release|Win32
+		{DE5E899E-EE4F-43E4-A99C-5ADA8B42FF72}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

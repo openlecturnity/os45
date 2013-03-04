@@ -1,0 +1,130 @@
+lutils-Lib
+==========
+
+Kurze Übersicht der Dateien in der Bibliothek lutils.
+
+Die Bibliothek lutils ist eine rein mit Standard-C-Funktionen und
+Win32-Aufrufen aufgebaute Bibliothek, die einige nütliche Funktionen
+zur Verfügung stellt. Dabei wurde explizit auf MFC verzichtet, um die
+Bibliothek auch einfach in NativeUtils oder lwiutl32 (siehe dort)
+benutzen zu können, bzw. immer in den Fällen, wo man sich nicht darauf
+verlassen kann, dass eine MFC-Runtime-DLL zur Verfügung steht (wie
+beispielsweise direkt bei der Installation von LECTURNITY).
+
+Autor: Martin Danielsson
+
+$Revision: 1.5 $
+$Date: 2005-12-14 10:02:10 $
+
+lautoupdate.cpp
+   Namespace LAutoUpdate. Enthält im Grunde nur zwei Funktionen,
+   CheckForUpdates() und Configure(). Beide Methoden laden über
+   OpenLibraries() zunächst die DLLs, die für das Laden von
+   lsupdt32.dll benötigt werden, und dann holen sie per
+   GetProcAddress() die Funktionen über ihren Namen und rufen sie
+   auf. Dies wurde so gelöst, um lsupdt32.dll nicht in allen
+   Unterverzeichnissen von LECTURNITY speichern zu müssen, und damit
+   auch filesdk.dll, drawsdk.dll und gdiplus.dll. Über implizites
+   Laden der DLLs (über die .lib-Bestandteile linken) müssen alle DLLs
+   so liegen, dass sie gefunden werden, d.h. entweder im gleichen
+   Verzeichnis, oder im Pfad. Möglicherweise lässt sich dies unter
+   Windows XP auch anders lösen, aber eine Recherche zu dieser Zeit
+   ergab, dass es auf jeden Fall nicht ganz einfach ist.
+
+
+lbuffer.cpp
+   Klasse LBuffer. Implementierung eines binären Puffers, der sich
+   automatisch vergrößert, wenn hinzugefügte Daten nicht mehr in den
+   Puffer hineinpassen. Unterstützt den Operator (LPVOID).
+
+
+lexpressionparser.cpp
+   Klasse LExpressionParser, LExpression. Die eigentliche
+   Schnittstelle (Methode EvaluateInt()) befindet sich in der Klasse
+   LExpressionParser, aber die eigentliche Arbeit wird in LExpression
+   durchgeführt. LExpression kann ganzzahlige Ausdrücke mit den
+   Operatoren +, -, max, min, div, mul, if und Klammern auswerten. Die
+   dabei angewendete Technik ist eine Rekursion über Klammern und
+   Argumenten der Funktionen. Die Klasse LExpression nimmt als
+   Argument einen String, den er in vorgegebenen Grenzen auswertet,
+   man muss also nicht bei jeder Rekursion den Eingabestring
+   duplizieren.
+
+
+lfile.cpp
+   Klasse LFile. Eine noch etwas halbherzige Klasse, die im Prinzip
+   dazu gedacht ist, allgemein für das Schreiben und Lesen von Dateien
+   zuständig zu sein. Im Moment sind nur Methoden für das Schreiben
+   von Dateien, entweder binär oder im Text-Format, vorgesehen. Das
+   kann die Klasse aber immerhin schon, und sie beherrscht drei
+   Ausgabeformate im Text-Modus: ANSI, UCS-2 ("Unicode") und
+   UTF-8. Weiter sollte sich die Klasse auch problemlos im
+   Unicode-Modus kompilieren lassen. Im Prinzip.
+
+
+linternet.cpp 
+   Klasse LInternet. Die Klasse LInternet kann zum Herunterladen von
+   Dateien aus dem Internet über das http-Protokoll dienen (eventuell
+   funktionieren auch andere Protokolle, dies ist jedoch unbekannt und
+   vor allem ungetestet). Es stellt eine Read()-Methode zur Verfügung,
+   mit welcher man in Stream-Manier Daten aus einer Netzwerk-Quelle
+   lesen kann. Diese Klasse wurde aus LsUpdt32 ausgelagert, daher ist
+   der "User Agent" (für die http-Anfragen) immer auf "LECTURNITY
+   Auto-Update" gesetzt.
+
+
+
+lio.cpp
+   Namespace LIo. Allerlei nützliche Funktionen, die mit Dateien und
+   Verzeichnissen zu tun haben. U.a. befinden sich hier Methoden, um
+   Dateigrößen größer 4GB auszulesen, oder um Unterverzeichnisse zu
+   zählen, relative und absolute Pfade herzustellen, etc. pp.
+
+
+lmisc.cpp
+   Wurde offensichtlich etwas stiefmütterlich behandelt, und macht
+   auch irgendwie nicht sehr viel Sinn, das Namespace LMisc. Es sind
+   nur drei Funktionen implementiert: IsUserAdmin() (hat Benutzer
+   Administrator-Rechte?), IsWindowsNT() (befinden wir uns auf einem
+   Windows NT-Betriebssystem, d.h. nicht Windows 9X) und
+   LaunchProgram. Besonders LaunchProgram wird wahrscheinlich nur an
+   wenigen Stellen verwendet, weil es nur ein Einzeiler ist
+   (::ShellExecute).
+
+
+lregistry.cpp
+   Namespace LRegistry. Eine Ansammlung praktischer Funktionen, um in
+   der Registry zu lesen und zu schreiben. Unter anderem gibt es dort
+   auch Funktionen (alle "Setting"-Funktionen), die speziell auf
+   LECTURNITY zugeschnitten sind, mit deren Hilfe man Einstellungen
+   lesen (zunächst aus HKCU, wenn dort nicht vorhanden aus HKLM) und
+   schreiben (normalerweise nach HKCU) kann.
+
+
+lstring.cpp
+   Die Klasse LString. LString wurde eingeführt, damit man auch in
+   Projekten, die nicht MFC benutzen, eine CString-ähnliche
+   String-Klasse benutzen kann, die man z.B. konkatenieren kann, oder
+   nach TCHAR casten kann, ohne dass man Low-Level-Stringfunktionen
+   aus der C-API bemühen muss. LString hat weiter einfache Tokenizer-
+   und Such-Fähigkeiten, und kann (auch statisch) von TCHAR nach UTF-8
+   und umgekehrt konvertieren.
+
+
+ltextbuffer.cpp 
+   Klasse LTextBuffer. Die Klasse LTextBuffer setzt auf LBuffer auf,
+   kann also alles, was LBuffer kann (z.B. sich vergrößern), und dazu
+   noch einiges mehr. Vor allem wird LTextBuffer bei der
+   Template-Verarbeitung eingesetzt. Mit Hilfe eines LTextBuffers wird
+   eine Text-Datei gelesen, und anschließend über die Methode
+   ReplaceAll Schlüsselworte darin ersetzt. Diese Ersetzungen werden
+   zuerst nur als "Wunsch" in Form einer Liste von Änderungsobjekten
+   gespeichert. Erst mit einem Aufruf der Methode Commit() werden
+   die Ersetzungen im Puffer tatsächlich durchgeführt.
+   LTextBuffer kann auch Text-Dateien speichern, und
+   zwar in den Formaten, die auch LFile (siehe oben) unterstützt:
+   ANSI, UTF-8 und Unicode (UCS-2).
+
+
+StdAfx.cpp
+   Für die vorkompilierten Header.

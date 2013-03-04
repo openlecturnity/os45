@@ -1,0 +1,91 @@
+; LPLibs.def : Deklariert die Modul-Parameter für die DLL.
+
+LIBRARY      "LPLibs"
+; DESCRIPTION  'LPLibs Windows Dynamic Link Library'
+
+EXPORTS
+	DirectCall
+
+    ; Explizite Exporte können hier eingefügt werden
+	LPLibs_Init
+	LPLibs_CleanUp
+
+	Scorm_ReadSettings
+	Scorm_WriteSettings
+	Scorm_GetSettings
+	Scorm_UseSettings
+	Scorm_Configure
+	Scorm_Init
+	Scorm_CleanUp
+	Scorm_SetTargetFileName
+	Scorm_GetTargetFilePath
+	Scorm_SetIndexFileName
+	Scorm_AddResourceFile
+	Scorm_AddMetadataKeyword
+	Scorm_AddGeneralKeyword
+	Scorm_AddFullTextString
+	Scorm_GetLanguage
+	Scorm_GetVersion
+	Scorm_GetStatus
+	Scorm_GetFullTextAsKeywords
+	Scorm_CreatePackage
+	Scorm_GetProgress
+	Scorm_Cancel
+
+	Template_Init
+	Template_CleanUp
+	Template_ReadSettings
+	Template_ReadSettingsFromFile
+	Template_GetSettings
+    Template_SetSettings
+    Template_GetCurrentTemplatePath
+	Template_Configure
+	Template_AddKeyword
+	Template_GetTitle
+	Template_GetDescription
+	Template_GetAuthor
+	Template_GetCopyright
+	Template_IsScormCompliant
+	Template_IsUtfTemplate
+	Template_DoParse
+	Template_SetTargetDirectory
+	Template_GetTargetDirectory
+	Template_GetFileCount
+	Template_GetFile
+	Template_SetScormEnabled
+	Template_SetDocumentType
+	Template_SetTargetFormat
+	Template_GetMaxSlidesHeight
+	Template_GetMaxSlidesWidth
+	Template_GetStandardNavigationStates
+	Template_PutStandardNavigationStatesToLrd
+
+
+	Transfer_Configure
+
+	Flash_SetInputFiles
+	Flash_SetOutputFile
+	Flash_SetWbInputDimension
+	Flash_SetWbOutputDimension
+	Flash_SetMovieDimension
+	Flash_SetFlashVersion
+	Flash_SetAutostartMode
+	Flash_SetDrawEvalNote
+	Flash_SetPspDesign
+	Flash_SetShowClipsInVideoArea
+	Flash_ResetAllDimensions
+	Flash_ConvertImages
+	Flash_ConvertFonts
+	Flash_ConvertAudioToMp3Ds
+	Flash_SetStandardNavigationStates
+	Flash_GetContentDimensions
+	Flash_BuildMovie
+	Flash_PrepareScorm
+	Flash_GetListOfInteractiveOpenedFiles
+	Flash_PrepareCopiesOfInteractiveOpenedFiles
+	Flash_Cancel
+	Flash_Cleanup
+	Flash_LastErrorDetail
+	Flash_GetFontListFontNotFound
+	Flash_GetFontListGlyphNotFound
+	Flash_GetFontListStylesNotSupported

@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "puttylib", "..\puttylib\puttylib.vcproj", "{BFD1AAE4-F1D9-4E91-AB2E-AE5C26140617}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sshdll", "sshdll.vcproj", "{9E8ABB21-227B-4625-88EE-93319D7C68F9}"
+	ProjectSection(ProjectDependencies) = postProject
+		{BFD1AAE4-F1D9-4E91-AB2E-AE5C26140617} = {BFD1AAE4-F1D9-4E91-AB2E-AE5C26140617}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BFD1AAE4-F1D9-4E91-AB2E-AE5C26140617}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BFD1AAE4-F1D9-4E91-AB2E-AE5C26140617}.Debug|Win32.Build.0 = Debug|Win32
+		{BFD1AAE4-F1D9-4E91-AB2E-AE5C26140617}.Release|Win32.ActiveCfg = Release|Win32
+		{BFD1AAE4-F1D9-4E91-AB2E-AE5C26140617}.Release|Win32.Build.0 = Release|Win32
+		{9E8ABB21-227B-4625-88EE-93319D7C68F9}.Debug|Win32.ActiveCfg = Debug|Win32
+		{9E8ABB21-227B-4625-88EE-93319D7C68F9}.Debug|Win32.Build.0 = Debug|Win32
+		{9E8ABB21-227B-4625-88EE-93319D7C68F9}.Release|Win32.ActiveCfg = Release|Win32
+		{9E8ABB21-227B-4625-88EE-93319D7C68F9}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,0 +1,674 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" creationComplete="init()" resize="onResize()" verticalScrollPolicy="off" horizontalScrollPolicy="off">
+    
+    <mx:Metadata>
+        [Event(name="lecturnityLoaded", type="flash.events.Event")]
+    </mx:Metadata>
+    
+    
+    
+    <mx:Script>
+        <![CDATA[
+            //import com.blitzagency.xray.logger.Debug;
+            import org.osflash.thunderbolt.Logger;
+            import flx.events.FlashInterfaceEvent;
+            // TODO: Remove Listeners on destory (removedFromStage)
+        
+            import mx.controls.Image;
+            import mx.controls.SWFLoader;
+            import mx.core.Application;
+            import flash.geom.Rectangle;
+            import flx.external.FlashInterface;
+            
+            // Allow all domains
+            flash.system.Security.allowDomain("*");
+
+            public const DEFAULT_PROXIE_SOURCE:String = "LecturnityProxieAS2.swf";
+            
+            // TODO: (maybe provide load method)
+            public var proxieSource:String = DEFAULT_PROXIE_SOURCE;
+            public var baseURL:String = "";
+            public var isMainVideoLoading:Boolean = false;
+            
+            
+            private var _swfLoader:SWFLoader;
+            private var _urlLoader:URLLoader;
+            private var _metadataXML:XML;
+            private var _timer:Timer;
+            private var _isProxieInitialized:Boolean = false;
+            private var _isLecturnityLoaded:Boolean = false;
+            
+            // Size of Lecturnity Movie Clip
+            private var _lecturnityWidth:Number;
+            private var _lecturnityHeight:Number;
+            
+            // Demanded Lecturnity Size (Lecturnity has a problem, that is that its actual dimensions are usually not what they should be)
+            private var _lecturnityContentWidth:Number;
+            private var _lecturnityContentHeight:Number;
+            
+            // Current, resized lecturnity dimension and position
+            [Bindable] public var lecCurrentRect:Rectangle = new Rectangle();
+            
+            private var _position:int;
+            private var _zoomFactor:Number = 1.0;
+            private var _videoProgress:Number=0;
+            private var _lecturnityProgress:Number=0;
+            
+            private var _source:String;
+            private var _isAudioMuted:Boolean = false;
+            private var _volume:int = 80;
+            
+            private var _isResizable:Boolean = false;
+            
+            // TODO: Make Bindable Getter
+            //[Bindable] public var isPlaying:Boolean = false;
+            private var _isPlaying:Boolean = false;
+            
+            public function set source(source:String):void {
+                // nothing to change
+                if(source == _source) return;
+                
+                // unload lecturnity
+                if(_source != null) {
+                    unloadLecturnity();
+                }
+                
+                // new source 
+                _source = source;
+                
+                // load new lecturnity if proxie is intialized (if not, lecturnity will be loaded when proxie is ready)
+                if(_source!=null) {
+                    if(_isProxieInitialized) loadLecturnity();
+                }
+            }
+            
+            public function get source():String {
+                return _source;
+            }
+            
+            [Bindable]
+            public function set muteAudio(boolean:Boolean):void {
+                if(boolean!=_isAudioMuted) {
+                    _isAudioMuted = boolean;
+                    if(boolean) setVolume(0);
+                    else setVolume(_volume);    
+                }
+            }
+            
+            public function get muteAudio():Boolean {
+                return _isAudioMuted;
+            }
+            
+            [Bindable]
+            public function set volume(volume:int):void {
+                _volume = volume;
+                if(!_isAudioMuted) setVolume(volume);
+            }
+            
+            public function get volume():int {
+                return _volume;
+            }
+
+            public function set isResizable(isResizable:Boolean):void {
+                _isResizable = isResizable;
+            }
+
+            public function get isPlaying():Boolean {
+                //var temp:Object = FlashInterface.call("lecturnity_proxie_1.getIsPlaying");
+                //return Boolean(temp.result);
+                //_isPlaying = Boolean(temp.result);
+                return _isPlaying;
+            }
+
+            public function get isLecturnitySwfLoaded():Boolean {
+                return _isLecturnityLoaded;
+            }
+
+
+            /*
+            [Bindable] 
+            public function get playtime():int {
+                return _position;
+            }
+            
+            private function set playtime(time:int):void {
+                
+            }
+            */
+            
+            public function init():void {
+                //FlashInterface.publish(root,true);
+
+                _swfLoader = new SWFLoader();
+                Security.allowDomain("*");
+                Security.allowInsecureDomain("*");
+                _swfLoader.addEventListener(Event.COMPLETE, onLecturnityProxieComplete);
+                _swfLoader.addEventListener(Event.INIT, onLecturnityProxieInitialized);
+                _swfLoader.addEventListener(IOErrorEvent.IO_ERROR, onLecturnityProxieError);
+                _swfLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onLecturnitySecurityProxieError);
+
+                // There seems to be a problem with FlashInterface in debug mode
+                //FlashInterface.addEventListener("LECTURNITY_PROGRESS",onLecturnityProgress);
+                // FlashInterface.addEventListener('creation_complete', onLecturnityProxieCreationComplete);
+
+                // TODO: This is quick n dirty
+                try { 
+                    _swfLoader.trustContent = true;
+                    _swfLoader.load(proxieSource); 
+                } catch (error:Error) {
+                    Logger.debug("swfLoader.trustContent not applyable here: "+error.message);
+                    //swfLoader.trustContent = false;
+                    _swfLoader = new SWFLoader();
+                    Security.allowDomain("*");
+                    Security.allowInsecureDomain("*");
+                    _swfLoader.addEventListener(Event.COMPLETE, onLecturnityProxieComplete);
+                    _swfLoader.addEventListener(Event.INIT, onLecturnityProxieInitialized);
+                    _swfLoader.addEventListener(IOErrorEvent.IO_ERROR, onLecturnityProxieError);
+                    _swfLoader.addEventListener(SecurityErrorEvent.SECURITY_ERROR, onLecturnitySecurityProxieError);
+                    _swfLoader.load(proxieSource); 
+                }
+                
+                
+                this.addChild(_swfLoader);
+                
+                _timer = new Timer(125, 0); // (300, 0);
+                _timer.addEventListener(TimerEvent.TIMER, updateLecturnityData);
+
+                Logger.debug("Timer.start()");
+                _timer.start();
+            }
+            
+            public function callResize():void {
+                onResize();
+            }
+
+            private function onLecturnityProxieInitialized(event:Event):void {
+                Logger.debug("Loading Lecturnity Proxie:: Initialized");
+                /*if(source!=null) {
+                    setBaseURL(baseURL);
+                    setLayout();
+                    loadLecturnity(source);
+                }*/
+            }
+            
+            private function onLecturnityProxieError(event:IOErrorEvent):void {
+                Logger.debug("Loading Lecturnity Proxie:: IO Error: "+event.text);
+            }
+
+            private function onLecturnitySecurityProxieError(event:SecurityErrorEvent):void {
+                Logger.debug("Loading Lecturnity Proxie:: Security Error: "+event.text);
+            }
+            
+            private function onLecturnityProxieComplete(event:Event):void {
+                _swfLoader.removeEventListener(Event.COMPLETE, onLecturnityProxieComplete);
+                //var temp:Object = FlashInterface.call("lecturnity_proxie_1.isInitialized");
+                //setBaseURL(baseURL);
+            }
+            
+            // Event driven progress update. There seems to be a problem with FlashInterface in debug mode
+            /*
+            private function onLecturnityProgress(event:FlashInterfaceEvent):void {
+                lecturnityProgress = event.data.percentage;
+            }
+            */
+            
+            private function onLecturnityProxieCreationComplete(event:FlashInterfaceEvent=null):void {
+                FlashInterface.removeEventListener("creation_complete", onLecturnityProxieCreationComplete);
+                //setLecturnitySize();
+                if(_source!=null) 
+                    loadLecturnity(_source);
+                else {
+                    // Timer is used for metadata (like isProxieIntialized, 
+                    // as well as for lecturnity state (like currentPosition)
+                    // Therefore timer control (start and stop) is a little more complex
+                    Logger.debug("Timer.stop()");
+                    _timer.stop();
+                }
+            }
+            
+            private function initLecturnity():void {
+                getLecturnityDimensions();
+                _isLecturnityLoaded = true;
+                setLecturnitySize();
+                //layoutLecturnity();
+                dispatchEvent(new Event("lecturnityLoaded"));
+            }
+            
+            private function updateLecturnityData(event:TimerEvent):void {
+                var temp:Object;
+                if(_isProxieInitialized) {
+                    //mx.controls.Alert.show("isProxieInitialized");
+                    if(_isLecturnityLoaded) { 
+                        temp = FlashInterface.call("lecturnity_proxie_1.getIsPlaying");
+                        _isPlaying = Boolean(temp.result);
+                        if(_isPlaying)
+                            getCurrentPosition();
+                        if(isMainVideoLoading)
+                            getVideoLoadedPercentage();
+                    } else {
+                        if(isLecturnityLoaded()) {
+                            _lecturnityProgress = 100;
+                            initLecturnity();
+                        } else {
+                            _lecturnityProgress = getLecturnityLoadedPercentage();
+                        }
+                    }
+                } else {
+                    //mx.controls.Alert.show("!isProxieInitialized");
+                    temp = FlashInterface.call("lecturnity_proxie_1.isInitialized");
+                    if(temp!=null) {
+                        if(temp.result == 1) {
+                            _isProxieInitialized = true;
+                            onLecturnityProxieCreationComplete();
+                        } else {
+                            Logger.debug("Error initializing LecturnityProxie");
+                        }  
+                    // not initialized yet.
+                    // TODO: Consider Error Event after Timeout
+                    }
+                }
+            }
+            
+            private function getCurrentPosition(event:TimerEvent=null):void {
+                var temp:Object = FlashInterface.call("lecturnity_proxie_1.getPlaytime");
+                _position = Number(temp.result);
+            }
+            
+            private function getVideoLoadedPercentage(event:TimerEvent=null):void {
+                var temp:Object = FlashInterface.call("lecturnity_proxie_1.getVideoLoadedPercentage");
+                _videoProgress = Number(temp.result);
+                if(_videoProgress==100) isMainVideoLoading = false;
+            }
+            
+            private function isLecturnityLoaded():Boolean {
+                var temp:Object = FlashInterface.call("lecturnity_proxie_1.isLecturnityLoaded");
+                if(Number(temp.result)>0) return true;
+                else return false;
+            }
+            
+            private function getLecturnityLoadedPercentage():Number {
+                var temp:Object = FlashInterface.call("lecturnity_proxie_1.getLoadProgress");
+                if(Number(temp.result)>0) return temp.result;
+                else return 0;
+            }
+
+            
+            
+            /** Public facade methods **/
+            
+            public function play():void    {
+                FlashInterface.call("lecturnity_proxie_1.play");
+//                _isPlaying = true;
+            }
+            
+            public function stop():void {
+//                _isPlaying = false;
+                FlashInterface.call("lecturnity_proxie_1.stop");
+                //timer.stop();
+            }
+            
+            public function pause():void  {
+                FlashInterface.call("lecturnity_proxie_1.pause");
+//                _isPlaying = false;
+                //timer.stop();
+            }
+            
+            public function getPlaytime():int {
+                getCurrentPosition();
+                return _position;
+            }
+            
+            public function setPlaytime(time:Number):void {
+                this._position = time;
+                FlashInterface.call("lecturnity_proxie_1.setPlaytime", time);
+            }
+            
+            public function gotoPage(pageNumber:int):void {
+                FlashInterface.call("lecturnity_proxie_1.gotoPage", pageNumber);
+            }
+            
+            public function setVolume(volume:Number=NaN):void {
+                if(isNaN(volume)) volume = _volume;
+                if(_isLecturnityLoaded)
+                    FlashInterface.call("lecturnity_proxie_1.setVolume", volume);
+            }
+            
+            // The next 3 methods are implemented for the case that the 
+            // dimensions of the LEC movie have not been read correctly 
+            // in 'getLecturnityDimensions()' called from 'initLecturnity()' 
+            // This may happen outside the "trusted area" from the Flassh security policy
+            public function readLecMovieDimensions():void {
+                _lecturnityContentWidth = getLecMovieWidth();
+                _lecturnityContentHeight = getLecMovieHeight();
+            }
+
+            public function getLecMovieWidth():int {
+                if (_isLecturnityLoaded) {
+                    var request:Object;
+                    request = FlashInterface.call("lecturnity_proxie_1.getLecturnityMovieWidth");
+                    return Number(request.result);
+                } else {
+                    return getLecContentWidth();
+                }
+            }
+            
+            public function getLecMovieHeight():int {
+                if (_isLecturnityLoaded) {
+                    var request:Object;
+                    request = FlashInterface.call("lecturnity_proxie_1.getLecturnityMovieHeight");
+                    return Number(request.result);
+                } else {
+                    return getLecContentHeight();
+                }
+            }
+            
+            public function getLecContentWidth():int {
+                return _lecturnityContentWidth;
+            }
+            
+            public function getLecContentHeight():int {
+                return _lecturnityContentHeight;
+            }
+            
+            public function getLecCurrentWidth():int {
+                return lecCurrentRect.width;
+            }
+            
+            public function getLecCurrentHeight():int {
+                return lecCurrentRect.height;
+            }
+            
+            public function getLecCurrentRectangle():Rectangle {
+                return lecCurrentRect;
+            }
+            
+            public function getLecturnityZoomFactor():Number {
+                return _zoomFactor;
+            }
+
+            public function getLecturnityProgress():int {
+                return _lecturnityProgress;
+            }
+            
+            public function getVideoProgress():int {
+                return _videoProgress;
+            }
+            
+
+            public function loadLecturnity(url:String=null):void {
+                if(url==null) url=_source;
+                if(!_timer.running) {
+                    _timer.start();
+                    Logger.debug("Timer.start()");
+                }
+                _isLecturnityLoaded = false;
+                setBaseURL(baseURL);
+                FlashInterface.call("lecturnity_proxie_1.loadLecturnity", url);
+            }
+            
+            public function unloadLecturnity():void {
+                Logger.debug("unloadLecturnity");
+                
+                try {
+                    Security.allowDomain("*");
+                    
+                    // reset 
+                    if(_isProxieInitialized) {
+                        Logger.debug("Timer.stop()");
+                        _timer.stop();
+                    }
+                    stop();
+                    //_isPlaying = false;
+                    _isLecturnityLoaded = false;
+                    _position = 0;
+                    volume = 100;
+                    _videoProgress = 0;
+                    _lecturnityProgress = 0;
+                    isMainVideoLoading = false;
+                    muteAudio = false;
+                    
+                    
+                    // unload
+                    FlashInterface.call("lecturnity_proxie_1.unloadLecturnity");
+                } 
+                
+                catch (error:SecurityError) {
+                    Logger.debug("SecurityError caught: "+error.message);
+                }
+                
+                catch (error:Error) {
+                    Logger.debug("Error caught: "+error.message);
+                }
+            }
+            
+            public function setBaseURL(baseURL:String):void {
+                FlashInterface.call("lecturnity_proxie_1.setBaseURL", baseURL);
+            }
+
+            private function setLecturnitySize(width:Number=NaN, height:Number=NaN):void {
+                if(isNaN(width)) width = this.width;
+                if(isNaN(height)) height = this.height;
+                
+                if (isNaN(_lecturnityContentWidth) || isNaN(_lecturnityContentHeight) 
+                  || (_lecturnityContentWidth == 0) || (_lecturnityContentHeight == 0)) {
+                    // Lec movie size is still read as 0x0 --> Try to read the dimension again
+                    readLecMovieDimensions(); 
+                }
+                if ((_lecturnityContentWidth > 0) && (_lecturnityContentHeight > 0)) {
+                    var wFactor:Number = width / _lecturnityContentWidth;
+                    var hFactor:Number = height / _lecturnityContentHeight;
+                    _zoomFactor = Math.min(wFactor, hFactor);
+                    
+                    lecCurrentRect.width = Math.floor(_zoomFactor*_lecturnityContentWidth);
+                    lecCurrentRect.height = Math.floor(_zoomFactor*_lecturnityContentHeight);
+                    
+                    var lecWidth:Number = lecCurrentRect.width * (_lecturnityWidth / _lecturnityContentWidth);
+                    var lecHeight:Number = lecCurrentRect.height * (_lecturnityHeight / _lecturnityContentHeight);
+                    lecCurrentRect.x = Math.floor((width - lecCurrentRect.width) / 2);
+                    lecCurrentRect.y = Math.floor((height - lecCurrentRect.height) / 2);
+                    if(lecCurrentRect.x <= 0.0)
+                        lecCurrentRect.x = 0.0;
+                    if(lecCurrentRect.y <= 0.0)
+                        lecCurrentRect.y = 0.0;
+                    
+                    FlashInterface.call("lecturnity_proxie_1.setLayout", lecWidth, lecHeight, lecCurrentRect.x, lecCurrentRect.y);
+                }
+            }
+            
+            private function getLecturnityDimensions():void {
+                var request:Object;
+                request = FlashInterface.call("lecturnity_proxie_1.getLecturnityDimensions");
+                _lecturnityWidth = Number(request.result.mcWidth);
+                _lecturnityHeight = Number(request.result.mcHeight);
+                _lecturnityContentWidth = Number(request.result.contentWidth);
+                _lecturnityContentHeight = Number(request.result.contentHeight);
+            }
+            
+            
+            private function onResize():void {
+                if(_isLecturnityLoaded) {
+                    // Improvement Bugfix 5603: Resizable?
+                    if (_isResizable)
+                        setLecturnitySize();
+                    else
+                        setLecturnitySize(_lecturnityContentWidth, _lecturnityContentHeight);
+                    // Bugfix 5334: Call resize of the parent application
+                    parentDocument.CallResize();
+                }
+            }
+                    
+                    
+            /** SCORM interface block **/
+            public function scormGetHasTesting():Boolean {
+                var request:Object = FlashInterface.call("lecturnity_proxie_1.scormGetHasTesting");
+                return Boolean(request.result);
+            }
+            public function scormSetHasTesting(bHasTesting:Boolean):void {
+                FlashInterface.call("lecturnity_proxie_1.scormSetHasTesting", (bHasTesting ? 1 : 0));
+            }
+
+            public function scormGetLMSResumeSupported():Boolean {
+                var request:Object = FlashInterface.call("lecturnity_proxie_1.scormGetLMSResumeSupported");
+                return Boolean(request.result);
+            }
+            public function scormSetLMSResumeSupported(bLMSResumeSupported:Boolean):void {
+                FlashInterface.call("lecturnity_proxie_1.scormSetLMSResumeSupported", (bLMSResumeSupported ? 1 : 0));
+            }
+
+            public function scormGetTotalCurrentlyAchievePoints():int {
+                var request:Object = FlashInterface.call("lecturnity_proxie_1.scormGetTotalCurrentlyAchievePoints");
+                return int(request.result);
+            }
+            public function scormSetTotalCurrentlyAchievePoints(nTotalCurrentlyAchievePoints:int):void {
+                FlashInterface.call("lecturnity_proxie_1.scormSetTotalCurrentlyAchievePoints", nTotalCurrentlyAchievePoints);
+            }
+
+            public function scormGetSuccessStatus():String {
+                var request:Object = FlashInterface.call("lecturnity_proxie_1.scormGetSuccessStatus");
+                return String(request.result);
+            }
+            public function scormSetSuccessStatus(strSuccessStatus:String):void {
+                FlashInterface.call("lecturnity_proxie_1.scormSetSuccessStatus", strSuccessStatus);
+            }
+
+            public function scormGetCompletionStatus():String {
+                var request:Object = FlashInterface.call("lecturnity_proxie_1.scormGetCompletionStatus");
+                return String(request.result);
+            }
+            public function scormSetCompletionStatus(strCompletionStatus:String):void {
+                FlashInterface.call("lecturnity_proxie_1.scormSetCompletionStatus", strCompletionStatus);
+            }
+
+            public function scormGetResumePos():Number {
+                var request:Object = FlashInterface.call("lecturnity_proxie_1.scormGetResumePos");
+                return Number(request.result);
+            }
+            public function scormSetResumePos(fResumePos:Number):void {
+                FlashInterface.call("lecturnity_proxie_1.scormSetResumePos", fResumePos);
+            }
+
+            public function scormGetDoLoadLocationData():Boolean {
+                var request:Object = FlashInterface.call("lecturnity_proxie_1.scormGetDoLoadLocationData");
+                return Boolean(request.result);
+            }
+            public function scormSetDoLoadLocationData(bDoLoadLocationData:Boolean):void {
+                FlashInterface.call("lecturnity_proxie_1.scormSetDoLoadLocationData", (bDoLoadLocationData ? 1 : 0));
+            }
+
+            public function scormGetSuspendData():String {
+                var request:Object = FlashInterface.call("lecturnity_proxie_1.scormGetSuspendData");
+                return String(request.result);
+            }
+            public function scormSetSuspendData(strSuspendData:String):void {
+                FlashInterface.call("lecturnity_proxie_1.scormSetSuspendData", strSuspendData);
+            }
+
+            public function scormGetDoLoadSuspendData():Boolean {
+                var request:Object = FlashInterface.call("lecturnity_proxie_1.scormGetDoLoadSuspendData");
+                return Boolean(request.result);
+            }
+            public function scormSetDoLoadSuspendData(bDoLoadSuspendData:Boolean):void {
+                FlashInterface.call("lecturnity_proxie_1.scormSetDoLoadSuspendData", (bDoLoadSuspendData ? 1 : 0));
+            }
+
+            public function scormGetSuspendDataLoaded():Boolean {
+                var request:Object = FlashInterface.call("lecturnity_proxie_1.scormGetSuspendDataLoaded");
+                return Boolean(request.result);
+            }
+            public function scormSetSuspendDataLoaded(bSuspendDataLoaded:Boolean):void {
+                FlashInterface.call("lecturnity_proxie_1.scormSetSuspendDataLoaded", (bSuspendDataLoaded ? 1 : 0));
+            }
+
+            public function scormGetDoLoadLearnerData():Boolean {
+                var request:Object = FlashInterface.call("lecturnity_proxie_1.scormGetDoLoadLearnerData");
+                return Boolean(request.result);
+            }
+            public function scormSetDoLoadLearnerData(bDoLoadLearnerData:Boolean):void {
+                FlashInterface.call("lecturnity_proxie_1.scormSetDoLoadLearnerData", (bDoLoadLearnerData ? 1 : 0));
+            }
+
+            public function scormGetLearnerDataLoaded():Boolean {
+                var request:Object = FlashInterface.call("lecturnity_proxie_1.scormGetLearnerDataLoaded");
+                return Boolean(request.result);
+            }
+            public function scormSetLearnerDataLoaded(bLearnerDataLoaded:Boolean):void {
+                FlashInterface.call("lecturnity_proxie_1.scormSetLearnerDataLoaded", (bLearnerDataLoaded ? 1 : 0));
+            }
+
+            public function scormGetLocationTimeStamp():Number {
+                var request:Object = FlashInterface.call("lecturnity_proxie_1.scormGetLocationTimeStamp");
+                return Number(request.result);
+            }
+            public function scormSetLocationTimeStamp(fLocationTimeStamp:Number):void {
+                FlashInterface.call("lecturnity_proxie_1.scormSetLocationTimeStamp", fLocationTimeStamp);
+            }
+
+            public function scormGetSessionTime():int {
+                var request:Object = FlashInterface.call("lecturnity_proxie_1.scormGetSessionTime");
+                return int(request.result);
+            }
+            public function scormSetSessionTime(nSessionTime:int):void {
+                FlashInterface.call("lecturnity_proxie_1.scormSetSessionTime", nSessionTime);
+            }
+
+            public function scormGetQuestionsCount():int {
+                var request:Object = FlashInterface.call("lecturnity_proxie_1.scormGetQuestionsCount");
+                return int(request.result);
+            }
+            public function scormSetQuestionsCount(nQuestionsCount:int):void {
+                FlashInterface.call("lecturnity_proxie_1.scormSetQuestionsCount", nQuestionsCount);
+            }
+
+            public function scormGetLearnerResponse():String {
+                var request:Object = FlashInterface.call("lecturnity_proxie_1.scormGetLearnerResponse");
+                return String(request.result);
+            }
+            public function scormSetLearnerResponse(strLearnerResponse:String):void {
+                FlashInterface.call("lecturnity_proxie_1.scormSetLearnerResponse", strLearnerResponse);
+            }
+
+            public function scormGetQuestionIndex():String {
+                var request:Object = FlashInterface.call("lecturnity_proxie_1.scormGetQuestionIndex");
+                return String(request.result);
+            }
+            public function scormSetQuestionIndex(strQuestionIndex:String):void {
+                FlashInterface.call("lecturnity_proxie_1.scormSetQuestionIndex", strQuestionIndex);
+            }
+
+            public function scormGetQuestionResult():String {
+                var request:Object = FlashInterface.call("lecturnity_proxie_1.scormGetQuestionResult");
+                return String(request.result);
+            }
+            public function scormSetQuestionResult(strQuestionResult:String):void {
+                FlashInterface.call("lecturnity_proxie_1.scormSetQuestionResult", strQuestionResult);
+            }
+
+
+            public function isEvaluation():Boolean {
+                var request:Object = FlashInterface.call("lecturnity_proxie_1.isEvaluation");
+                var strEvaluation:String = String(request.result);
+                if (strEvaluation.indexOf("true") > -1)
+                    return true;
+                else
+                    return false;
+            }
+
+
+            public function callMsgBox(strMessage:String):void {
+                mx.controls.Alert.show("callMsgBox: " + strMessage);
+            }
+
+
+            /** Callback Functions **/
+            public function onCreationComplete():void {
+                
+            }
+            
+            
+
+        ]]>
+    </mx:Script>
+    
+
+    
+</mx:Canvas>

@@ -1,0 +1,155 @@
+button_setImageDir("images/");
+button_prepareButton("layouthome", "controlbar_onHome", "button_home.png", "button_home_f2.png", "button_home_f3.png", "button_home_f4.png", false, "%JumpToBegin%");
+button_prepareButton("layoutback", "controlbar_onBack", "button_back.png", "button_back_f2.png", "button_back_f3.png", "button_back_f4.png", false, "%SlideBackwards%");
+button_prepareButton("layoutplay", "controlbar_onPlay", "button_play.png", "button_play_f2.png", "button_play_f3.png", "button_play_f4.png", false, "%StartReplayPause%");
+button_addButtonState("layoutplay", "1", "button_pause.png", "button_pause_f2.png", "button_pause_f3.png", "button_pause_f4.png", false);
+button_prepareButton("layoutforward", "controlbar_onForward", "button_forward.png", "button_forward_f2.png", "button_forward_f3.png", "button_forward_f4.png", false, "%SlideForward%");
+button_prepareButton("layoutend", "controlbar_onEnd", "button_end.png", "button_end_f2.png", "button_end_f3.png", "button_end_f4.png", false, "%JumpToEnd%");
+button_prepareButton("layoutmute", "controlbar_onMute", "button_mute_f3.png", "button_mute_f2.png", "button_mute.png", "button_mute_f4.png", false, "%SoundOnOff%");
+button_addButtonState("layoutmute", "1", "button_mute.png", "button_mute_f2.png", "button_mute_f3.png", "button_mute_f4.png", false);
+
+var g_layoutTimeSlider = null;
+var g_layoutVolumeSlider = null;
+
+var g_layoutIgnoreTimeChange = false;
+var g_isSliding = false;
+
+var g_statusLabel = null;
+var g_statusLabelDisplay = false;
+var g_slideLabel  = null;
+
+function controlbar_init()
+{
+  g_layoutTimeSlider = new LSlider('g_layoutTimeSlider');
+  g_layoutTimeSlider.attachOnChange(controlbar_onTimeChange);
+  g_layoutTimeSlider.attachOnSlideStart(controlbar_onSlideStart);
+  g_layoutTimeSlider.attachOnSlideEnd(controlbar_onSlideEnd);
+  g_layoutTimeSlider.width  = 398;
+  g_layoutTimeSlider.height = 8;
+  g_layoutTimeSlider.minVal = 0;
+  g_layoutTimeSlider.maxVal = top.main.g_mediaDurations[0];
+  g_layoutTimeSlider.valueDefault = 0;
+  g_layoutTimeSlider.valueInterval = 1000;
+  g_layoutTimeSlider.imgDir = '';
+  g_layoutTimeSlider.setBackgroundImage('images/timeslider_bg.png', 'no-repeat');
+  g_layoutTimeSlider.setSliderIcon('images/timeslider_knob.png', 24, 8);
+  g_layoutTimeSlider.useInputField = 0;
+  g_layoutTimeSlider.draw('timeSliderDiv');
+
+  g_layoutVolumeSlider = new LSlider('g_layoutVolumeSlider');
+  g_layoutVolumeSlider.attachOnChange(controlbar_onVolumeChange);
+  g_layoutVolumeSlider.width  = 87;
+  g_layoutVolumeSlider.height = 8;
+  g_layoutVolumeSlider.minVal = 0;
+  g_layoutVolumeSlider.maxVal = 100;
+  g_layoutVolumeSlider.valueDefault = 50;
+  g_layoutVolumeSlider.valueInterval = 1;
+  g_layoutVolumeSlider.imgDir = '';
+  g_layoutVolumeSlider.setBackgroundImage('images/volumeslider_bg.png', 'no-repeat');
+  g_layoutVolumeSlider.setSliderIcon('images/timeslider_knob.png', 24, 8);
+  g_layoutVolumeSlider.useInputField = 0;
+  g_layoutVolumeSlider.draw('volumeSliderDiv');
+
+  top.main.layout_enableControl("home", true);
+  if (!top.main.g_isStandaloneMode)
+  {
+    top.main.layout_enableControl("back", true);
+    top.main.layout_enableControl("forward", true);
+  }
+  top.main.layout_enableControl("end", true);
+  top.main.layout_enableControl("mute", true);
+  top.main.layout_updateTime(0);
+}
+
+function controlbar_getStatusLabel()
+{
+  if (g_statusLabel == null)
+    g_statusLabel = getHtmlObject('', 'statusAreaDiv', '', false, true);
+  return g_statusLabel;
+}
+
+function controlbar_getSlideLabel()
+{
+  if (g_slideLabel == null)
+    g_slideLabel = getHtmlObject('', 'slidesAreaDiv', '', false, true);
+  return g_slideLabel;
+}
+
+function controlbar_setSlideLabelText(slideText)
+{
+  var label = controlbar_getSlideLabel();
+  if (label != null)
+    label.innerHTML = slideText;
+}
+
+function controlbar_displayIsBuffering(bDisplay)
+{
+  var statusDiv = controlbar_getStatusLabel();
+  if (bDisplay)
+    statusDiv.innerHTML = 'Status: %Buffering%';
+  else
+    statusDiv.innerHTML = '';
+  g_statusLabelDisplay = bDisplay;
+}
+
+function controlbar_displayCurrentTime(msTime)
+{
+  if (!g_statusLabelDisplay)
+  {
+    var statusDiv = controlbar_getStatusLabel();
+    statusDiv.innerHTML = msToTime(msTime);
+  }
+}
+
+function controlbar_onSlideStart(obj)
+{
+  g_isSliding = true;
+  top.main.control_beginSlide();
+}
+
+function controlbar_onSlideEnd(obj)
+{
+  g_isSliding = false;
+  top.main.control_endSlide();
+}
+
+function controlbar_onTimeChange(obj)
+{
+  if (g_isSliding || (!g_isSliding && !g_layoutIgnoreTimeChange))
+    top.main.control_seekTime(obj.getValue());
+}
+
+function controlbar_onVolumeChange(obj)
+{
+  top.main.control_setVolume(obj.getValue());
+}
+
+function controlbar_onHome()
+{
+  top.main.layout_onHome();
+}
+
+function controlbar_onEnd()
+{
+  top.main.layout_onEnd();
+}
+
+function controlbar_onBack()
+{
+  top.main.layout_onBack();
+}
+
+function controlbar_onForward()
+{
+  top.main.layout_onForward();
+}
+
+function controlbar_onPlay()
+{
+  top.main.layout_onPlay();
+}
+
+function controlbar_onMute()
+{
+  top.main.layout_onMute();
+}

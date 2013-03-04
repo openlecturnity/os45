@@ -1,0 +1,42 @@
+#ifndef __UTILE_DEFINES__
+#define __UTILE_DEFINES__
+
+
+#ifndef IMC_MAX_PATH
+#define IMC_MAX_PATH       4096
+#endif
+
+#ifndef WM_USER
+#define WM_USER       0x0400
+#endif
+
+
+#ifndef WM_USER_STANDARD_LAYOUT
+#define WM_USER_STANDARD_LAYOUT       WM_USER+1025
+#endif
+
+#ifndef WM_USER_PAGEFOCUSED_LAYOUT
+#define WM_USER_PAGEFOCUSED_LAYOUT       WM_USER+1026
+#endif
+
+#ifndef WM_USER_FULLSCREEN_LAYOUT
+#define WM_USER_FULLSCREEN_LAYOUT       WM_USER+1027
+#endif
+
+#ifndef WM_USER_AUDIO_SETTINGS
+#define WM_USER_AUDIO_SETTINGS       WM_USER+1028
+#endif
+
+#ifndef WM_USER_VIDEO_SETTINGS
+#define WM_USER_VIDEO_SETTINGS       WM_USER+1029
+#endif
+
+#ifndef WM_USER_GOTO_STANDARD_LAYOUT
+#define WM_USER_GOTO_STANDARD_LAYOUT       WM_USER+1030
+#endif
+
+#ifndef WM_FINISH_SGSELECTION
+#define WM_FINISH_SGSELECTION       WM_USER+1031
+#endif
+
+#endif

@@ -1,0 +1,179 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <title>Document Overview</title>
+
+    <style type="text/css">
+      <!--
+      body {
+        background-color:#CED7E7;
+        padding:0;
+        margin:0;
+      }
+
+      div.textdiv {
+        font-family:Arial, Helvetica, sans-serif;
+        color:#0D2059;
+        font-size:11px;
+        vertical-align:middle;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+       }
+
+      div.outer {
+        position:absolute;
+        border-style:solid;
+        border-width:1px;
+        border-color:#0D2059;
+        font-size:1px;
+        left:0px;
+        top:3px;
+        background-color:#CED7E7;
+        z-index:6;
+      }
+
+      div.inner {
+        position:absolute;
+        border-style:solid;
+        border-width:1px;
+        border-color:#0D2059;
+        font-size:1px;
+        left:4px;
+        top:7px;
+        z-index:7;
+        background-color:#0D2059;
+      }
+
+      a {
+        text-decoration: none;
+        color:#0D2059;
+      }
+
+      a:hover {
+        color:#0D2059;
+      }
+      -->
+    </style>
+
+    <script type="text/javascript" language="JavaScript">
+      <!--
+      var isIE = false;
+      if (document.all)
+        isIE = true;
+
+      var g_currentThumb = '';
+      var g_activeThumbSlide = 0;
+      
+      function thumbs_displayThumb(thumbDiv)
+      {
+        g_currentThumb = thumbDiv;
+        setTimeout("thumbs_delayedDisplay('" + thumbDiv + "')", 100);
+      }
+      
+      function thumbs_delayedDisplay(thumbDiv)
+      {
+        if (g_currentThumb == thumbDiv)
+          {
+            document.getElementById(thumbDiv).style.visibility = 'visible';
+          }
+      }
+      
+      function thumbs_hideThumb(thumbDiv)
+      {
+        document.getElementById(thumbDiv).style.visibility = 'hidden';
+        g_currentThumb = '';
+      }
+      
+      function thumb_s(id)
+      {
+        return document.getElementById(id).style;
+      }
+      
+      function thumb_o(id)
+      {
+        return document.getElementById(id);
+      }
+      
+      function thumbs_activateSlide(slideNr)
+      {
+        if (slideNr == g_activeThumbSlide)
+          return;
+        
+        if (g_activeThumbSlide > 0)
+        { 
+          thumb_s('slideNr' + g_activeThumbSlide).backgroundColor = '#CED7E7';
+          thumb_s('slideImg' + g_activeThumbSlide).backgroundColor = '#CED7E7';
+          thumb_s('slideTitle' + g_activeThumbSlide).backgroundColor = '#CED7E7';
+          thumb_s('slideTime' + g_activeThumbSlide).backgroundColor = '#CED7E7';
+        }
+        
+        thumb_s('slideNr' + slideNr).backgroundColor = '#FFFFFF';
+        thumb_s('slideImg' + slideNr).backgroundColor = '#FFFFFF';
+        thumb_s('slideTitle' + slideNr).backgroundColor = '#FFFFFF';
+        thumb_s('slideTime' + slideNr).backgroundColor = '#FFFFFF';
+        
+        // Set Anchor
+        if (slideNr > 1)
+          parent.thumbsFrame.location.href = "__thumbs.html#slideAnchor" + (slideNr-1);
+        else
+          parent.thumbsFrame.location.href = "__thumbs.html#slideAnchor" + slideNr;
+        
+        g_activeThumbSlide = slideNr;
+      }
+      
+      function thumbs_jumpTo(slideNr)
+      {
+        parent.control_seekTime(parent.g_thumbEntries[slideNr-1].timeStamp);
+      }
+      
+      function thumbs_outputThumb(thumbNr)
+      {
+        var index = thumbNr - 1;
+        var ieOffset = isIE ? 0 : 2;
+        var playerWidth = Math.max(%PlayerWidth%, Math.max(%VideoWidth%, %StillImageWidth%));
+
+        document.writeln('<div style="position: absolute; top: ' + (index*21 + 2) + 'px; left: 5px;">');
+        
+        // document.writeln('  <div id="slideNr' + thumbNr + '" class="textdiv" style="position: absolute; top: 0px; height: 18px; width: 25px; left: 0px; padding-left: 5px; padding-right: 5px; padding-top: 4px; text-align: right;"><a name="slideAnchor' + thumbNr + '">' + thumbNr + '</a></div>');
+        ///document.writeln('  <div id="slideDivisor' + thumbNr + '" class="textdiv" style="position: absolute; top: 0px; height: 3px; width: 150px; left: 0px; padding-left: 5px; padding-right: 5px; padding-top: 4px; text-align: right;"><a name="slideAnchor' + thumbNr + '">&nbsp;</a></div>');
+        document.writeln('  <div id="slideNr' + thumbNr + '" class="textdiv" style="position: absolute; top: 3px; height: ' + (isIE ? 21 : 17) + 'px; width: ' + (isIE ? 25 : 15) + 'px; left: 0px; padding-left: 5px; padding-right: 5px; padding-top: 4px; text-align: right;">' + thumbNr + '</div>');
+
+        // document.writeln('  <div id="slideImg' + thumbNr + '" class="textdiv" style="position: absolute; top: 3px; height: 21px; width: 30px; left: 25px; padding-top: 2px; z-index: 5;" onMouseOver="javascript:thumbs_displayThumb(\'thumb' + thumbNr + '\');" onMouseOut="javascript:thumbs_hideThumb(\'thumb' + thumbNr + '\');"><a href="javascript:thumbs_jumpTo(' + thumbNr + ');"><img id="slideImgImg' + thumbNr + '" src="images/slide.png" border="0"></a></div>');
+        document.writeln('  <div id="slideImg' + thumbNr + '" class="textDiv" style="position:absolute; top: 3px; height:' + (isIE ? 21 : 21) + 'px; width:25px; left:25px; z-index:5;" onMouseOver="javascript:thumbs_displayThumb(\'thumb' + thumbNr + '\');" onMouseOut="javascript:thumbs_hideThumb(\'thumb' + thumbNr + '\');"><div class="outer" style="width:' + (19-ieOffset) + 'px; height:' + (15-ieOffset) + 'px;"></div><div class="inner" style="width:' + (11-ieOffset) + 'px; height:' + (7-ieOffset) + 'px;"></div></div>');
+
+        if (playerWidth < 280)
+        {
+          document.writeln('  <div id="slideTitle' + thumbNr + '" class="textdiv" style="position: absolute; top: 3px; height: 21px; width: ' + (playerWidth - 75) + 'px; left: 50px; border: 0px; z-index:2;"><p style="margin: 0px; border: 0px; padding-top: 4px;"><a href="javascript:thumbs_jumpTo(' + thumbNr + ');" title="' + parent.g_thumbEntries[index].fullTitle + '">' + parent.g_thumbEntries[index].fullTitle + '</a></div>');
+          document.writeln('  <div id="slideTime' + thumbNr + '" class="textdiv" style="position: absolute; top: 3px; height: 21px; width: 0px; left: ' + (playerWidth - 67) + 'px; border: 0px; text-align: right;"><p style="margin: 0px; border: 0px; padding-top: 4px;">' + parent.msToTime(parent.g_thumbEntries[index].timeStamp) + '</p></div>');
+        }
+        else
+        {
+          document.writeln('  <div id="slideTitle' + thumbNr + '" class="textdiv" style="position: absolute; top: 3px; height: 21px; width: ' + (playerWidth - 117) + 'px; left: 50px; border: 0px; z-index:2;"><p style="margin: 0px; border: 0px; padding-top: 4px;"><a href="javascript:thumbs_jumpTo(' + thumbNr + ');" title="' + parent.g_thumbEntries[index].fullTitle + '">' + parent.g_thumbEntries[index].fullTitle + '</a></div>');
+          document.writeln('  <div id="slideTime' + thumbNr + '" class="textdiv" style="position: absolute; top: 3px; height: 21px; width: 42px; left: ' + (playerWidth - 67) + 'px; border: 0px; text-align: right;"><p style="margin: 0px; border: 0px; padding-top: 4px;">' + parent.msToTime(parent.g_thumbEntries[index].timeStamp) + '</p></div>');
+        }
+        
+        document.writeln('</div>');
+        
+        document.writeln('<div id="thumb' + thumbNr + '" style="position: absolute; top: ' + (index * 21 + 24) + 'px; left: 46px; visibility: hidden; border: 0px; z-index: 10;">');
+        document.writeln('  <div style="position: absolute; left: 0px; top: 0px;"><img src="images/bubble.gif"></div>');
+        document.writeln('  <div style="position: absolute; left: 7px; top: 6px;"><img src="slides/' + parent.g_thumbEntries[index].thumbUrl + '"></div>');
+        document.writeln('</div>');
+      }
+      // -->
+    </script>
+  </head>
+
+  <body>
+    <script type="text/javascript" language="JavaScript">
+      <!--
+      for (var i=1; i<parent.g_thumbCount + 1; ++i)
+      {
+        thumbs_outputThumb(i);
+      }
+      // -->
+    </script>
+  </body>
+</html>

@@ -1,0 +1,630 @@
+// Microsoft Visual C++ generated resource script.
+//
+#include "resource.h"
+
+#define APSTUDIO_READONLY_SYMBOLS
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 2 resource.
+//
+#include "afxres.h"
+
+/////////////////////////////////////////////////////////////////////////////
+#undef APSTUDIO_READONLY_SYMBOLS
+
+/////////////////////////////////////////////////////////////////////////////
+// Deutsch (Deutschland) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)
+#ifdef _WIN32
+LANGUAGE LANG_GERMAN, SUBLANG_GERMAN
+#pragma code_page(1252)
+#endif //_WIN32
+
+#ifdef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// TEXTINCLUDE
+//
+
+1 TEXTINCLUDE 
+BEGIN
+    "resource.h\0"
+END
+
+2 TEXTINCLUDE 
+BEGIN
+    "#include ""afxres.h""\r\n"
+    "\0"
+END
+
+3 TEXTINCLUDE 
+BEGIN
+    "#define _AFX_NO_SPLITTER_RESOURCES\r\n"
+    "#define _AFX_NO_OLE_RESOURCES\r\n"
+    "#define _AFX_NO_TRACKER_RESOURCES\r\n"
+    "#define _AFX_NO_PROPERTY_RESOURCES\r\n"
+    "\r\n"
+    "#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)\r\n"
+    "LANGUAGE 7, 1\r\n"
+    "#pragma code_page(1252)\r\n"
+    "#include ""res\\Assistant.rc2""  // Nicht mit Microsoft Visual C++ bearbeitete Ressourcen\r\n"
+    "#include ""afxres.rc""         // Standardkomponenten\r\n"
+    "#include ""afxprint.rc""       // Ressourcen für Drucken/Seitenansicht\r\n"
+    "#endif\r\n"
+    "\0"
+END
+
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Icon
+//
+
+// Icon with lowest ID value placed first to ensure application icon
+// remains consistent on all systems.
+IDR_MAINFRAME           ICON                    "res\\Assistant.ico"
+IDR_AssistantTYPE       ICON                    "res\\AssistantDoc.ico"
+IDI_LINE_WIDTH          ICON                    "res\\icon1.ico"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Bitmap
+//
+
+IDR_FONT_ATTRIBUTES     BITMAP                  "res\\toolbar1.bmp"
+IDR_MAINFRAME           BITMAP                  "res\\mainframe.bmp"
+IDR_TOOL_ATTRIBUTES     BITMAP                  "res\\bmp00001.bmp"
+IDR_RECORDING_CONTROL   BITMAP                  "res\\recording.bmp"
+IDR_PAGE_NAVIGATION     BITMAP                  "res\\navigation.bmp"
+IDB_MARKER_ORANGE       BITMAP                  "gifs\\marker_orange.bmp"
+IDR_PRESENTATION_TOOLS  BITMAP                  "res\\bmp00002.bmp"
+IDR_SCREENGRABBING      BITMAP                  "res\\bmp00003.bmp"
+IDR_MARKERANDPENS       BITMAP                  "res\\bmp00004.bmp"
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Toolbar
+//
+
+IDR_FONT_ATTRIBUTES TOOLBAR  16, 15
+BEGIN
+    BUTTON      ID_COMBO_FONT
+    BUTTON      ID_COMBO_FONTSIZE
+    BUTTON      ID_FONT_BOLD
+    BUTTON      ID_FONT_ITALIC
+    BUTTON      ID_FONT_UNDERLINE
+END
+
+IDR_MAINFRAME TOOLBAR  16, 15
+BEGIN
+    BUTTON      ID_PAGE_NEW
+    SEPARATOR
+    BUTTON      ID_SELECT_OBJECTS
+    BUTTON      ID_MOVE_OBJECTS
+    BUTTON      ID_COPY_OBJECTS
+    BUTTON      ID_CUT_OBJECTS
+    BUTTON      ID_UNDO
+    SEPARATOR
+    BUTTON      ID_TOOL_TEXT
+    BUTTON      ID_TOOL_FREEHAND
+    BUTTON      ID_TOOL_LINE
+    BUTTON      ID_TOOL_RECTANGLE
+    BUTTON      ID_TOOL_OVAL
+    BUTTON      ID_TOOL_POLYLINE
+    BUTTON      ID_TOOL_POLYGON
+END
+
+IDR_TOOL_ATTRIBUTES TOOLBAR  16, 15
+BEGIN
+    BUTTON      ID_LINE_COLOR
+    BUTTON      ID_FILL_COLOR
+    BUTTON      ID_LINE_WIDTH
+    BUTTON      ID_LINE_STYLE
+END
+
+IDR_RECORDING_CONTROL TOOLBAR  25, 25
+BEGIN
+    BUTTON      ID_START_RECORDING
+    BUTTON      ID_PAUSE_RECORDING
+    BUTTON      ID_STOP_RECORDING
+END
+
+IDR_PAGE_NAVIGATION TOOLBAR  16, 40
+BEGIN
+    BUTTON      ID_FIRST_PAGE
+    BUTTON      ID_PREVIOUS_PAGE
+    BUTTON      ID_NEXT_PAGE
+    BUTTON      ID_LAST_PAGE
+END
+
+IDR_PRESENTATION_TOOLS TOOLBAR  40, 25
+BEGIN
+    BUTTON      ID_SIMPLE_NAVIGATION
+    BUTTON      ID_TELEPOINTER
+    SEPARATOR
+    BUTTON      ID_FULL_SCREEN
+    SEPARATOR
+    BUTTON      ID_SHOWHIDE_STRUCTURE
+    BUTTON      ID_SHOWHIDE_TOOLBAR
+END
+
+IDR_SCREENGRABBING TOOLBAR  40, 25
+BEGIN
+    BUTTON      ID_SCREENGRABBING
+    BUTTON      ID_SHOW_HIDE
+    BUTTON      ID_MIN_MAX
+END
+
+IDR_MARKERANDPENS TOOLBAR  40, 25
+BEGIN
+    BUTTON      ID_MARKER_YELLOW
+    BUTTON      ID_MARKER_GREEN
+    BUTTON      ID_MARKER_ORANGE
+    BUTTON      ID_MARKER_MAGENTA
+    SEPARATOR
+    BUTTON      ID_PEN_RED
+    BUTTON      ID_PEN_GREEN
+    BUTTON      ID_PEN_BLUE
+    BUTTON      ID_PEN_BLACK
+    BUTTON      ID_PEN_WHITE
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Menu
+//
+
+IDR_MAINFRAME MENU 
+BEGIN
+    POPUP "&Datei"
+    BEGIN
+        MENUITEM "&Neu\tStrg+N",                ID_FILE_NEW
+        MENUITEM "Ö&ffnen...\tStrg+O",          ID_FILE_OPEN
+        MENUITEM "&Speichern\tStrg+S",          ID_FILE_SAVE
+        MENUITEM "Speichern &unter...",         ID_FILE_SAVE_AS
+        MENUITEM SEPARATOR
+        MENUITEM "&Drucken...\tStrg+P",         ID_FILE_PRINT
+        MENUITEM "&Seitenansicht",              ID_FILE_PRINT_PREVIEW
+        MENUITEM "Dru&ckeinrichtung...",        ID_FILE_PRINT_SETUP
+        MENUITEM SEPARATOR
+        MENUITEM "Letzte Datei",                ID_FILE_MRU_FILE1, GRAYED
+        MENUITEM SEPARATOR
+        MENUITEM "&Beenden",                    ID_APP_EXIT
+    END
+    POPUP "&Bearbeiten"
+    BEGIN
+        MENUITEM "&Rückgängig\tStrg+Z",         ID_EDIT_UNDO
+        MENUITEM SEPARATOR
+        MENUITEM "&Ausschneiden\tStrg+X",       ID_CUT_OBJECTS
+        MENUITEM "&Kopieren\tStrg+C",           ID_COPY_OBJECTS
+        MENUITEM "&Einfügen\tStrg+V",           ID_EDIT_PASTE
+    END
+    POPUP "&Ansicht"
+    BEGIN
+        MENUITEM "&Symbolleiste",               ID_VIEW_TOOLBAR
+        MENUITEM "Status&leiste",               ID_VIEW_STATUS_BAR
+    END
+    POPUP "&Hilfe"
+    BEGIN
+        MENUITEM "&Info über Assistant...",     ID_APP_ABOUT
+    END
+END
+
+IDR_LINE_WIDTH_MENU MENU 
+BEGIN
+    POPUP "."
+    BEGIN
+        MENUITEM SEPARATOR
+        MENUITEM "--",                          ID__
+        MENUITEM "---",                         ID__32825
+        MENUITEM "---",                         ID__32826
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Accelerator
+//
+
+IDR_MAINFRAME ACCELERATORS 
+BEGIN
+    "N",            ID_FILE_NEW,            VIRTKEY, CONTROL
+    "O",            ID_FILE_OPEN,           VIRTKEY, CONTROL
+    "S",            ID_FILE_SAVE,           VIRTKEY, CONTROL
+    "P",            ID_FILE_PRINT,          VIRTKEY, CONTROL
+    "Z",            ID_EDIT_UNDO,           VIRTKEY, CONTROL
+    "X",            ID_EDIT_CUT,            VIRTKEY, CONTROL
+    "C",            ID_EDIT_COPY,           VIRTKEY, CONTROL
+    "V",            ID_EDIT_PASTE,          VIRTKEY, CONTROL
+    VK_BACK,        ID_EDIT_UNDO,           VIRTKEY, ALT
+    VK_DELETE,      ID_EDIT_CUT,            VIRTKEY, SHIFT
+    VK_INSERT,      ID_EDIT_COPY,           VIRTKEY, CONTROL
+    VK_INSERT,      ID_EDIT_PASTE,          VIRTKEY, SHIFT
+    VK_F6,          ID_NEXT_PANE,           VIRTKEY 
+    VK_F6,          ID_PREV_PANE,           VIRTKEY, SHIFT
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Dialog
+//
+
+IDD_ABOUTBOX DIALOGEX 0, 0, 235, 55
+STYLE DS_SETFONT | DS_MODALFRAME | DS_FIXEDSYS | WS_POPUP | WS_CAPTION | WS_SYSMENU
+CAPTION "Info über Assistant"
+FONT 8, "MS Shell Dlg", 0, 0, 0x1
+BEGIN
+    ICON            IDR_MAINFRAME,IDC_STATIC,11,17,20,20
+    LTEXT           "Assistant Version 1.0",IDC_STATIC,40,10,119,8,SS_NOPREFIX
+    LTEXT           "Copyright (C) 2006",IDC_STATIC,40,25,119,8
+    DEFPUSHBUTTON   "OK",IDOK,178,7,50,16,WS_GROUP
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// Version
+//
+
+VS_VERSION_INFO VERSIONINFO
+ FILEVERSION 1,0,0,1
+ PRODUCTVERSION 1,0,0,1
+ FILEFLAGSMASK 0x3fL
+#ifdef _DEBUG
+ FILEFLAGS 0x1L
+#else
+ FILEFLAGS 0x0L
+#endif
+ FILEOS 0x4L
+ FILETYPE 0x1L
+ FILESUBTYPE 0x0L
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+        BLOCK "040704e4"
+        BEGIN
+            VALUE "CompanyName", "TODO: <Firmenname>"
+            VALUE "FileDescription", "TODO: <Dateibeschreibung>"
+            VALUE "FileVersion", "1.0.0.1"
+            VALUE "InternalName", "Assistant.exe"
+            VALUE "Copyright (C) 2006", "TODO: (c) <Firmenname>. Alle Rechte vorbehalten."
+            VALUE "OriginalFilename", "Assistant.exe"
+            VALUE "ProductName", "TODO: <Product name>"
+            VALUE "ProductVersion", "1.0.0.1"
+        END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+        VALUE "Translation", 0x407, 1252
+    END
+END
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// DESIGNINFO
+//
+
+#ifdef APSTUDIO_INVOKED
+GUIDELINES DESIGNINFO 
+BEGIN
+    IDD_ABOUTBOX, DIALOG
+    BEGIN
+        LEFTMARGIN, 7
+        RIGHTMARGIN, 228
+        TOPMARGIN, 7
+        BOTTOMMARGIN, 48
+    END
+END
+#endif    // APSTUDIO_INVOKED
+
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDR_MAINFRAME           "Assistant\n\nAssistant\n\n\nAssistant.Document\nAssistant.Document"
+    IDS_NO_LINE_COLOR       "Keine Linienfarbe"
+    IDS_MORE_LINE_COLORS    "Weitere Farben..."
+    IDS_MORE_FILL_COLORS    "Weitere Farben..."
+    IDS_NO_FILL_COLOR       "Keine Füllfarbe"
+    IDS_MORE_LINE_WIDTH     "Weitere Liniendicken..."
+    IDS_LS_SOLID            "Uni"
+    IDS_LS_ROUNDDOT         "Runder Punkt"
+    IDS_LS_SQUAREDOT        "Viereckiger Punkt"
+    IDS_LS_LONGDASH         "Langer Strich"
+    IDS_LS_LONGDASHDOT      "Langer Strichpunkt"
+    IDS_LS_LONGDASHDOTDOT   "Langer Strichpunkt-Punkt"
+    IDS_LS_DASH             "Strich"
+    IDS_LS_DASHDOT          "Strichpunkt"
+END
+
+STRINGTABLE 
+BEGIN
+    AFX_IDS_APP_TITLE       "Assistant"
+    AFX_IDS_IDLEMESSAGE     "Bereit"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_INDICATOR_EXT        "ER"
+    ID_INDICATOR_CAPS       "UF"
+    ID_INDICATOR_NUM        "NUM"
+    ID_INDICATOR_SCRL       "RF"
+    ID_INDICATOR_OVR        "ÜB"
+    ID_INDICATOR_REC        "MA"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_FILE_NEW             "Erstellt ein neues Dokument.\nNeu"
+    ID_FILE_OPEN            "Öffnet ein vorhandenes Dokument.\nÖffnen"
+    ID_FILE_CLOSE           "Schließt das aktive Dokument.\nSchließen"
+    ID_FILE_SAVE            "Speichert das aktive Dokument.\nSpeichern"
+    ID_FILE_SAVE_AS         "Speichert das aktive Dokument unter einem neuem Namen.\nSpeichern unter"
+    ID_FILE_PAGE_SETUP      "Ändert die Druckoptionen.\nSeite einrichten"
+    ID_FILE_PRINT_SETUP     "Ändert den Drucker und die Druckoptionen.\nDruckereinrichtung"
+    ID_FILE_PRINT           "Druckt das aktive Dokument.\nDrucken"
+    ID_FILE_PRINT_PREVIEW   "Zeigt ganze Seiten an.\nSeitenansicht"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_APP_ABOUT            "Zeigt Programm-, Versions- und Copyrightinformationen an.\nInfo"
+    ID_APP_EXIT             "Beendet die Anwendung und fordert zum Speichern der Dokumente auf.\nBeenden"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_FILE_MRU_FILE1       "Öffnet das Dokument."
+    ID_FILE_MRU_FILE2       "Öffnet das Dokument."
+    ID_FILE_MRU_FILE3       "Öffnet das Dokument."
+    ID_FILE_MRU_FILE4       "Öffnet das Dokument."
+    ID_FILE_MRU_FILE5       "Öffnet das Dokument."
+    ID_FILE_MRU_FILE6       "Öffnet das Dokument."
+    ID_FILE_MRU_FILE7       "Öffnet das Dokument."
+    ID_FILE_MRU_FILE8       "Öffnet das Dokument."
+    ID_FILE_MRU_FILE9       "Öffnet das Dokument."
+    ID_FILE_MRU_FILE10      "Öffnet das Dokument."
+    ID_FILE_MRU_FILE11      "Öffnet das Dokument."
+    ID_FILE_MRU_FILE12      "Öffnet das Dokument."
+    ID_FILE_MRU_FILE13      "Öffnet das Dokument."
+    ID_FILE_MRU_FILE14      "Öffnet das Dokument."
+    ID_FILE_MRU_FILE15      "Öffnet das Dokument."
+    ID_FILE_MRU_FILE16      "Öffnet das Dokument."
+END
+
+STRINGTABLE 
+BEGIN
+    ID_NEXT_PANE            "Wechselt zum nächsten Fensterbereich.\nNächster Bereich"
+    ID_PREV_PANE            "Wechselt zum vorherigen Fensterbereich.\nVorheriger Bereich"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_WINDOW_SPLIT         "Teilt das aktive Fenster in Bereiche.\nTeilen"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_EDIT_CLEAR           "Löscht die Auswahl.\nLöschen"
+    ID_EDIT_CLEAR_ALL       "Löscht alles.\nAlles löschen"
+    ID_EDIT_COPY            "Kopiert die Auswahl in die Zwischenablage.\nKopieren"
+    ID_EDIT_CUT             "Überträgt die Auswahl in die Zwischenablage.\nAusschneiden"
+    ID_EDIT_FIND            "Sucht den angegebenen Text.\nSuchen"
+    ID_EDIT_PASTE           "Fügt den Inhalt der Zwischenablage ein.\nEinfügen"
+    ID_EDIT_REPEAT          "Wiederholt den letzten Vorgang.\nWiederholen"
+    ID_EDIT_REPLACE         "Ersetzt den angegebenen Text.\nErsetzen"
+    ID_EDIT_SELECT_ALL      "Markiert das gesamte Dokument.\nAlles auswählen"
+    ID_EDIT_UNDO            "Macht den letzten Vorgang rückgängig.\nRückgängig"
+    ID_EDIT_REDO            "Wiederholt den zuletzt rückgängig gemachten Vorgang.\nWiederherstellen"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_VIEW_TOOLBAR         "Blendet die Symbolleiste ein oder aus.\nSymbolleiste"
+    ID_VIEW_STATUS_BAR      "Blendet die Statusleiste ein oder aus.\nStatusleiste"
+END
+
+STRINGTABLE 
+BEGIN
+    AFX_IDS_SCSIZE          "Ändert die Fenstergröße."
+    AFX_IDS_SCMOVE          "Ändert die Position des Fensters."
+    AFX_IDS_SCMINIMIZE      "Minimiert das Fenster."
+    AFX_IDS_SCMAXIMIZE      "Maximiert das Fenster."
+    AFX_IDS_SCNEXTWINDOW    "Wechselt zum nächsten Dokumentfenster."
+    AFX_IDS_SCPREVWINDOW    "Wechselt zum vorherigen Dokumentfenster."
+    AFX_IDS_SCCLOSE         "Schließt das aktive Fenster und fordert zum Speichern des Dokuments auf."
+END
+
+STRINGTABLE 
+BEGIN
+    AFX_IDS_SCRESTORE       "Stellt die ursprüngliche Fenstergröße wieder her."
+    AFX_IDS_SCTASKLIST      "Aktiviert die Taskliste."
+END
+
+STRINGTABLE 
+BEGIN
+    AFX_IDS_PREVIEW_CLOSE   "Beendet die Seitenansicht.\nSeitenansicht beenden"
+END
+
+#endif    // Deutsch (Deutschland) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+/////////////////////////////////////////////////////////////////////////////
+// Englisch (USA) resources
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_ENU)
+#ifdef _WIN32
+LANGUAGE LANG_ENGLISH, SUBLANG_ENGLISH_US
+#pragma code_page(1252)
+#endif //_WIN32
+
+/////////////////////////////////////////////////////////////////////////////
+//
+// String Table
+//
+
+STRINGTABLE 
+BEGIN
+    IDR_MAINFRAME           "Assistant\n\nAssistant\n\n\nAssistant.Document\nAssistant.Document"
+    IDS_NO_LINE_COLOR       "No line color"
+    IDS_MORE_COLORS         "More Colors..."
+    IDS_MORE_FILL_COLORS    "More colors..."
+    IDS_NO_FILL_COLOR       "No fill color"
+    IDS_MORE_LINE_WIDTH     "More Lines..."
+    IDS_LS_SOLID            "Uni"
+    IDS_LS_ROUNDDOT         "Runder Punkt"
+    IDS_LS_SQUAREDOT        "Viereckiger Punkt"
+    IDS_LS_LONGDASH         "Langer Strich"
+    IDS_LS_LONGDASHDOT      "Langer Strichpunkt"
+    IDS_LS_LONGDASHDOTDOT   "Langer Strichpunkt-Punkt"
+    IDS_LS_DASH             "Strich"
+    IDS_LS_DASHDOT          "Strichpunkt"
+END
+
+STRINGTABLE 
+BEGIN
+    AFX_IDS_APP_TITLE       "Assistant"
+    AFX_IDS_IDLEMESSAGE     "Bereit"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_INDICATOR_EXT        "ER"
+    ID_INDICATOR_CAPS       "UF"
+    ID_INDICATOR_NUM        "NUM"
+    ID_INDICATOR_SCRL       "RF"
+    ID_INDICATOR_OVR        "ÜB"
+    ID_INDICATOR_REC        "MA"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_FILE_NEW             "Erstellt ein neues Dokument.\nNeu"
+    ID_FILE_OPEN            "Öffnet ein vorhandenes Dokument.\nÖffnen"
+    ID_FILE_CLOSE           "Schließt das aktive Dokument.\nSchließen"
+    ID_FILE_SAVE            "Speichert das aktive Dokument.\nSpeichern"
+    ID_FILE_SAVE_AS         "Speichert das aktive Dokument unter einem neuem Namen.\nSpeichern unter"
+    ID_FILE_PAGE_SETUP      "Ändert die Druckoptionen.\nSeite einrichten"
+    ID_FILE_PRINT_SETUP     "Ändert den Drucker und die Druckoptionen.\nDruckereinrichtung"
+    ID_FILE_PRINT           "Druckt das aktive Dokument.\nDrucken"
+    ID_FILE_PRINT_PREVIEW   "Zeigt ganze Seiten an.\nSeitenansicht"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_APP_ABOUT            "Zeigt Programm-, Versions- und Copyrightinformationen an.\nInfo"
+    ID_APP_EXIT             "Beendet die Anwendung und fordert zum Speichern der Dokumente auf.\nBeenden"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_FILE_MRU_FILE1       "Öffnet das Dokument."
+    ID_FILE_MRU_FILE2       "Öffnet das Dokument."
+    ID_FILE_MRU_FILE3       "Öffnet das Dokument."
+    ID_FILE_MRU_FILE4       "Öffnet das Dokument."
+    ID_FILE_MRU_FILE5       "Öffnet das Dokument."
+    ID_FILE_MRU_FILE6       "Öffnet das Dokument."
+    ID_FILE_MRU_FILE7       "Öffnet das Dokument."
+    ID_FILE_MRU_FILE8       "Öffnet das Dokument."
+    ID_FILE_MRU_FILE9       "Öffnet das Dokument."
+    ID_FILE_MRU_FILE10      "Öffnet das Dokument."
+    ID_FILE_MRU_FILE11      "Öffnet das Dokument."
+    ID_FILE_MRU_FILE12      "Öffnet das Dokument."
+    ID_FILE_MRU_FILE13      "Öffnet das Dokument."
+    ID_FILE_MRU_FILE14      "Öffnet das Dokument."
+    ID_FILE_MRU_FILE15      "Öffnet das Dokument."
+    ID_FILE_MRU_FILE16      "Öffnet das Dokument."
+END
+
+STRINGTABLE 
+BEGIN
+    ID_NEXT_PANE            "Wechselt zum nächsten Fensterbereich.\nNächster Bereich"
+    ID_PREV_PANE            "Wechselt zum vorherigen Fensterbereich.\nVorheriger Bereich"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_WINDOW_SPLIT         "Teilt das aktive Fenster in Bereiche.\nTeilen"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_EDIT_CLEAR           "Löscht die Auswahl.\nLöschen"
+    ID_EDIT_CLEAR_ALL       "Löscht alles.\nAlles löschen"
+    ID_EDIT_COPY            "Kopiert die Auswahl in die Zwischenablage.\nKopieren"
+    ID_EDIT_CUT             "Überträgt die Auswahl in die Zwischenablage.\nAusschneiden"
+    ID_EDIT_FIND            "Sucht den angegebenen Text.\nSuchen"
+    ID_EDIT_PASTE           "Fügt den Inhalt der Zwischenablage ein.\nEinfügen"
+    ID_EDIT_REPEAT          "Wiederholt den letzten Vorgang.\nWiederholen"
+    ID_EDIT_REPLACE         "Ersetzt den angegebenen Text.\nErsetzen"
+    ID_EDIT_SELECT_ALL      "Markiert das gesamte Dokument.\nAlles auswählen"
+    ID_EDIT_UNDO            "Macht den letzten Vorgang rückgängig.\nRückgängig"
+    ID_EDIT_REDO            "Wiederholt den zuletzt rückgängig gemachten Vorgang.\nWiederherstellen"
+END
+
+STRINGTABLE 
+BEGIN
+    ID_VIEW_TOOLBAR         "Blendet die Symbolleiste ein oder aus.\nSymbolleiste"
+    ID_VIEW_STATUS_BAR      "Blendet die Statusleiste ein oder aus.\nStatusleiste"
+END
+
+STRINGTABLE 
+BEGIN
+    AFX_IDS_SCSIZE          "Ändert die Fenstergröße."
+    AFX_IDS_SCMOVE          "Ändert die Position des Fensters."
+    AFX_IDS_SCMINIMIZE      "Minimiert das Fenster."
+    AFX_IDS_SCMAXIMIZE      "Maximiert das Fenster."
+    AFX_IDS_SCNEXTWINDOW    "Wechselt zum nächsten Dokumentfenster."
+    AFX_IDS_SCPREVWINDOW    "Wechselt zum vorherigen Dokumentfenster."
+    AFX_IDS_SCCLOSE         "Schließt das aktive Fenster und fordert zum Speichern des Dokuments auf."
+END
+
+STRINGTABLE 
+BEGIN
+    AFX_IDS_SCRESTORE       "Stellt die ursprüngliche Fenstergröße wieder her."
+    AFX_IDS_SCTASKLIST      "Aktiviert die Taskliste."
+END
+
+STRINGTABLE 
+BEGIN
+    AFX_IDS_PREVIEW_CLOSE   "Beendet die Seitenansicht.\nSeitenansicht beenden"
+END
+
+#endif    // Englisch (USA) resources
+/////////////////////////////////////////////////////////////////////////////
+
+
+
+#ifndef APSTUDIO_INVOKED
+/////////////////////////////////////////////////////////////////////////////
+//
+// Generated from the TEXTINCLUDE 3 resource.
+//
+#define _AFX_NO_SPLITTER_RESOURCES
+#define _AFX_NO_OLE_RESOURCES
+#define _AFX_NO_TRACKER_RESOURCES
+#define _AFX_NO_PROPERTY_RESOURCES
+
+#if !defined(AFX_RESOURCE_DLL) || defined(AFX_TARG_DEU)
+LANGUAGE 7, 1
+#pragma code_page(1252)
+#include "res\Assistant.rc2"  // Nicht mit Microsoft Visual C++ bearbeitete Ressourcen
+#include "afxres.rc"         // Standardkomponenten
+#include "afxprint.rc"       // Ressourcen für Drucken/Seitenansicht
+#endif
+
+/////////////////////////////////////////////////////////////////////////////
+#endif    // not APSTUDIO_INVOKED
+

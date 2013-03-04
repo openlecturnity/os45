@@ -1,0 +1,40 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>LECTURNITY WebPlayer %Version% - Slides</title>
+
+    <link rel="stylesheet" href="slides.css">
+    <link rel="stylesheet" href="style.css">
+
+    <script src="js/slides.js" type="text/javascript"></script>
+    <script src="js/variables.js" type="text/javascript"></script>
+    <script src="js/utils.js" type="text/javascript"></script>
+    <script src="js/layoutapi.js" type="text/javascript"></script>
+    <script src="js/layout.js" type="text/javascript"></script>
+    <script src="js/%ControlJavaScript%" type="text/javascript"></script>
+
+    <script type="text/javascript">
+      <!--
+      determineBrowser();
+
+      function main_init()
+      {
+        //layout_onResize();
+        slidesInit();
+        controlInit();
+      }
+      // -->
+    </script>
+  </head>
+
+  <body onResize="layout_onResize();">
+
+<div id="masterPlayerDiv" class="masterPlayer">
+%MasterPlayer%
+</div>
+
+%Slides%
+
+  </body>
+</html>

@@ -1,0 +1,419 @@
+/* CSS file */
+
+/* START Components and Container skinning and layout */
+
+/** Fonts **/
+@font-face {
+    src: url("fonts/trebuc.ttf");
+    fontFamily: SlidestarFontFamily;
+    fontStyle: normal;
+    fontWeight: normal;
+}
+
+@font-face {
+    src: url("fonts/trebucbd.ttf");
+    fontFamily: SlidestarFontFamily;
+    fontStyle: normal;
+    font-weight: bold;
+}
+@font-face {
+    src: url("fonts/trebucit.ttf");
+    fontFamily: SlidestarFontFamily;
+    fontStyle: italic;
+    font-weight: normal;
+}
+@font-face {
+    src: url("fonts/trebucbi.ttf");
+    fontFamily: SlidestarFontFamily;
+    fontStyle: italic;
+    font-weight: bold;
+}
+
+@font-face {
+    src: url("fonts/CALIBRI.TTF");
+    fontFamily: CalibriFontFamily;
+    fontStyle: normal;
+    fontWeight: normal;
+}
+
+@font-face {
+    src: url("fonts/CALIBRIB.TTF");
+    fontFamily: CalibriFontFamily;
+    fontStyle: normal;
+    font-weight: bold;
+}
+@font-face {
+    src: url("fonts/CALIBRII.TTF");
+    fontFamily: CalibriFontFamily;
+    fontStyle: italic;
+    font-weight: normal;
+}
+@font-face {
+    src: url("fonts/CALIBRIZ.TTF");
+    fontFamily: CalibriFontFamily;
+    fontStyle: italic;
+    font-weight: bold;
+}
+
+Container, ScrollControlBase {
+    vertical-scroll-bar-style-name: "slidestarScroll";
+    horizontal-scroll-bar-style-name: "slidestarScroll";
+}
+
+.slidestarScroll {
+    down-arrow-skin:Embed("assets/scroll/scrollerBottom.png");
+    down-arrow-over-skin: Embed("assets/scroll/scrollerBottom_over.png");
+    down-arrow-down-skin: Embed("assets/scroll/scrollerBottom_down.png");
+    up-arrow-skin: Embed("assets/scroll/scrollerTop.png");
+    up-arrow-over-skin: Embed("assets/scroll/scrollerTop_over.png");
+    up-arrow-down-skin: Embed("assets/scroll/scrollerTop_down.png");
+      thumb-skin: Embed("assets/scroll/scrollerHandler.png", scaleGridLeft="1", scaleGridRight="12", scaleGridTop="1", scaleGridBottom="40");
+    thumb-over-skin: Embed("assets/scroll/scrollerHandler_over.png", scaleGridLeft="1", scaleGridRight="12", scaleGridTop="1", scaleGridBottom="40");
+    thumb-down-skin: Embed("assets/scroll/scrollerHandler_down.png", scaleGridLeft="1", scaleGridRight="12", scaleGridTop="1", scaleGridBottom="40");
+    thumb-icon: Embed("assets/scroll/scrollerHandlerIcon.png");
+    track-skin: Embed("assets/scroll/scrollerBar.png");
+}
+
+.viewerContainer {
+    backgroundColor: #333333;
+    color: #ffffff;
+}
+
+.viewer {
+    /*
+    border-color: #dddddd;
+    border-thickness: 1;
+    border-style: solid;
+    */
+} 
+
+.searchInput {
+   borderStyle: solid;
+   borderColor: #515967;
+   borderThickness: 2;
+   cornerRadius: 2;
+   backgroundColor: #c9d8fc;
+   color: #0b333c;
+   paddingLeft: 2;
+   padding-top: 2;
+   dropShadowEnabled: false;
+   theme-color: #7C8AA0;
+}
+
+.searchCheckbox {
+   highlightAlphas: 0, 0;
+   fillAlphas: 1, 1, 1, 1;
+   fillColors: #c9d8fc, #c9d8fc, #ffffff, #ffffff;
+   borderColor: #515967;
+   iconColor: #515967;
+   themeColor: #515967;
+   font-family: CalibriFontFamily;
+   font-size: 12;
+   font-weight: normal;
+   font-style: normal;
+   color: #C9D8FC;
+   textRollOverColor: #ffffff;
+}
+    
+
+.viewerSearchHeader {
+    background-image: Embed("assets/viewerSearchHeaderBackground.png");
+    background-size: "100%";
+    vertical-align: middle;
+    padding-bottom: 0; padding-left: 0; padding-right: 0; padding-top: 0;
+}
+.viewerMenuBar {
+    background-image: Embed("assets/viewer_background_menubar.png");
+    background-size: "100%";
+    vertical-align: middle;
+    padding-right: 10;
+    padding-left: 10;
+}
+.viewerTabHeaderBackground {
+    background-image: Embed("assets/viewerTabHaderBackground.png");
+    background-size: "100%";
+    vertical-align: middle;
+    padding: 0;
+    vertical-gap: 0;
+    horizontal-gap: 0;
+}
+
+.viewerHeaderBackground {
+    background-image: Embed("assets/viewerHeaderBackground.png");
+    background-size: "100%";
+    vertical-align: middle;
+    padding-top: 6;
+    padding-bottom: 5;
+    padding-right: 5;
+    padding-left: 35;
+    vertical-gap: 0;
+    horizontal-gap: 0;
+}
+
+
+/* END Components and Container skinning and layout */
+
+
+/* START Button Skinning */
+
+.viewerButtonThumbNaviNext {
+    skin: Embed("assets/viewerThumbnaviNext.png");
+    over-skin: Embed("assets/viewerThumbnaviNextOn.png");
+    down-skin: Embed("assets/viewerThumbnaviNextDown.png");
+}
+
+.viewerButtonThumbNaviLast {
+    skin: Embed("assets/viewerThumbnaviEnd.png");
+    over-skin: Embed("assets/viewerThumbnaviEndOn.png");
+    down-skin: Embed("assets/viewerThumbnaviEndDown.png");
+}
+
+.viewerButtonThumbNaviPrevious {
+    skin: Embed("assets/viewerThumbnaviPrev.png");
+    over-skin: Embed("assets/viewerThumbnaviPrevOn.png");
+    down-skin: Embed("assets/viewerThumbnaviPrevDown.png");
+}
+
+.viewerButtonThumbNaviFirst {
+    skin: Embed("assets/viewerThumbnaviStart.png");
+    over-skin: Embed("assets/viewerThumbnaviStartOn.png");
+    down-skin: Embed("assets/viewerThumbnaviStartDown.png");
+}
+
+.viewerButtonMediaPlay {
+    selected-up-skin: Embed("assets/viewerPauseOff.png");
+    selected-over-skin: Embed("assets/viewerPauseOn.png");
+    selected-down-skin: Embed("assets/viewerPauseDown.png");
+    up-skin: Embed("assets/viewerPlayOff.png");
+    over-skin: Embed("assets/viewerPlayOn.png");
+    down-skin: Embed("assets/viewerPlayDown.png");    
+}
+
+.viewerButtonMediaAudio {
+    up-skin: Embed("assets/viewerAudioOff.png");
+    over-skin: Embed("assets/viewerAudioOn.png");
+    down-skin: Embed("assets/viewerAudioDown.png");
+    selected-up-skin: Embed("assets/viewerAudioMutedOff.png");
+    selected-over-skin: Embed("assets/viewerAudioMutedOn.png");
+    selected-down-skin: Embed("assets/viewerAudioMutedDown.png");
+}
+
+.viewerMediaLecturnitySlider {
+    thumb-skin: Embed("assets/viewerMediaSliderThumb.png");
+    thumb-over-skin: Embed("assets/viewerMediaSliderThumbOn.png");
+    thumb-down-skin: Embed("assets/viewerMediaSliderThumbDown.png");
+    trackSkin: Embed("assets/viewer_media_slider_track.png");
+    trackHighlightSkin: Embed("assets/viewer_media_lecturnity_slider_track_highlight.png");
+    progressSkin: Embed("assets/viewer_media_slider_progress.png");
+}
+
+.viewerMediaLecturnitySliderDisabled {
+    thumb-skin: Embed("assets/viewerMediaSliderThumbDisabled.png");
+    thumb-over-skin: Embed("assets/viewerMediaSliderThumbDisabled.png");
+    thumb-down-skin: Embed("assets/viewerMediaSliderThumbDisabled.png");
+    trackSkin: Embed("assets/viewer_media_slider_track.png");
+    trackHighlightSkin: Embed("assets/viewer_media_lecturnity_slider_track_highlight.png");
+    progressSkin: Embed("assets/viewer_media_slider_progress.png");
+}
+
+.viewerAudioSliderContainer {
+    background-size: "100%";
+    padding-top: -3;
+}    
+
+.viewerAudioSlider {
+    thumb-skin: Embed("assets/viewerAudioSliderThumb.png");
+    thumb-down-skin: Embed("assets/viewerAudioSliderThumbDown.png");
+    thumb-over-skin: Embed("assets/viewerAudioSliderThumbOn.png");
+    track-skin: Embed("assets/viewerAudioSliderTrack.png");
+    track-highlight-skin: Embed("assets/viewerAudioSliderHighlightTrack.png");
+    progressSkin: Embed("assets/viewerAudioSliderTrack.png");
+}
+
+
+/* END Button Skinning */
+
+
+/* START Text formating */
+
+.textTitle {
+    font-size: 12;
+    font-weight: bold;
+    color: #7DA3FF;
+    fontFamily: CalibriFontFamily;
+    font-anti-alias-type: normal;
+}
+
+.textSubtitle {
+    font-size: 14;
+    color: #CCCCCC;
+    fontFamily: SlidestarFontFamily;
+    font-anti-alias-type: advanced;
+}
+
+.textSubSubtitle {
+    font-size: 13;
+    color: #FFFFFF;
+    fontFamily: SlidestarFontFamily;
+    font-anti-alias-type: advanced;
+}
+
+.textZoomSliderPercent {
+    font-size: 10;
+    font-weight: bold;
+    color: #FFFFFF;
+    fontFamily: SlidestarFontFamily;
+    font-anti-alias-type: advanced;
+}
+
+.textSearchRelevanceIcon {
+    color: #707070;
+}    
+
+
+/* Lecturnity Player specific text formatting */
+.stdNormal {
+    font-family: CalibriFontFamily;
+    font-size: 13;
+    font-weight: normal;
+    font-style: normal;
+    color: #000000;
+}
+
+.infoLeft {
+    font-family: CalibriFontFamily;
+    font-size: 13;
+    font-weight: normal;
+    font-style: normal;
+    color: #ffffff;
+}
+.infoRight {
+    font-family: CalibriFontFamily;
+    font-size: 13;
+    font-weight: normal;
+    font-style: normal;
+    color: #C9D8FC;
+}
+
+.stdSmaller {
+    font-family: CalibriFontFamily;
+    font-size: 12;
+    font-weight: normal;
+    font-style: normal;
+    color: #000000;
+}
+
+.stdBold {
+    font-family: CalibriFontFamily;
+    font-size: 13;
+    font-weight: bold;
+    font-style: normal;
+    color: #000000;
+}
+
+.stdItalic {
+    font-family: CalibriFontFamily;
+    font-size: 11;
+    font-weight: normal;
+    font-style: italic;
+    color: #000000;
+}
+
+.smallNormal {
+    font-family: CalibriFontFamily;
+    font-size: 12;
+    font-weight: normal;
+    font-style: normal;
+}
+.smallNormalLight {
+    font-family: CalibriFontFamily;
+    font-size: 12;
+    font-weight: normal;
+    font-style: normal;
+    color: #C9D8FC;
+}
+  
+.evalNote {
+    font-family: CalibriFontFamily;
+    font-size: 15;
+    font-weight: bold;
+    font-style: normal;
+    color: #ff0000;
+}
+
+.smallGrey {
+    fontFamily: CalibriFontFamily;
+    font-size: 12;
+    font-weight: normal;
+    font-style: normal;
+    color: #ffffff;
+}
+  
+.evaluationText {
+    fontFamily: myArialFont;
+    font-size: 64;
+    font-weight: normal;
+    font-style: normal;
+    color: #ff0000;
+}
+
+.lecturnityLogo {
+    fontFamily: SlidestarFontFamily;
+    font-size: 14;
+    font-weight: bold;
+    font-style: italic;
+    color: #ffffff;
+}
+
+.lecturnityWebplayer {
+    fontFamily: SlidestarFontFamily;
+    font-size: 10;
+    font-weight: bold;
+    font-style: italic;
+    color: #ffffff;
+}
+
+.tabButton {
+    font-family: CalibriFontFamily;
+    font-size: 12;
+    font-weight: normal;
+    font-style: normal;
+    color: #ffffff;
+}
+
+.languageList {
+   backgroundColor: #c9d8fc;
+   rollOverColor: #afc7fa;
+   textRollOverColor: #0b333c;
+   borderColor: #000000;
+   selectionColor: #7697e4;
+   textSelectedColor: #0b333c;
+}
+
+.languageCurrent {
+    font-family: CalibriFontFamily;
+    font-size: 12;
+    font-weight: bold;
+    font-style: normal;
+    color: #ffffff;
+}
+
+.scalingTypeList {
+   backgroundColor: #c9d8fc;
+   rollOverColor: #afc7fa;
+   textRollOverColor: #0b333c;
+   borderColor: #000000;
+   selectionColor: #7697e4;
+   textSelectedColor: #0b333c;
+}
+
+.scalingTypeCurrent {
+    font-family: CalibriFontFamily;
+    font-size: 12;
+    font-weight: bold;
+    font-style: normal;
+    color: #ffffff;
+}
+
+/* End Text formating */
+

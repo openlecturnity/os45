@@ -1,0 +1,185 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mx:Canvas xmlns:mx="http://www.adobe.com/2006/mxml" initialize="onInit()" creationComplete="onCreationComplete()">
+    <mx:Metadata> 
+        [Event(name="afterClick", type="flash.events.Event")] 
+    </mx:Metadata>
+    
+    <mx:Script>
+        <![CDATA[
+            //import mx.charts.CategoryAxis;
+            import mx.events.FlexMouseEvent;
+            [Bindable] public var source:Class;
+            [Bindable] public var overSource:Class;
+            [Bindable] public var downSource:Class;
+            [Bindable] public var selectedSource:Class;
+            [Bindable] public var title:String;
+            [Bindable] public var fontColor:String = "#ffffff";
+            [Bindable] public var fontColorSelected:String = "#ffffff";
+            [Bindable] public var fontColorOver:String = "#ffffff";
+            [Bindable] public var fontColorDown:String = "#ffffff";
+            [Bindable] public var fontColorDisabled:String = "#808080";
+            [Bindable] public var currentColor:uint = 0xffffff; 
+            
+            [Bindable] public var titleOffsetTop:int = 0;
+            [Bindable] public var titleOffsetLeft:int = 0;
+            
+            [Bindable] private var _selected:Boolean = false;
+            [Bindable] private var _disabled:Boolean = false;
+            private var mouseOver:Boolean = false;    
+            private var mouseDown:Boolean = false;    
+            
+            //public var afterClick:Function;
+            
+            [Bindable] private var _w:Number = 20;
+            [Bindable] private var _h:Number = 20;
+            
+            private function onInit():void {
+                this.addEventListener(MouseEvent.MOUSE_OVER,onMouseOver);
+                this.addEventListener(MouseEvent.CLICK,onMouseClick);
+                this.addEventListener(MouseEvent.MOUSE_OUT,onMouseOut);
+                this.addEventListener(MouseEvent.MOUSE_DOWN,onMouseDown);
+                this.addEventListener(MouseEvent.MOUSE_UP,onMouseUp);
+                
+                this.currentColor = StyleManager.getColorName(fontColor);
+            }
+            
+            [Bindable("widthChanged")]
+            override public function get width():Number {
+                return this._w;
+            }
+            
+            [Bindable("heightChanged")]
+            override public function get height():Number {
+                return this._h;
+            }
+            
+            override public function set width(value:Number):void {
+                this._w = value;
+            }
+            
+            override public function set height(value:Number):void {
+                this._h = value;
+            }
+            
+            private function onCreationComplete():void {
+                setStyling();
+            }
+            
+            private function onMouseOver(event:Event):void {
+                this.mouseOver = true;
+                
+                setStyling();
+            }
+            
+            private function onMouseOut(event:Event):void {
+                this.mouseOver = false;
+                this.mouseDown = false;
+                
+                setStyling();
+            }
+            
+            private function onMouseDown(event:Event):void {
+                this.mouseDown = true;
+                
+                setStyling();
+            }
+            
+            private function onMouseUp(event:Event):void {
+                this.mouseDown = false;
+                
+                setStyling();
+            }
+            
+            private function onMouseClick(event:Event):void {
+                this.mouseOver = false;
+                
+                if (!this._disabled)
+                    this._selected = !this._selected;
+                
+                setStyling();
+                
+                if (!this._disabled)
+                    dispatchEvent(new Event("afterClick"));
+                    /* if (afterClick != null) {
+                        afterClick();
+                    }*/
+            }
+            
+            private function setStyling():void {
+                if (this._disabled) {
+                        this.currentColor = StyleManager.getColorName(fontColorDisabled);
+                        this.normal.visible = true;
+                        this.select.visible = false;
+                        this.over.visible = false;
+                        this.down.visible = false;
+                } else {
+                    if (this.mouseDown == true && this.downSource != null) {
+                        this.normal.visible = false;
+                        this.select.visible = false;
+                        this.over.visible = false;
+                        this.down.visible = true;
+                        this.currentColor = StyleManager.getColorName(fontColorDown);
+                        return;
+                    } 
+                    
+                    if (this.mouseOver == true && this.overSource != null) {
+                        this.normal.visible = false;
+                        this.select.visible = false;
+                        this.over.visible = true;
+                        this.down.visible = false;
+                        this.currentColor = StyleManager.getColorName(fontColorOver);
+                        return;
+                    } 
+                    
+                    if (this._selected == true && this.selectedSource != null) {
+                        this.normal.visible = false;
+                        this.select.visible = true;
+                        this.over.visible = false;
+                        this.down.visible = false;
+                        this.currentColor = StyleManager.getColorName(fontColorSelected);
+                        return;
+                    }
+                    this.normal.visible = true;
+                    this.select.visible = false;
+                    this.over.visible = false;
+                    this.down.visible = false;
+                    this.currentColor = StyleManager.getColorName(fontColor);
+                }
+            }
+            
+            public function set selected(_in:Boolean):void {
+                this._selected = _in;
+                
+                this.mouseOver = false;
+                
+                try {
+                    setStyling();
+                }            
+                catch(e:Error) {}
+            }
+            
+            [Bindable]
+            public function get selected():Boolean {
+                return this._selected;
+                setStyling();
+            }
+
+            public function set disabled(_in:Boolean):void {
+                this._disabled = _in;
+
+                try {
+                    setStyling();
+                }            
+                catch(e:Error) {}
+            }
+
+        ]]>
+    </mx:Script>
+    
+    
+    <mx:Image id="normal" source="{this.source}" height="{this.height}" width="{this.width}" />
+    <mx:Image id="over" source="{this.overSource}" visible="false" height="{this.height}" width="{this.width}" />
+    <mx:Image id="select" source="{this.selectedSource}" visible="false" height="{this.height}" width="{this.width}" />
+    <mx:Image id="down" source="{this.downSource}" visible="false" height="{this.height}" width="{this.width}" />
+    <mx:Text id="text" color="{currentColor}" text="{title}" height="{this.height-4}" styleName="tabButton" width="100%" textAlign="center" top="{titleOffsetTop+4}" left="{titleOffsetLeft}" selectable="false" />
+</mx:Canvas>

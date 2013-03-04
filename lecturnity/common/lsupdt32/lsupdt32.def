@@ -1,0 +1,4 @@
+LIBRARY lsupdt32
+EXPORTS
+	LecturnityUpdateCheck
+	LecturnityUpdateConfigure

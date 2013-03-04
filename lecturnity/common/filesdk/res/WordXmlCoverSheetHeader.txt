@@ -1,0 +1,40 @@
+			<w:hdr w:type="even">
+				<w:p>
+					<w:r>
+						<w:cr/>
+					</w:r>
+				</w:p>
+			</w:hdr>
+			<w:hdr w:type="odd">
+				<w:p/>
+				<w:p>
+					<w:r>
+						<w:rPr>
+							<w:noProof/>
+						</w:rPr>
+						<w:pict>
+							<v:shapetype id="_x0000_t75" coordsize="21600,21600" o:spt="75" o:preferrelative="t" path="m@4@5l@4@11@9@11@9@5xe" filled="f" stroked="f">
+								<v:stroke joinstyle="miter"/>
+								<v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>
+								<o:lock v:ext="edit" aspectratio="t"/>
+							</v:shapetype>
+							<w:binData w:name="wordml://03000000.png" xml:space="preserve">iVBORw0KGgoAAAANSUhEUgAAF3AAAAAmCAMAAACsJD7bAAAAGXRFWHRTb2Z0d2FyZQBBZG9iZSBJ
+bWFnZVJlYWR5ccllPAAAAB5QTFRF7n8AZIzDvRA0iKBj////qLaJt8Ti7szD3ZWJ+cGIN0Z14wAA
+AWhJREFUeNrs2LENwkAQAMG3AQP9N4z8DVyyCdJMvBXsWqPn7XPO3rs8ZtcOX4/ZDr8LAAAAAAD+
+n+EOAAAAAAABwx0AAAAAAAKGOwAAAAAABAx3AAAAAAAIGO4AAAAAABAw3AEAAAAAIGC4AwAAAABA
+wHAHAAAAAICA4Q4AAAAAAAHDHQAAAAAAAoY7AAAAAAAEDHcAAAAAAAgY7gAAAAAAEDDcAQAAAAAg
+YLgDAAAAAEDAcAcAAAAAgIDhDgAAAAAAAcMdAAAAAAAChjsAAAAAAAQMdwAAAAAACBjuAAAAAAAQ
+MNwBAAAAACBguAMAAAAAQMBwBwAAAACAgOEOAAAAAAABwx0AAAAAAAKGOwAAAAAABAx3AAAAAAAI
+GO4AAAAAABAw3AEAAAAAIGC4AwAAAABAwHAHAAAAAICA4Q4AAAAAAAHDHQAAAAAAAoY7AAAAAAAE
+DHcAAAAAAAgY7gAAAAAAMPkJMAC4lTA/aUj03AAAAABJRU5ErkJggk==</w:binData>
+							<v:shape id="Bild 14" o:spid="_x0000_s2056" type="#_x0000_t75" alt="streifen" style="position:absolute;left:0;text-align:left;margin-left:-.35pt;margin-top:48.5pt;width:1162.65pt;height:7.45pt;z-index:-3;visibility:visible;mso-position-horizontal-relative:page;mso-position-vertical-relative:page" wrapcoords="-14 0 -14 19440 21600 19440 21600 0 -14 0">
+								<v:imagedata src="wordml://03000000.png" o:title="streifen"/>
+								<w10:wrap type="tight" anchorx="page" anchory="page"/>
+							</v:shape>
+						</w:pict>
+					</w:r>
+					<w:r wsp:rsidR="00C019C1">
+						<w:tab/>
+					</w:r>
+				</w:p>
+			</w:hdr>

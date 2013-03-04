@@ -1,0 +1,4 @@
+LIBRARY	"lsutl32"
+
+EXPORTS
+	UpdateLicenseKey

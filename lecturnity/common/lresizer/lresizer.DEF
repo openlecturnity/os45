@@ -1,0 +1,13 @@
+; lresizer.DEF
+;
+; This file provides declarations of the entrypoints in
+; the DLL.
+
+LIBRARY         "lresizer.DLL"
+; DESCRIPTION     'Lecturnity Video Resizer'
+EXPORTS
+    DllGetClassObject   PRIVATE
+    DllCanUnloadNow     PRIVATE
+    DllRegisterServer   PRIVATE
+    DllUnregisterServer PRIVATE
+

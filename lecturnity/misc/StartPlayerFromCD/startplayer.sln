@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "startplayer", "startplayer.vcproj", "{BA36A471-5529-4CF4-BD3A-56046C671392}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5D663F5B-0399-4CE5-9F16-E7230BD236AA} = {5D663F5B-0399-4CE5-9F16-E7230BD236AA}
+		{53AFFF9F-7B1B-4493-A250-92BC2D4262E7} = {53AFFF9F-7B1B-4493-A250-92BC2D4262E7}
+	EndProjectSection
+EndProject
+Project("{059D6162-CD51-11D0-AE1F-00A0C90FFFC3}") = "keygenlib", "..\..\lecturnity\common\keygenlib\keygenlib.dsp", "{53AFFF9F-7B1B-4493-A250-92BC2D4262E7}"
+EndProject
+Project("{059D6162-CD51-11D0-AE1F-00A0C90FFFC3}") = "lutils", "..\..\lecturnity\common\lutils\lutils.dsp", "{5D663F5B-0399-4CE5-9F16-E7230BD236AA}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		English Release|Win32 = English Release|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{BA36A471-5529-4CF4-BD3A-56046C671392}.Debug|Win32.ActiveCfg = Debug|Win32
+		{BA36A471-5529-4CF4-BD3A-56046C671392}.Debug|Win32.Build.0 = Debug|Win32
+		{BA36A471-5529-4CF4-BD3A-56046C671392}.English Release|Win32.ActiveCfg = English Release|Win32
+		{BA36A471-5529-4CF4-BD3A-56046C671392}.English Release|Win32.Build.0 = English Release|Win32
+		{BA36A471-5529-4CF4-BD3A-56046C671392}.Release|Win32.ActiveCfg = Release|Win32
+		{BA36A471-5529-4CF4-BD3A-56046C671392}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

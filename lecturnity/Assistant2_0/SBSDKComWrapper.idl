@@ -1,0 +1,296 @@
+// SBSDKComWrapper.idl : IDL source for SBSDKComWrapper
+//
+
+// This file will be processed by the MIDL tool to
+// produce the type library (SBSDKComWrapper.tlb) and marshalling code.
+
+import "oaidl.idl";
+import "ocidl.idl";
+
+[
+	object,
+	uuid(006EC885-2A99-4823-B6D2-9F86D6496C92),
+	dual,
+	nonextensible,
+	helpstring("ISBSDKBaseClass Interface"),
+	pointer_default(unique)
+]
+interface ISBSDKBaseClass : IDispatch{
+	typedef enum _SBCSDK_TOOL_TYPE {SBC_NO_TOOL = 0, SBC_PEN, SBC_ERASER, SBC_RECTANGLE,
+		SBC_LINE, SBC_CIRCLE, SBC_POLYGON} SBCSDK_TOOL_TYPE;
+	typedef enum _SBCSDK_MOUSE_EVENT_FLAG {SBCME_DEFAULT = 0x0, SBCME_ALWAYS = 0x1,
+		SBCME_NEVER = 0x2} SBCSDK_MOUSE_EVENT_FLAG;
+	[id(1), helpstring("method SBSDKAttach")] HRESULT SBSDKAttach([in] LONG hWnd, [in] VARIANT_BOOL bSendXMLAnnotations);
+	[id(2), helpstring("method SBSDKGetToolType")] HRESULT SBSDKGetToolType([in] LONG iPointerID, [out,retval] SBCSDK_TOOL_TYPE* result);
+	[id(3), helpstring("method SBSDKGetToolColor")] HRESULT SBSDKGetToolColor([in] LONG iPointerID, [out] LONG* red, [out] LONG* green, [out] LONG* blue);
+	[id(4), helpstring("method SBSDKGetToolOpacity")] HRESULT SBSDKGetToolOpacity([in] LONG iPointerID, [out,retval] FLOAT* result);
+	[id(5), helpstring("method SBSDKGetToolFillColor")] HRESULT SBSDKGetToolFillColor([in] LONG iPointerID, [out] LONG* red, [out] LONG* green, [out] LONG* blue);
+	[id(6), helpstring("method SBSDKGetToolFillOpacity")] HRESULT SBSDKGetToolFillOpacity([in] LONG iPointerID, [out,retval] FLOAT* result);
+	[id(7), helpstring("method SBSDKGetToolWidth")] HRESULT SBSDKGetToolWidth([in] LONG iPointerID, [out,retval] LONG* result);
+	[id(8), helpstring("method SBSDKIsABoardConnected")] HRESULT SBSDKIsABoardConnected([out,retval] VARIANT_BOOL* result);
+	[id(9), helpstring("method SBSDKGetConnectedBoardCount")] HRESULT SBSDKGetConnectedBoardCount([out,retval] LONG* result);
+	[id(10), helpstring("method SBSDKGetBoardCount")] HRESULT SBSDKGetBoardCount([out,retval] LONG* result);
+	[id(11), helpstring("method SBSDKIsBoardProjected")] HRESULT SBSDKIsBoardProjected([in] LONG iPointerID, [out,retval] VARIANT_BOOL* result);
+	[id(12), helpstring("method SBSDKGetBoardNumberFromPointerID")] HRESULT SBSDKGetBoardNumberFromPointerID([in] LONG iPointerID, [out,retval] LONG* result);
+	[id(13), helpstring("method SBSDKGetSoftwareVersion")] HRESULT SBSDKGetSoftwareVersion([out] LONG* iMajor, [out] LONG* iMinor, [out] LONG* iUpdate, [out] LONG* iBuild, [out,retval] VARIANT_BOOL* result);
+	[id(14), helpstring("method SBSDKDetach")] HRESULT SBSDKDetach([in] LONG hWnd);
+	[id(15), helpstring("method SBSDKGetDestinationWnd")] HRESULT SBSDKGetDestinationWnd([out] LONG* hWnd);
+	[id(16), helpstring("method SBSDKSetSendMouseEvents")] HRESULT SBSDKSetSendMouseEvents([in] LONG hAttachedWnd, [in] SBCSDK_MOUSE_EVENT_FLAG iTools, [in] LONG iPointerID);
+	[id(17), helpstring("method SBSDKGetCurrentBoard")] HRESULT SBSDKGetCurrentBoard([out,retval] LONG* result);
+	[id(18), helpstring("method SBSDKGetCurrentTool")] HRESULT SBSDKGetCurrentTool();
+};
+[
+	object,
+	uuid(54EE21D3-6D4B-473B-BB82-0034DF1D2F1D),
+	dual,
+	nonextensible,
+	helpstring("ISBSDKBaseClassEx Interface"),
+	pointer_default(unique)
+]
+interface ISBSDKBaseClassEx : IDispatch{
+	typedef enum _SBCSDK_BOARD_STATUS {
+		SBC_BOARD_OPEN,					//This SMART Board is working properly.
+		SBC_BOARD_CLOSED,				//This SMART Board is not currently active. (The port is closed)
+		SBC_BOARD_DEVICE_IN_USE,			//The port for this device is in use by another application.
+		SBC_BOARD_DEVICE_NOT_FOUND,		//The port for this device could not be found
+		SBC_BOARD_DEVICE_NOT_PRESENT,	//This SMART Board is unplugged or not available.
+		SBC_BOARD_NO_DATA,				//No data is being received on this port.
+		SBC_BOARD_ANALYZING_DATA,		//Analyzing incoming data to determine if it is a SMART Board...
+		SBC_BOARD_NOT_RESPONDING,		//Data is being received, but communication to the SMART Board is not working correctly.  The LEDs will not function properly.
+		SBC_BOARD_DISABLED,				//Board has been disabled by registry setting.
+		SBC_BOARD_USB_UNPLUGGED			//The USB dongle is plugged in but not connected to the SMART Board.
+	} SBCSDK_BOARD_STATUS;
+
+	typedef enum _SBCSDK_MOUSE_STATE {SBC_MOUSE_LEFT_CLICK, SBC_MOUSE_MIDDLE_CLICK,
+		SBC_MOUSE_RIGHT_CLICK, SBC_MOUSE_CTRL_CLICK, SBC_MOUSE_ALT_CLICK, SBC_MOUSE_SHIFT_CLICK,
+		SBC_MOUSE_FLOAT_CLICK, SBC_MOUSE_NEXT_CLICK_NOT_SET} SBCSDK_MOUSE_STATE;
+
+	[id(1), helpstring("method SBSDKAttach")] HRESULT SBSDKAttach([in] LONG hWnd, [in] VARIANT_BOOL bSendXMLAnnotations);
+	[id(2), helpstring("method SBSDKGetToolType")] HRESULT SBSDKGetToolType([in] LONG iPointerID, [out,retval] SBCSDK_TOOL_TYPE* result);
+	[id(3), helpstring("method SBSDKGetToolColor")] HRESULT SBSDKGetToolColor([in] LONG iPointerID, [out] LONG* red, [out] LONG* green, [out] LONG* blue);
+	[id(4), helpstring("method SBSDKGetToolOpacity")] HRESULT SBSDKGetToolOpacity([in] LONG iPointerID, [out,retval] FLOAT* result);
+	[id(5), helpstring("method SBSDKGetToolFillColor")] HRESULT SBSDKGetToolFillColor([in] LONG iPointerID, [out] LONG* red, [out] LONG* green, [out] LONG* blue);
+	[id(6), helpstring("method SBSDKGetToolFillOpacity")] HRESULT SBSDKGetToolFillOpacity([in] LONG iPointerID, [out,retval] FLOAT* result);
+	[id(7), helpstring("method SBSDKGetToolWidth")] HRESULT SBSDKGetToolWidth([in] LONG iPointerID, [out,retval] LONG* result);
+	[id(8), helpstring("method SBSDKIsABoardConnected")] HRESULT SBSDKIsABoardConnected([out,retval] VARIANT_BOOL* result);
+	[id(9), helpstring("method SBSDKGetConnectedBoardCount")] HRESULT SBSDKGetConnectedBoardCount([out,retval] LONG* result);
+	[id(10), helpstring("method SBSDKGetBoardCount")] HRESULT SBSDKGetBoardCount([out,retval] LONG* result);
+	[id(11), helpstring("method SBSDKIsBoardProjected")] HRESULT SBSDKIsBoardProjected([in] LONG iPointerID, [out,retval] VARIANT_BOOL* result);
+	[id(12), helpstring("method SBSDKGetBoardNumberFromPointerID")] HRESULT SBSDKGetBoardNumberFromPointerID([in] LONG iPointerID, [out,retval] LONG* result);
+	[id(13), helpstring("method SBSDKGetSoftwareVersion")] HRESULT SBSDKGetSoftwareVersion([out] LONG* iMajor, [out] LONG* iMinor, [out] LONG* iUpdate, [out] LONG* iBuild, [out,retval] VARIANT_BOOL* result);
+	[id(14), helpstring("method SBSDKDetach")] HRESULT SBSDKDetach([in] LONG hWnd);
+	[id(15), helpstring("method SBSDKGetDestinationWnd")] HRESULT SBSDKGetDestinationWnd([out] LONG* hWnd);
+	[id(16), helpstring("method SBSDKSetSendMouseEvents")] HRESULT SBSDKSetSendMouseEvents([in] LONG hAttachedWnd, [in] SBCSDK_MOUSE_EVENT_FLAG iTools, [in] LONG iPointerID);
+	[id(17), helpstring("method SBSDKGetCurrentBoard")] HRESULT SBSDKGetCurrentBoard([out,retval] LONG* result);
+	[id(18), helpstring("method SBSDKGetCurrentTool")] HRESULT SBSDKGetCurrentTool();
+	[id(19), helpstring("method SBSDKRegisterDataMonitor")] HRESULT SBSDKRegisterDataMonitor(void);
+
+	[id(20), helpstring("method SBDViTStartTrackerMode")] HRESULT SBDViTStartTrackerMode([in] LONG iBoardNumber);
+	[id(21), helpstring("method SBDViTStopTrackerMode")] HRESULT SBDViTStopTrackerMode([in] LONG iBoardNumber);
+
+	[id(22), helpstring("method SBSDKIsBoardDViT")] HRESULT SBSDKIsBoardDViT([in] LONG iBoardNumber, [out,retval] VARIANT_BOOL* result);
+	[id(23), helpstring("method SBSDKGetBoardStatus")] HRESULT SBSDKGetBoardStatus([in] LONG iBoardNumber, [out,retval] SBCSDK_BOARD_STATUS* result);
+	[id(24), helpstring("method SBSDKIsConnected")] HRESULT SBSDKIsConnected([out,retval] VARIANT_BOOL* result);
+
+	[id(25), helpstring("method SBSDKGetMouseState")] HRESULT SBSDKGetMouseState([out,retval] SBCSDK_MOUSE_STATE* result);
+	[id(26), helpstring("method SBSDKSetMouseState")] HRESULT SBSDKSetMouseState([in] SBCSDK_MOUSE_STATE iMouseState);
+
+	[id(27), helpstring("method SBSDKGetMultiPointerMode")] HRESULT SBSDKGetMultiPointerMode([in] LONG iBoardNumber);
+};
+[
+	object,
+	uuid(1A12B0DC-6FD5-4C84-9977-6ABCB416E10A),
+	dual,
+	nonextensible,
+	helpstring("ISBSDKBaseClass2 Interface"),
+	pointer_default(unique)
+]
+interface ISBSDKBaseClass2 : IDispatch{
+	typedef enum _SBCSDK_PEN_TRAY_TOOL {SBCSDK_PTT_NONE = 0, SBCSDK_PTT_ERASER, SBCSDK_PTT_BLACK_PEN,
+							SBCSDK_PTT_BLUE_PEN, SBCSDK_PTT_RED_PEN, SBCSDK_PTT_GREEN_PEN} SBCSDK_PEN_TRAY_TOOL;
+
+	[id(1), helpstring("method SBSDKAttach")] HRESULT SBSDKAttach([in] LONG hWnd, [in] VARIANT_BOOL bSendXMLAnnotations);
+	[id(2), helpstring("method SBSDKAttachWithMsgWnd")] HRESULT SBSDKAttachWithMsgWnd([in] LONG hWnd, [in] VARIANT_BOOL bSendXMLAnnotations, [in] LONG hWndProcessData);
+	[id(3), helpstring("method SBSDKDetach")] HRESULT SBSDKDetach([in] LONG hWnd);
+	[id(4), helpstring("method SBSDKGetXYDestinationWnd")] HRESULT SBSDKGetXYDestinationWnd([out,retval] LONG* lResult);
+	[id(5), helpstring("method SBSDKProcessData")] HRESULT SBSDKProcessData(void);
+	[id(6), helpstring("method SBSDKGetToolType")] HRESULT SBSDKGetToolType([in] LONG iPointerID, [out,retval] SBCSDK_TOOL_TYPE* result);
+	[id(7), helpstring("method SBSDKGetToolColor")] HRESULT SBSDKGetToolColor([in] LONG iPointerID, [out] LONG* red, [out] LONG* green, [out] LONG* blue);
+	[id(8), helpstring("method SBSDKGetToolOpacity")] HRESULT SBSDKGetToolOpacity([in] LONG iPointerID, [out,retval] FLOAT* result);
+	[id(9), helpstring("method SBSDKGetToolFillColor")] HRESULT SBSDKGetToolFillColor([in] LONG iPointerID, [out] LONG* red, [out] LONG* green, [out] LONG* blue);
+	[id(10), helpstring("method SBSDKGetToolFillOpacity")] HRESULT SBSDKGetToolFillOpacity([in] LONG iPointerID, [out,retval] FLOAT* result);
+	[id(11), helpstring("method SBSDKGetToolWidth")] HRESULT SBSDKGetToolWidth([in] LONG iPointerID, [out,retval] LONG* result);
+	[id(12), helpstring("method SBSDKIsABoardConnected")] HRESULT SBSDKIsABoardConnected([out,retval] VARIANT_BOOL* result);
+	[id(13), helpstring("method SBSDKGetConnectedBoardCount")] HRESULT SBSDKGetConnectedBoardCount([out,retval] LONG* result);
+	[id(14), helpstring("method SBSDKGetBoardCount")] HRESULT SBSDKGetBoardCount([out,retval] LONG* result);
+	[id(15), helpstring("method SBSDKIsBoardProjected")] HRESULT SBSDKIsBoardProjected([in] LONG iPointerID, [out,retval] VARIANT_BOOL* result);
+	[id(16), helpstring("method SBSDKGetBoardNumberFromPointerID")] HRESULT SBSDKGetBoardNumberFromPointerID([in] LONG iPointerID, [out,retval] LONG* result);
+	[id(17), helpstring("method SBSDKGetSoftwareVersion")] HRESULT SBSDKGetSoftwareVersion([out] LONG* iMajor, [out] LONG* iMinor, [out] LONG* iUpdate, [out] LONG* iBuild, [out,retval] VARIANT_BOOL* result);
+	[id(18), helpstring("method SBSDKGetCurrentBoard")] HRESULT SBSDKGetCurrentBoard([out,retval] LONG* result);
+	[id(19), helpstring("method SBSDKGetCurrentTool")] HRESULT SBSDKGetCurrentTool(void);
+	[id(20), helpstring("method SBSDKSetSendMouseEvents")] HRESULT SBSDKSetSendMouseEvents([in] LONG hAttachedWnd, [in] SBCSDK_MOUSE_EVENT_FLAG iTools, [in] LONG iPointerID);
+	[id(21), helpstring("method SBSDKSetSendXMLToolChanges")] HRESULT SBSDKSetSendXMLToolChanges([in] VARIANT_BOOL bSendXMLToolChanges);
+	[id(22), helpstring("method SBSDKGetXMLToolStr")] HRESULT SBSDKGetXMLToolStr([in] LONG iPointerID, [out,retval] BSTR* result);
+	[id(23), helpstring("method SBSDKGetBoardStatus")] HRESULT SBSDKGetBoardStatus([in] LONG iBoardNumber, [out,retval] SBCSDK_BOARD_STATUS* result);
+	[id(24), helpstring("method SBSDKIsConnected")] HRESULT SBSDKIsConnected([out,retval] VARIANT_BOOL* result);
+	[id(25), helpstring("method SBSDKGetMultiPointerMode")] HRESULT SBSDKGetMultiPointerMode([in] LONG iBoardNumber);
+	[id(26), helpstring("method SBSDKSetMultiPointerMode")] HRESULT SBSDKSetMultiPointerMode([in] LONG iBoardNumber, [in] VARIANT_BOOL bOn);
+	[id(27), helpstring("method SBSDKSetToolXMLStr")] HRESULT SBSDKSetToolXMLStr([in] BSTR bstrXMLTool);
+	[id(28), helpstring("method SBSDKRegisterProjectedWindowByName")] HRESULT SBSDKRegisterProjectedWindowByName([in] BSTR bstrWindowTitle, [in] VARIANT_BOOL bSendXMLAnnotations);
+	[id(29), helpstring("method SBSDKGetPenTrayToolType")] HRESULT SBSDKGetPenTrayToolType([in] LONG iPointerID, [out,retval] SBCSDK_PEN_TRAY_TOOL* result);
+	[id(30), helpstring("method SBSDKRegisterDataMonitor")] HRESULT SBSDKRegisterDataMonitor(void);
+	[id(31), helpstring("method SBSDKGetMouseState")] HRESULT SBSDKGetMouseState([out,retval] SBCSDK_MOUSE_STATE* result);
+	[id(32), helpstring("method SBSDKSetMouseState")] HRESULT SBSDKSetMouseState([in] SBCSDK_MOUSE_STATE mouseState);
+	[id(33), helpstring("method SBSDKIsBoardDViT")] HRESULT SBSDKIsBoardDViT([in] LONG iBoardNumber, [out,retval] VARIANT_BOOL* result);
+	[id(35), helpstring("method SBSDKSetDViTTrackerMode")] HRESULT SBSDKSetDViTTrackerMode([in] LONG iBoardNumber, [in] VARIANT_BOOL bOn);
+};
+[
+	uuid(1ECC296C-A20E-4788-8AE7-07AEE7C6ADC7),
+	version(1.0),
+	helpstring("SBSDKComWrapper 1.0 Type Library")
+]
+library SBSDKComWrapperLib
+{
+	importlib("stdole2.tlb");
+	[
+		uuid(E5414F79-475C-47CD-87AE-116CA193BF15),
+		helpstring("_ISBSDKBaseClassEvents Interface")
+	]
+	dispinterface _ISBSDKBaseClassEvents
+	{
+		properties:
+		methods:
+		[id(1), helpstring("method OnXYDown")] void OnXYDown([in] LONG x, [in] LONG y, [in] LONG z, [in] LONG iPointerID);
+		[id(2), helpstring("method OnXYMove")] void OnXYMove([in] LONG x, [in] LONG y, [in] LONG z, [in] LONG iPointerID);
+		[id(3), helpstring("method OnXYUp")] void OnXYUp([in] LONG x, [in] LONG y, [in] LONG z, [in] LONG iPointerID);
+		[id(4), helpstring("method OnXYNonProjectedDown")] void OnXYNonProjectedDown([in] LONG x, [in] LONG y, [in] LONG z, [in] LONG iPointerID);
+		[id(5), helpstring("method OnXYNonProjectedMove")] void OnXYNonProjectedMove([in] LONG x, [in] LONG y, [in] LONG z, [in] LONG iPointerID);
+		[id(6), helpstring("method OnXYNonProjectedUp")] void OnXYNonProjectedUp([in] LONG x, [in] LONG y, [in] LONG z, [in] LONG iPointerID);
+		[id(7), helpstring("method OnXMLAnnotation")] void OnXMLAnnotation([in] BSTR bstrXMLAnnotation);
+		[id(8), helpstring("method OnNoTool")] void OnNoTool([in] LONG iPointerID);
+		[id(9), helpstring("method OnPen")] void OnPen([in] LONG iPointerID);
+		[id(10), helpstring("method OnEraser")] void OnEraser([in] LONG iPointerID);
+		[id(11), helpstring("method OnRectangle")] void OnRectangle([in] LONG iPointerID);
+		[id(12), helpstring("method OnLine")] void OnLine([in] LONG iPointerID);
+		[id(13), helpstring("method OnCircle")] void OnCircle([in] LONG iPointerID);
+		[id(14), helpstring("method OnPrint")] void OnPrint([in] LONG iPointerID);
+		[id(15), helpstring("method OnNext")] void OnNext([in] LONG iPointerID);
+		[id(16), helpstring("method OnPrevious")] void OnPrevious([in] LONG iPointerID);
+		[id(17), helpstring("method OnClear")] void OnClear([in] LONG iPointerID);
+		[id(18), helpstring("method OnSBSDKBoardStatusChange")] void OnSBSDKBoardStatusChange(void);
+	};
+	[
+		uuid(5180E2B4-FAF0-4C88-8615-8B6B75B0E689),
+		helpstring("SBSDKBaseClass Class")
+	]
+	coclass SBSDKBaseClass
+	{
+		[default] interface ISBSDKBaseClass;
+		[default, source] dispinterface _ISBSDKBaseClassEvents;
+	};
+	[
+		uuid(E8C0C627-2CA0-4ED7-9CB9-A44F600D3D76),
+		helpstring("_ISBSDKBaseClassExEvents Interface")
+	]
+	dispinterface _ISBSDKBaseClassExEvents
+	{
+		properties:
+		methods:
+		[id(1), helpstring("method OnXYDown")] void OnXYDown([in] LONG x, [in] LONG y, [in] LONG z, [in] LONG iPointerID);
+		[id(2), helpstring("method OnXYMove")] void OnXYMove([in] LONG x, [in] LONG y, [in] LONG z, [in] LONG iPointerID);
+		[id(3), helpstring("method OnXYUp")] void OnXYUp([in] LONG x, [in] LONG y, [in] LONG z, [in] LONG iPointerID);
+		[id(4), helpstring("method OnXYNonProjectedDown")] void OnXYNonProjectedDown([in] LONG x, [in] LONG y, [in] LONG z, [in] LONG iPointerID);
+		[id(5), helpstring("method OnXYNonProjectedMove")] void OnXYNonProjectedMove([in] LONG x, [in] LONG y, [in] LONG z, [in] LONG iPointerID);
+		[id(6), helpstring("method OnXYNonProjectedUp")] void OnXYNonProjectedUp([in] LONG x, [in] LONG y, [in] LONG z, [in] LONG iPointerID);
+		[id(7), helpstring("method OnXMLAnnotation")] void OnXMLAnnotation([in] BSTR bstrXMLAnnotation);
+		[id(8), helpstring("method OnNoTool")] void OnNoTool([in] LONG iPointerID);
+		[id(9), helpstring("method OnPen")] void OnPen([in] LONG iPointerID);
+		[id(10), helpstring("method OnEraser")] void OnEraser([in] LONG iPointerID);
+		[id(11), helpstring("method OnRectangle")] void OnRectangle([in] LONG iPointerID);
+		[id(12), helpstring("method OnLine")] void OnLine([in] LONG iPointerID);
+		[id(13), helpstring("method OnCircle")] void OnCircle([in] LONG iPointerID);
+		[id(14), helpstring("method OnPrint")] void OnPrint([in] LONG iPointerID);
+		[id(15), helpstring("method OnNext")] void OnNext([in] LONG iPointerID);
+		[id(16), helpstring("method OnPrevious")] void OnPrevious([in] LONG iPointerID);
+		[id(17), helpstring("method OnClear")] void OnClear([in] LONG iPointerID);
+		[id(18), helpstring("method OnSBSDKBoardStatusChange")] void OnSBSDKBoardStatusChange(void);
+
+		[id(19), helpstring("method OnXYDownRaw")] void OnXYDownRaw([in] LONG x, [in] LONG y, [in] LONG z, [in] LONG iPointerID);
+		[id(20), helpstring("method OnXYMoveRaw")] void OnXYMoveRaw([in] LONG x, [in] LONG y, [in] LONG z, [in] LONG iPointerID);
+		[id(21), helpstring("method OnXYUpRaw")] void OnXYUpRaw([in] LONG x, [in] LONG y, [in] LONG z, [in] LONG iPointerID);
+
+		[id(22), helpstring("method OnDViTTrackerData")] void OnDViTTrackerData([in] LONG iBoardNumber, [in] unsigned char ucData1, [in] unsigned char ucData2, [in] unsigned char ucData3);
+		[id(23), helpstring("method OnDViTRawWidthHeight")] void OnDViTRawWidthHeight([in] LONG iWidth, [in] LONG iHeight, [in] LONG iPointerID);
+		[id(24), helpstring("method OnDViTAspectRatioAndDeltaAngles")] void OnDViTAspectRatioAndDeltaAngles([in] LONG iBoardNumber, [in] double dAspectRatio, [in] double dAngle1, [in] double dAngle2, [in] double dAngle3, [in] double dAngle4);
+
+		[id(25), helpstring("method OnDViTMultiPointerMode")] void OnDViTMultiPointerMode([in] LONG iBoardNumber, [in] VARIANT_BOOL bMultiPointerModeOn);
+
+		[id(26), helpstring("method OnRightMouse")] void OnRightMouse([in] LONG iPointerID);
+		[id(27), helpstring("method OnMiddleMouse")] void OnMiddleMouse([in] LONG iPointerID);
+		[id(28), helpstring("method OnFloatMouse")] void OnFloatMouse([in] LONG iPointerID);
+		[id(29), helpstring("method OnKeyboard")] void OnKeyboard([in] LONG iPointerID);
+	};
+	[
+		uuid(F8827A48-FAD3-42DF-8C5D-1536D212728C),
+		helpstring("SBSDKBaseClassEx Class")
+	]
+	coclass SBSDKBaseClassEx
+	{
+		[default] interface ISBSDKBaseClassEx;
+		[default, source] dispinterface _ISBSDKBaseClassExEvents;
+	};
+	[
+		uuid(9395111E-381A-4D5B-91DE-E77706A54385),
+		helpstring("_ISBSDKBaseClass2Events Interface")
+	]
+	dispinterface _ISBSDKBaseClass2Events
+	{
+		properties:
+		methods:
+		[id(1), helpstring("method OnXYDown")] void OnXYDown([in] LONG x, [in] LONG y, [in] LONG z, [in] LONG iPointerID);
+		[id(2), helpstring("method OnXYMove")] void OnXYMove([in] LONG x, [in] LONG y, [in] LONG z, [in] LONG iPointerID);
+		[id(3), helpstring("method OnXYUp")] void OnXYUp([in] LONG x, [in] LONG y, [in] LONG z, [in] LONG iPointerID);
+		[id(4), helpstring("method OnXYNonProjectedDown")] void OnXYNonProjectedDown([in] LONG x, [in] LONG y, [in] LONG z, [in] LONG iPointerID);
+		[id(5), helpstring("method OnXYNonProjectedMove")] void OnXYNonProjectedMove([in] LONG x, [in] LONG y, [in] LONG z, [in] LONG iPointerID);
+		[id(6), helpstring("method OnXYNonProjectedUp")] void OnXYNonProjectedUp([in] LONG x, [in] LONG y, [in] LONG z, [in] LONG iPointerID);
+		[id(7), helpstring("method OnXMLAnnotation")] void OnXMLAnnotation([in] BSTR bstrXMLAnnotation);
+		[id(8), helpstring("method OnNoTool")] void OnNoTool([in] LONG iPointerID);
+		[id(9), helpstring("method OnPen")] void OnPen([in] LONG iPointerID);
+		[id(10), helpstring("method OnEraser")] void OnEraser([in] LONG iPointerID);
+		[id(11), helpstring("method OnRectangle")] void OnRectangle([in] LONG iPointerID);
+		[id(12), helpstring("method OnLine")] void OnLine([in] LONG iPointerID);
+		[id(13), helpstring("method OnCircle")] void OnCircle([in] LONG iPointerID);
+		[id(14), helpstring("method OnPrint")] void OnPrint([in] LONG iPointerID);
+		[id(15), helpstring("method OnNext")] void OnNext([in] LONG iPointerID);
+		[id(16), helpstring("method OnPrevious")] void OnPrevious([in] LONG iPointerID);
+		[id(17), helpstring("method OnClear")] void OnClear([in] LONG iPointerID);
+		[id(18), helpstring("method OnBoardStatusChange")] void OnBoardStatusChange(void);
+		[id(19), helpstring("method OnXMLToolChange")] void OnXMLToolChange([in] LONG iBoardNumber, [in] BSTR bstrXMLTool);
+
+		[id(20), helpstring("method OnXYDownRaw")] void OnXYDownRaw([in] LONG x, [in] LONG y, [in] LONG z, [in] LONG iPointerID);
+		[id(21), helpstring("method OnXYMoveRaw")] void OnXYMoveRaw([in] LONG x, [in] LONG y, [in] LONG z, [in] LONG iPointerID);
+		[id(22), helpstring("method OnXYUpRaw")] void OnXYUpRaw([in] LONG x, [in] LONG y, [in] LONG z, [in] LONG iPointerID);
+
+		[id(23), helpstring("method OnDViTTrackerData")] void OnDViTTrackerData([in] LONG iBoardNumber, [in] unsigned char ucData1, [in] unsigned char ucData2, [in] unsigned char ucData3);
+		[id(24), helpstring("method OnDViTRawWidthHeight")] void OnDViTRawWidthHeight([in] LONG iWidth, [in] LONG iHeight, [in] LONG iPointerID);
+		[id(25), helpstring("method OnDViTAspectRatioAndDeltaAngles")] void OnDViTAspectRatioAndDeltaAngles([in] LONG iBoardNumber, [in] double dAspectRatio, [in] double dAngle1, [in] double dAngle2, [in] double dAngle3, [in] double dAngle4);
+
+		[id(26), helpstring("method OnDViTMultiPointerMode")] void OnDViTMultiPointerMode([in] LONG iBoardNumber, [in] VARIANT_BOOL bMultiPointerModeOn);
+
+		[id(27), helpstring("method OnRightMouse")] void OnRightMouse([in] LONG iPointerID);
+		[id(28), helpstring("method OnMiddleMouse")] void OnMiddleMouse([in] LONG iPointerID);
+		[id(29), helpstring("method OnFloatMouse")] void OnFloatMouse([in] LONG iPointerID);
+		[id(30), helpstring("method OnKeyboard")] void OnKeyboard([in] LONG iPointerID);
+
+		[id(31), helpstring("method OnMouseStateChange")] void OnMouseStateChange([in] SBCSDK_MOUSE_STATE mouseState);
+	};
+	[
+		uuid(F134CF0C-9C05-4277-B67D-A25E3030271D),
+		helpstring("SBSDKBaseClass2 Class")
+	]
+	coclass SBSDKBaseClass2
+	{
+		[default] interface ISBSDKBaseClass2;
+		[default, source] dispinterface _ISBSDKBaseClass2Events;
+	};
+};

@@ -1,0 +1,10 @@
+	<o:DocumentProperties>
+		<o:Title>%TITLE%</o:Title>
+		<o:Author>%AUTHOR%</o:Author>
+		<o:LastAuthor>%AUTHOR%</o:LastAuthor>
+		<o:Revision>1</o:Revision>
+		<o:TotalTime>0</o:TotalTime>
+		<o:Created>%DATE%</o:Created>
+		<o:LastSaved>%DATE%</o:LastSaved>
+		<o:Version>11.0000</o:Version>
+	</o:DocumentProperties>

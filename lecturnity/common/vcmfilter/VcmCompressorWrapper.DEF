@@ -1,0 +1,13 @@
+; VcmCompressorWrapper.DEF
+;
+; This file provides declarations of the entrypoints in
+; the DLL.
+
+LIBRARY         "vcmfilter.DLL"
+DESCRIPTION     'VCM Codec Wrapper Filter'
+EXPORTS
+    DllGetClassObject   PRIVATE
+    DllCanUnloadNow     PRIVATE
+    DllRegisterServer   PRIVATE
+    DllUnregisterServer PRIVATE
+

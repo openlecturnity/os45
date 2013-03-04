@@ -1,0 +1,8 @@
+<w:p>
+	<w:pPr>
+		<w:pStyle w:val="Title" />
+	</w:pPr>
+        <w:r>
+		<w:t>%TITLE%</w:t>
+	</w:r>
+</w:p>
