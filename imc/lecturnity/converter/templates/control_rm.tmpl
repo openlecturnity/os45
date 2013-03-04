@@ -1,0 +1,301 @@
+/* LECTURNITY version 1.6.1 */
+
+/* ----------------------------------------------------------------------------
+ * Global variables
+ * ---------------------------------------------------------------------------- */
+
+// Media Player
+var MediaPlayer1           = null;
+var ControlPanel           = null;
+var StatusBar              = null;
+var RealPlayerStyle        = null;
+var ControlPanelStyle      = null;
+var StatusBarStyle         = null;
+
+%SMIL_JS_VAR_DECL%
+
+
+/* ------------------------------------------------------------------------
+ * Init: initialize media player
+ * ------------------------------------------------------------------------ */
+
+function delayedInitCheck1()
+{
+  InitImageStyle.visibility = "visible";
+
+  // tryouts (waiting time) depend on clips: 5 sec + 1 sec per clip 
+  var maxTryouts = 25 + (5 * numOfClips);
+  
+  // all players available?
+  var bPlayersReady = mediaPlayersLoaded();
+  if (!bPlayersReady && tryouts < maxTryouts)
+  {
+    tryouts++;
+    setTimeout("delayedInit()", 200);
+  }
+  else if (tryouts == maxTryouts)
+  {
+    var messageText = "%PLAYER_NOT_READY%";
+    messageText += "%PLAYER_NOT_READY_2%";
+    alert(messageText);
+    InitImageStyle.visibility = "hidden";
+  }
+  else
+  {
+    initPlayerFinished = true;
+    InitImageStyle.visibility = "hidden";
+  }
+  return;
+}
+
+function delayedInitCheck2()
+{
+  refreshMediaPlayer();
+}
+
+function mediaPlayersLoaded()
+{
+  if (isClipsSeparated && numOfClips > 0)
+  {
+    return getHtmlObject("viewframe", ("ClipLayer"+(numOfClips-1)), ("ClipImageWindow"+(numOfClips-1))) != null;
+  }
+  else
+  {
+    return getHtmlObject("videoframe", "ImageWindowLayer", "PlayerImageWindow") != null;
+  }
+}
+
+function determineMediaPlayers()
+{
+  MediaPlayer1 = getHtmlObject("videoframe", "ImageWindowLayer", "PlayerImageWindow");
+  ControlPanel = getHtmlObject("videoframe", "ControlPanelLayer", "PlayerControlPanel");
+  StatusBar    = getHtmlObject("videoframe", "StatusBarLayer", "PlayerStatusBar");
+  %SMIL_CLIPPLAYER_DEF%
+}
+
+function determinePlayerObjectStyles()
+{
+  RealPlayerStyle   = getHtmlObject("videoframe", "ImageWindowLayer", "PlayerImageWindow", true, true);
+  ControlPanelStyle = getHtmlObject("videoframe", "ControlPanelLayer", "PlayerControlPanel", true, true);
+  StatusBarStyle    = getHtmlObject("videoframe", "StatusBarLayer", "PlayerStatusBar", true, true);
+  %SMIL_CLIPPLAYERSTYLE_DEF%
+}
+
+function getWMControlsHeight()
+{
+  // this is only important for Windows Media Player
+  return 0;
+}
+
+%SMIL_JS_FUNCTION_DEF%
+
+/* ------------------------------------------------------------------------
+ * Part for Dynamic Frames
+ * ----------------------------------------------------------------------- */
+function resizeMediaPlayer(frameWidth, frameHeight)
+{
+  if (frameWidth < 120)
+    return;
+  if (frameHeight < 140)
+    return;
+  
+  var maxPlayerWidth = frameWidth - 40;
+  var maxPlayerHeight = frameHeight - 82;
+  var tempPlayerHeight = (aspectRatioVideo > 0) ? (maxPlayerWidth / aspectRatioVideo) : 1;
+
+  // Netscape 4.x: width and height can not be changed dynamically
+  if ((!isNS4) && (isScalable == true))
+  {
+    if (tempPlayerHeight > maxPlayerHeight)
+    {
+      if ( (videoType == TYPE_NOVIDEO) || (videoType == TYPE_STILLIMAGE) )
+      {
+        MediaPlayer1.height = 1;
+        MediaPlayer1.width = (maxPlayerHeight * aspectRatioVideo);
+      }
+      else
+      {
+        MediaPlayer1.height = maxPlayerHeight;
+        MediaPlayer1.width = (MediaPlayer1.height * aspectRatioVideo);
+      }
+    }
+    else
+    {
+      MediaPlayer1.width = maxPlayerWidth;
+      if ( (videoType == TYPE_NOVIDEO) || (videoType == TYPE_STILLIMAGE) )
+        MediaPlayer1.height = 1;
+      else
+        MediaPlayer1.height = (aspectRatioVideo > 0) ? (MediaPlayer1.width / aspectRatioVideo) : 1;
+    }
+    moveHtmlObjectToY(RealPlayerStyle, frameHeight - MediaPlayer1.height - 70);
+    moveHtmlObjectToY(ControlPanelStyle, frameHeight - 70);
+    moveHtmlObjectToY(StatusBarStyle, frameHeight - 40);
+      
+    if ( (videoType == TYPE_NOVIDEO) || (videoType == TYPE_STILLIMAGE) )
+    {
+      var availableWidth = frameWidth - 40;
+      var availableHeight = frameHeight - 80;
+      var scale = Math.min(availableWidth/StillimageWidth, availableHeight/StillimageHeight);
+      if (scale > 1.0)
+         scale = 1.0;
+      StillimageImage.width = scale * StillimageWidth;
+      StillimageImage.height = scale * StillimageHeight;
+      if (videoType == TYPE_STILLIMAGE && StillimageHeight <= 240)
+      {
+        var stillimageOffsetHeight = scale * (120 + (0.5 * StillimageHeight));
+        moveHtmlObjectToY(StillimageStyle, frameHeight - stillimageOffsetHeight - 70);
+      }
+      else
+      {
+        moveHtmlObjectToY(StillimageStyle, frameHeight - StillimageImage.height - 70);
+      }
+      moveHtmlObjectToX(StillimageStyle, 20 + parseInt(0.5 * (MediaPlayer1.width - StillimageImage.width)));
+    }
+    
+    if ( (videoType == TYPE_NOVIDEO) 
+      || (videoType == TYPE_VIDEO) && (hasMetadataTable) )
+      moveHtmlObjectToY(TableMetadataStyle, frameHeight - 105);
+    
+    // Resize status bar and control panel
+    ControlPanel.width = MediaPlayer1.width;
+    StatusBar.width = MediaPlayer1.width;
+    
+    refreshMediaPlayer();
+  }
+}
+
+function refreshMediaPlayer()
+{
+  if (isNS4 || document.all)
+  {
+    return;
+  }
+  else
+  {
+    // In Netscape 7.1 and Mozilla the RealPlayer seems 
+    // to be not painted correctly upon start ==> enforce repaint
+    RealPlayerStyle.visibility = "hidden";
+    ControlPanelStyle.visibility = "hidden";
+    StatusBarStyle.visibility = "hidden";
+    window.setTimeout("showMediaPlayer()", 100);
+  }
+}
+
+function showMediaPlayer()
+{
+  RealPlayerStyle.visibility = "visible";
+  ControlPanelStyle.visibility = "visible";
+  StatusBarStyle.visibility = "visible";
+}
+
+
+/* ------------------------------------------------------------------------
+ * Media Player Interfaces
+ * ------------------------------------------------------------------------ */
+
+function doPlay(Player)
+{
+  Player.DoPlay();
+}
+
+function doPause(Player)
+{
+  Player.DoPause();
+}
+
+function doStop(Player)
+{
+  Player.DoStop();
+}
+
+function setPosition(Player, milliseconds)
+{
+  Player.SetPosition(milliseconds);
+}
+
+function getPosition(Player)
+{
+  // return position in milliseconds
+  return Player.GetPosition();
+}
+
+function getPlayState(Player)
+{
+  return Player.GetPlayState();
+}
+
+function isStopped(Player)
+{
+  return (getPlayState(Player) == 0);
+}
+
+function isContacting(Player)
+{
+  return (getPlayState(Player) == 1);
+}
+
+function isBuffering(Player)
+{
+  return (getPlayState(Player) == 2);
+}
+
+function isPlaying(Player)
+{
+  return (getPlayState(Player) == 3);
+}
+
+function isPaused(Player)
+{
+  return (getPlayState(Player) == 4);
+}
+
+function isSeeking(Player)
+{
+  return (getPlayState(Player) == 5);
+}
+
+function isWaiting(Player)
+{
+  // not implemented ==> Windows Media
+  return false;
+}
+
+function isScanningForward(Player)
+{
+  // not implemented ==> Windows Media
+  return false;
+}
+
+function isScanningReverse(Player)
+{
+  // not implemented ==> Windows Media
+  return false;
+}
+
+function isNext(Player)
+{
+  // not implemented ==> Windows Media
+  return false;
+}
+
+function isPrevious(Player)
+{
+  // not implemented ==> Windows Media
+  return false;
+}
+
+function isClosed(Player)
+{
+  // not implemented ==> Windows Media
+  return false;
+}
+
+
+/* ------------------------------------------------------------------------
+ * Other stuff
+ * ------------------------------------------------------------------------ */
+function closePopups()
+{
+  // not implemented --> Windows Media
+  // do nothing
+}

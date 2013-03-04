@@ -1,0 +1,696 @@
+button_setImageDir("images/");
+button_prepareButton("layouthome", "layout_onHome()", "button_bw_start.png", "button_bw_start_f2.png", "button_bw_start_f3.png", "button_bw_start_f4.png", false, "%JumpToBegin%");
+button_prepareButton("layoutback", "layout_onBack()", "button_bw.png", "button_bw_f2.png", "button_bw_f3.png", "button_bw_f4.png", false, "%SlideBackwards%");
+button_prepareButton("layoutplay", "layout_onPlayPause()", "button_play.png", "button_play_f2.png", "button_play_f3.png", "button_play_f4.png", false, "%StartReplayPause%");
+button_addButtonState("layoutplay", "1", "button_pause.png", "button_pause_f2.png", "button_pause_f3.png", "button_pause_f4.png", false);
+button_prepareButton("layoutforward", "layout_onForward()", "button_ffw.png", "button_ffw_f2.png", "button_ffw_f3.png", "button_ffw_f4.png", false, "%SlideForward%");
+button_prepareButton("layoutend", "layout_onEnd()", "button_ffw_end.png", "button_ffw_end_f2.png", "button_ffw_end_f3.png", "button_ffw_end_f4.png", false, "%JumpToEnd%");
+button_prepareButton("layoutmute", "layout_onMute()", "button_volume_f3.png", "button_volume_f2.png", "button_volume.png", "button_volume_f4.png", true, "%SoundOnOff%");
+button_addButtonState("layoutmute", "1", "button_volume.png", "button_volume_f2.png", "button_volume_f3.png", "button_volume_f4.png", false);
+
+var g_playerHeight = 88;
+var g_minHeaderWidth = 320;
+var g_minHeaderHeight = 130;
+var g_minThumbsHeight = 70;
+var g_slidesOffset = 0;
+var g_currentDate = 0;
+
+// States of 'standard navigation':
+// 0: enabled; 1: disabled; 2: hidden
+var g_layoutNavigationControlBar        = %NavigationControlBar%;
+var g_layoutNavigationStandardButtons   = %NavigationStandardButtons%;
+var g_layoutNavigationTimeLine          = %NavigationTimeLine%;
+var g_layoutNavigationTimeDisplay       = %NavigationTimeDisplay%;
+var g_layoutNavigationDocumentStructure = 0;
+// 0: visible; 1: hidden
+var g_layoutLecturnityWebPlayerLogo     = %LecturnityWebPlayerLogo%;
+
+var g_overviewOffset = 150;
+
+var timeSlider = null;
+var volumeSlider = null;
+//var playerButton = null;
+
+// Variables for the layout
+var headerWidth = -1;
+var headerHeight = -1;
+var thumbsWidth = -1;
+var thumbsHeight = -1;
+var videoWidth = -1;
+var videoHeight = -1;
+var slidesWidth = -1;
+var slidesHeight = -1;
+var playerWidth = -1;
+var playerHeight = 88;
+
+var g_hasWarnedNS4 = false;
+var g_isSliding = false;
+var g_wasPlaying = false;
+
+var g_timeLabel = null;
+var g_statusLabel = null;
+var g_statusLabelDisplay = null;
+var g_lastDisplayedTimeMs = -1000;
+var g_layoutIgnoreTimeChange = false;
+
+var isIE = false;
+
+if (document.all)
+  isIE = true;
+      
+function s(id)
+{
+  if (isNS4)
+    return eval('document.' + id);
+  else
+    return document.getElementById(id).style;
+}
+
+function o(id)
+{
+  if (isNS4)
+    return s(id);
+  return document.getElementById(id);
+}
+
+function d_s(documentName, id)
+{
+  if (isNS4)
+    return eval(documentName + '.document.' + id);
+  else
+    return eval(documentName + '.document.getElementById("' + id + '").style');
+}
+
+function d_o(documentName, id)
+{
+  if (isNS4)
+    return d_s(documentName, id);
+  return eval(documentName + '.document.getElementById("' + id + '")');
+}
+
+function layout_checkDelayedPlaystate()
+{
+  var bSpecialTimestampIsStopmark = slides_specialTimestampIsStopmark(g_lastPositionMs);
+  if (g_wasPlaying && !control_isPlayerPlaying(control_getMasterPlayer()) && !bSpecialTimestampIsStopmark)
+    control_play();
+}
+
+function layout_onPlayPause()
+{
+  control_playPause();
+  g_wasPlaying = !g_wasPlaying;
+}
+
+function layout_onPlay()
+{
+  control_play();
+  g_wasPlaying = true;
+}
+
+function layout_onPause()
+{
+  control_pause();
+  g_wasPlaying = false;
+}
+
+function layout_onMute(playState)
+{
+  control_mute();
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  //setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onMuteOn(playState)
+{
+  control_muteOn();
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  //setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onMuteOff(playState)
+{
+  control_muteOff();
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  //setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onHome(playState)
+{
+  control_seekTime(0);
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onBack(playState)
+{
+  var currentSlide = layout_getCurrentSlide();
+  if (currentSlide > 0)
+    control_seekTime(g_thumbEntries[currentSlide - 1].timeStamp);
+  else
+    layout_onHome();
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onEnd(playState)
+{
+  control_seekTime(g_mediaDurations[0]-1);
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onForward(playState)
+{
+  var currentSlide = layout_getCurrentSlide();
+  if (currentSlide < g_thumbCount - 1)
+    control_seekTime(g_thumbEntries[currentSlide + 1].timeStamp);
+  else
+    layout_onEnd();
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onGotoSlide(slideNumber, playState)
+{
+  control_seekTime(g_thumbEntries[slideNumber].timeStamp);
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onGotoTargetmark(idTarget, playState)
+{
+  control_seekTime(g_targetmarkTimes[idTarget]);
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onGotoTimestamp(timeMs, playState)
+{
+  control_seekTime(timeMs);
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onGotoTimestampR(timeMs, playState)
+{
+    g_JumpRandomTimestamp = timeMs;
+  control_seekTime(timeMs);
+   
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onGotoQuestion()
+{
+    if(g_bAllQuestionsAnswered)
+        return;
+    layout_onGotoTimestampR(g_JumpRandomTimestamp, 'play');
+}
+
+function layout_onOpenUrl(url, playState)
+{
+  var currentDate = new Date().getTime(); 
+  if (currentDate - g_currentDate < 1000)
+    return;
+  
+  g_currentDate = currentDate;
+  
+  window.open(url, "_blank");
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  //setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onOpenFile(filename, playState)
+{
+  var currentDate = new Date().getTime(); 
+  if (currentDate - g_currentDate < 1000)
+    return;
+  
+  g_currentDate = currentDate;
+  
+  window.open(filename, "_blank");
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  //setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onResetQuestion(pageNumber)
+{
+  testing_resetQuestion(pageNumber);
+}
+
+function layout_onSubmitAnswer(pageNumber)
+{
+  if (control_isPlaying())
+    control_pause();
+  testing_submitAnswer(pageNumber);
+}
+
+function layout_onResetQuestionnaire(pageNumber)
+{
+  testing_resetQuestionnaire(pageNumber);
+}
+
+function layout_onSubmitTesting(pageNumber)
+{
+  if (control_isPlaying())
+    control_pause();
+  testing_submitTesting(pageNumber);
+}
+
+function layout_onClose()
+{
+  top.window.close();
+}
+
+function layout_onDoNothing()
+{
+  return;
+}
+
+function layout_getStatusLabel()
+{
+  if (g_statusLabel == null)
+    g_statusLabel = getHtmlObject('', 'BufferLabel', '', false, true);
+  return g_statusLabel;
+}
+
+function layout_displayIsBuffering(bDisplay, bufferingProgress)
+{
+  var statusDiv = layout_getStatusLabel();
+  if (bDisplay)
+  {
+    if (bufferingProgress >= 0)
+      statusDiv.innerHTML = '%Buffering%: ' + bufferingProgress + '%';
+    else
+      statusDiv.innerHTML = 'Status: %Buffering%';
+  }
+  else
+    statusDiv.innerHTML = '';
+
+  g_statusLabelDisplay = bDisplay;
+}
+
+function layout_displayIsDownloading(bDisplay)
+{
+  var statusDiv = layout_getStatusLabel();
+  if (bDisplay)
+    statusDiv.innerHTML = '%WmProgressiveDownloadStatus%';
+  else
+    statusDiv.innerHTML = '';
+}
+
+function layout_getSlide(timeMs)
+{
+  var slideNr = -1;
+  for (var i=0; i<g_thumbCount-1; ++i)
+  {
+    if ((timeMs >= g_thumbEntries[i].timeStamp &&
+        timeMs < g_thumbEntries[i+1].timeStamp) ||
+	  (i == 0 && timeMs < g_thumbEntries[i+1].timeStamp))
+      slideNr = i;
+  }
+  if (slideNr == -1)
+    slideNr = g_thumbCount-1;
+  return slideNr;
+}
+
+function layout_getCurrentSlide()
+{
+  var timeMs = control_getTimeMs();
+  return layout_getSlide(timeMs);
+}
+
+function layoutInit()
+{
+  setSlidesNS4Prefix('document.layers["slidesDiv"].');
+
+  if (!isNS4)
+  {
+    // delete the overview listbox; it's only used in netscape 4
+    if (document.getElementById('OverviewList'))
+      document.getElementById('OverviewList').innerHTML = '';
+
+    timeSlider = new LSlider('timeSlider');
+    timeSlider.attachOnChange(layout_onTimeChange);
+    timeSlider.attachOnSlideStart(layout_onSlideStart);
+    timeSlider.attachOnSlideEnd(layout_onSlideEnd);
+    timeSlider.width         = 320;
+    timeSlider.height        = 25;
+    timeSlider.minVal        = 0;
+    timeSlider.maxVal        = g_mediaDurations[0];
+    timeSlider.valueDefault  = 0;
+    timeSlider.valueInterval = 1000;
+    timeSlider.imgDir = '';
+    timeSlider.setBackgroundImage('images/playersliderbg.jpg', 'repeat');
+    timeSlider.setSliderIcon('images/sliderknob.png', 14, 25);
+    timeSlider.useInputField = 0;
+    timeSlider.draw('timeSliderDiv');
+    
+    volumeSlider = new LSlider('volumeSlider');
+    volumeSlider.attachOnChange(layout_onVolumeChange);
+    volumeSlider.width = 92;
+    volumeSlider.height = 38;
+    volumeSlider.minVal = 0;
+    volumeSlider.maxVal = 100;
+    volumeSlider.valueDefault = control_getVolume();
+    try
+    {
+      // This may fail in some cases; wrap in a try... catch-block
+      // just to be sure.
+      volumeSlider.valueDefault = control_getVolume();
+    }
+    catch (er)
+    {
+      volumeSlider.valueDefault = 50;
+    }
+    volumeSlider.valueInterval = 1;
+    volumeSlider.imgDir = 'images/';
+    volumeSlider.setBackgroundImage('player_volume.png', 'no-repeat');
+    volumeSlider.setSliderIcon('volumeknob.png', 14, 15);
+    volumeSlider.useInputField = 0;
+    volumeSlider.draw('volumeSliderDiv');
+    
+    if (!g_isStandaloneMode && o('thumbsframe') != null)
+      s('thumbsFrame').visibility = 'visible';
+
+    resizeLayout();
+  }
+
+  layout_enableControl("home", true);
+  layout_enableControl("back", true);
+  layout_enableControl("forward", true);
+  layout_enableControl("end", true);
+  layout_updateTime(0);
+}
+
+function layout_onSlideStart(obj)
+{
+  g_isSliding = true;
+  control_beginSlide();
+}
+
+function layout_onSlideEnd(obj)
+{
+  g_isSliding = false;
+  control_endSlide();
+}
+
+function layout_onTimeChange(obj)
+{
+  if (g_isSliding || (!g_isSliding && !g_layoutIgnoreTimeChange))
+    control_seekTime(obj.getValue());
+}
+
+function layout_onVolumeChange(obj)
+{
+  control_setVolume(obj.getValue());
+}
+
+function calcSizes(width, height)
+{
+  // We want to match width x height as good as possible
+
+  // First, the heights
+  playerHeight = 88;
+  slidesHeight = height - 88;
+  if (slidesHeight < g_slidesHeight + 20)
+    slidesHeight = g_slidesHeight + 20; // Smaller than minimum height
+  
+  headerHeight = g_minHeaderHeight;
+  var statusbarHeight = %StatusbarHeight%;
+  if (g_hasVideo)
+    videoHeight = g_videoHeight + 14 + statusbarHeight; // border is 14
+  else
+    videoHeight  = g_stillImageHeight + 7 + 14 + statusbarHeight; // 1 + 14 + statusbarHeight
+  
+  thumbsHeight = slidesHeight - headerHeight - videoHeight;
+  if (thumbsHeight < g_minThumbsHeight)
+  {
+    // Thumbs stretch the slides in height
+    thumbsHeight = g_minThumbsHeight;
+    slidesHeight = headerHeight + videoHeight + thumbsHeight;
+  }
+
+  // Now, the widths; this is more tricky
+  // We're going from left to right
+  headerWidth = g_minHeaderWidth;
+  if (g_hasVideo && headerWidth < g_videoWidth + 18)
+    headerWidth = g_videoWidth + 18;
+  if (g_hasStillImage && headerWidth < g_stillImageWidth + 18)
+    headerWidth = g_stillImageWidth + 18;
+  thumbsWidth = headerWidth;
+  videoWidth = headerWidth;
+
+  slidesWidth = g_slidesWidth + 30;
+  if (slidesWidth < width - headerWidth)
+    slidesWidth = width - headerWidth;
+
+  playerWidth = slidesWidth + headerWidth;
+
+  if (o('thumbsFrame') == null)
+  {
+    playerWidth = g_slidesWidth + 23;
+    if (playerWidth < 540)
+      playerWidth = 540;
+  }
+  if (g_isStandaloneMode)
+  {
+    playerWidth = g_videoWidth + 33;
+    if (playerWidth < 540)
+      playerWidth = 540;
+  }
+}
+
+function resizeLayout()
+{
+  layout_checkStandardNavigation();
+  
+  if (isNS4)
+  {
+    if (!g_hasWarnedNS4)
+      alert("%NetscapeResizeWarning%");
+    g_hasWarnedNS4 = true;
+    return;
+  }
+
+  var width; 
+  if (!isIE)
+    width = window.innerWidth - 40;
+  else
+    width = document.body.offsetWidth - 45;
+  var height;
+  if (!isIE)
+    height = window.innerHeight - 45;
+  else
+    height = document.body.offsetHeight - 35;
+
+  calcSizes(width, height);
+
+  g_slidesOffset = 10 + 7; // padding + border of slides
+  
+  if (g_slidesWidth < (540-23))
+    slidesOffset = 10 + (0.5 * ((530) - g_slidesWidth));
+
+  s('playerwidth').width = playerWidth - 529;
+  var tmpValue = timeSlider.getValue();
+  timeSlider.width = playerWidth - 304;
+  timeSlider.render('timeSliderDiv');
+  timeSlider.setValue(tmpValue);
+
+  for (var i=0; i<g_interactionEntries.length; ++i)
+  {
+    s(''+ g_interactionEntries[i].strId +'Layer').left = g_interactionEntries[i].x + layout_getSlidesLeft();
+    s(''+ g_interactionEntries[i].strId +'Layer').top = g_interactionEntries[i].y + layout_getSlidesTop();
+  }
+  var protectiveImg = o('protectiveImg');
+  if (protectiveImg)
+  {
+    protectiveImg.width = g_slidesWidth;
+    protectiveImg.height = g_slidesHeight;
+    s('protectiveLayer').left = layout_getSlidesLeft();
+    s('protectiveLayer').top = layout_getSlidesTop();
+  }
+
+  if (g_isStandaloneMode || o('thumbsFrame') == null)
+    return;
+  
+  s('headerwidth').width = headerWidth - 101;
+  s('headerheight').height = headerHeight - 20;
+  if (o('thumbswidth') != null)
+    s('thumbswidth').width = thumbsWidth - 98;
+  if (o('thumbsheight') != null)
+    s('thumbsheight').height = thumbsHeight - 14;
+  s('slideswidth').width = slidesWidth - 30;
+  s('slidesheight').height = slidesHeight - 20 + 2; // padding of header cells
+
+  s('videowidth').width = videoWidth - 98;
+  s('videoheight').height = videoHeight - 14;
+
+  if (o('thumbsFrame') != null)
+  {
+    s('thumbsFrame').width = thumbsWidth - 14;
+    s('thumbsFrame').height = thumbsHeight - 16;
+  }
+}
+
+// PlugIn Detection
+function detectPlugins()
+{
+  if (canDetectPlugins())
+  {
+    if (!%DetectRmOrWm%)
+      alert("%PluginRmWmNotDetected%");
+  }
+  else
+    alert("%PluginsCantBeDetected%");
+}
+
+function layout_checkStandardNavigation()
+{
+  if (g_layoutNavigationControlBar > 0)
+  {
+    g_layoutNavigationStandardButtons = g_layoutNavigationControlBar;
+    g_layoutNavigationTimeLine        = g_layoutNavigationControlBar;
+    g_layoutNavigationTimeDisplay     = g_layoutNavigationControlBar;
+
+    if (g_layoutNavigationControlBar == 2)
+      s('player').visibility = 'hidden';
+  }
+  
+  if (g_layoutNavigationStandardButtons > 0)
+  {
+    layout_enableControl("play", false);
+    layout_enableControl("end", false);
+    layout_enableControl("home", false);
+    layout_enableControl("back", false);
+    layout_enableControl("forward", false);
+
+    if (g_layoutNavigationStandardButtons == 2)
+    {
+      s('playButtonDiv').visibility ='hidden';
+      s('endButtonDiv').visibility ='hidden';
+      s('homeButtonDiv').visibility ='hidden';
+      s('backButtonDiv').visibility ='hidden';
+      s('forwardButtonDiv').visibility ='hidden';
+
+      o('player0_0').src = "images/player0_0_2.png";
+      o('player0_1').src = "images/player0_1_2.png";
+      o('player1_2').src = "images/player1_2_2.png";
+      o('player4_2').src = "images/player4_2_2.png";
+      o('player4_3').src = "images/player4_3_2.png";
+      if (g_layoutNavigationTimeDisplay == 2)
+      {
+        o('player0_3').src = "images/player0_3_22.png";
+        o('player7_2').src = "images/player7_2_22.png";
+        s('timefield').backgroundImage = "url(images/player_timefield_22.png)";
+      }
+      else
+      {
+        o('player0_3').src = "images/player0_3_20.png";
+        o('player7_2').src = "images/player7_2_20.png";
+        s('timefield').backgroundImage = "url(images/player_timefield_20.png)";
+      }
+    }
+  }
+  
+  if (g_layoutNavigationTimeLine > 0)
+  {
+    timeSlider.setSliderIcon('images/sliderknob_f4.png', 14, 25);
+    timeSlider.setBackgroundImage('images/trans.gif', 'no-repeat');
+    timeSlider.setDisabled();
+
+    if (g_layoutNavigationTimeLine == 2)
+    {
+      o('slidercellLeft').src = "images/player10_0_20.png";
+      s('slidercell').backgroundImage = "url(images/player_slider_bg_2.png)";
+      o('slidercellRight').src = "images/player13_0_2.png";
+      timeSlider.setSliderIcon('images/trans.gif', 14, 25);
+    }
+  }
+  
+  if (g_layoutNavigationTimeDisplay > 0)
+  {
+    s('TimeLabel').visibility ='hidden';
+    s('BufferLabel').visibility ='hidden';
+
+    if (g_layoutNavigationTimeDisplay == 2)
+    {
+      s('bufferfield').backgroundImage = "url(images/player11_1_2.png)";
+      if (g_layoutNavigationTimeLine == 2)
+        o('slidercellLeft').src = "images/player10_0_22.png";
+      else
+        o('slidercellLeft').src = "images/player10_0_02.png";
+      if (g_layoutNavigationStandardButtons == 2)
+      {
+        o('player0_3').src = "images/player0_3_22.png";
+        o('player7_2').src = "images/player7_2_22.png";
+        s('timefield').backgroundImage = "url(images/player_timefield_22.png)";
+      }
+      else
+      {
+        o('player0_3').src = "images/player0_3_02.png";
+        o('player7_2').src = "images/player7_2_02.png";
+        s('timefield').backgroundImage = "url(images/player_timefield_02.png)";
+      }
+    }
+  }
+}
+
+function layout_addWebPlayerLogo()
+{
+  if (g_layoutLecturnityWebPlayerLogo > 0)
+    document.writeln('<div id="LecWebPlayerLogo" style="position:relative;top:-82px;left:6px;width:1px;height:1px;"><img src="images/trans.gif" alt="" border="0"></div>');
+  else
+    document.writeln('<div id="LecWebPlayerLogo" style="position:relative;top:-82px;left:6px;width:58px;height:24px;"><a href="%LecturnityLink%" target="_blank"><img src="images/webplayer_logo.png" alt="" border="0"></a></div>');
+}

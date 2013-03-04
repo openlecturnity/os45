@@ -1,0 +1,79 @@
+<!-- LECTURNITY version 1.6.1 -->
+
+<html>
+  <head>
+    <title>%AUTHOR%: %TITLE%</title>
+    <style type="text/css">
+      #TableVideoviewLayer {position:absolute; left:%E_TABLE_VIDEOVIEW_LEFT%; top:%E_TABLE_VIDEOVIEW_TOP%; z-index:2; visibility:visible}
+      #ImageWindowLayer {position:absolute; left:%E_RM_PLAYER1_LEFT%; top:%E_RM_PLAYER1_TOP%; z-index:2; visibility:visible}
+      #StatusBarLayer {position:absolute; left:%E_STATUSBAR_LEFT%; top:%E_STATUSBAR_TOP%; z-index:2; visibility:visible}
+      #ControlPanelLayer {position:absolute; left:%E_CONTROLPANEL_LEFT%; top:%E_CONTROLPANEL_TOP%; z-index:2; visibility:visible}
+      #TableMetadataLayer {position:absolute; left:%E_TABLE_METADATA_LEFT%; top:%E_TABLE_METADATA_TOP%; z-index:3; visibility:visible}
+      #StillimageLayer {position:absolute; left:%E_STILLIMAGE_LEFT%; top:%E_STILLIMAGE_TOP%; z-index:3; visibility:visible}
+    </style>
+
+    <script language="JavaScript" type="text/javascript" src="control_all.js"></script>
+    <script language="JavaScript" type="text/javascript" src="control_rm.js"></script>
+    
+    <script language="JavaScript" type="text/javascript">
+    <!--
+      if ((navigator.appName=="Netscape") && (parseFloat(navigator.appVersion.substring(0,4))<5.0) )
+      {
+        document.open();
+        document.writeln('<link rel="stylesheet" href="imcns.css">');
+      }
+      else
+      {
+        document.open();
+        document.writeln('<link rel="stylesheet" href="imc.css">');
+      }
+      document.close();
+    //-->
+    </script>
+
+  </head>
+   
+  <body style="background-color:%BACKGROUND_COLOR%;margin:0px;"
+        onLoad="window.setTimeout('init()', 1000)">
+         
+    %TABLE_VIDEOVIEW% 
+    %TABLE_STILL_IMAGE%
+
+    <div id="ImageWindowLayer">
+      <embed name="PlayerImageWindow" 
+             width="%VIDEO_WIDTH%" 
+             height="%VIDEO_HEIGHT%" 
+             type="audio/x-pn-realaudio-plugin" 
+             %VIDEO_REGION% 
+             console="one" 
+             controls="ImageWindow" 
+             autostart="false" 
+             nojava="false" 
+             src="%RM_FILE%" 
+             alt=""></div>
+
+    <div id="StatusBarLayer">
+      <embed name="PlayerStatusBar" 
+             width="%REALPLAYER_WIDTH%" 
+             height="%REALPLAYER_HEIGHT%" 
+             type="audio/x-pn-realaudio-plugin" 
+             console="one" 
+             controls="StatusBar" 
+             autostart="false" 
+             nojava="false" 
+             alt=""></div>
+
+    <div id="ControlPanelLayer">
+      <embed name="PlayerControlPanel" 
+             width="%REALPLAYER_WIDTH%" 
+             height="%REALPLAYER_HEIGHT%" 
+             type="audio/x-pn-realaudio-plugin" 
+             console="one" 
+             controls="ControlPanel" 
+             autostart="false" 
+             nojava="false" 
+             alt=""></div>
+
+  </body>
+
+</html>

@@ -1,0 +1,96 @@
+<!-- LECTURNITY version 1.6.1 -->
+
+<html>
+  <head>
+    <title>%AUTHOR%: %TITLE%</title>
+    <style type="text/css">
+      #TableVideoviewLayer {position:absolute; left:%E_TABLE_VIDEOVIEW_LEFT%; top:%E_TABLE_VIDEOVIEW_TOP%; z-index:2; visibility:visible}
+      #WmPlayerLayer {position:absolute; left:%E_WM_PLAYER1_LEFT%; top:%E_WM_PLAYER1_TOP%; z-index:2; visibility:visible} 
+      #TableMetadataLayer {position:absolute; left:%E_TABLE_METADATA_LEFT%; top:%E_TABLE_METADATA_TOP%; z-index:3; visibility:visible}
+      #StillimageLayer {position:absolute; left:%E_STILLIMAGE_LEFT%; top:%E_STILLIMAGE_TOP%; z-index:3; visibility:visible}
+    </style>
+
+    <script language="JavaScript" type="text/javascript" src="control_all.js"></script>
+    <script language="JavaScript" type="text/javascript" src="control_wm.js"></script>
+    
+    <script language="JavaScript" type="text/javascript">
+    <!--
+      if ((navigator.appName=="Netscape") && (parseFloat(navigator.appVersion.substring(0,4))<5.0) )
+      {
+        document.open();
+        document.writeln('<link rel="stylesheet" href="imcns.css">');
+      }
+      else
+      {
+        document.open();
+        document.writeln('<link rel="stylesheet" href="imc.css">');
+      }
+      document.close();
+    //-->
+    </script>
+
+  </head>
+   
+  <body style="background-color:%BACKGROUND_COLOR%;margin:0px;"
+        onLoad="window.setTimeout('init()', 1000)" 
+        onUnload="closePopups()">
+         
+    %TABLE_VIDEOVIEW% 
+    %TABLE_STILL_IMAGE%
+
+    <img id="Spacer1" src="trans.gif" width="1" height="%E_WM_PLAYER1_TOP%"><br> 
+    <nobr>
+      <script language="JavaScript" type="text/javascript">
+      <!--
+        if ((navigator.appName=="Netscape") && (parseFloat(navigator.appVersion.substring(0,4))<5.0) )
+        {
+          document.open();
+          document.writeln('<img id="Spacer2" src="trans.gif" width="%E_WM_PLAYER1_LEFT2%" height="1">');
+        }
+        else
+        {
+          document.open();
+          document.writeln('<img id="Spacer2" src="trans.gif" width="%E_WM_PLAYER1_LEFT%" height="1">');
+        }
+        document.close();
+      //-->
+      </script>
+      <object ID="MediaPlayer1" 
+              width="%WMPLAYER_WIDTH%" 
+              height="%WMPLAYER_HEIGHT%" 
+              classid="CLSID:22D6F312-B0F6-11D0-94AB-0080C74C7E95" 
+              codebase="http://activex.microsoft.com/activex/controls/mplayer/en/nsmp2inf.cab#Version=6,0,02,902" 
+              standby="%STANDBY%" 
+              type="application/x-oleobject"> 
+        <param name="FileName" value="%WM_FILE%"> 
+        <param name="ShowControls" value="True"> 
+        <param name="ShowStatusBar" value="True"> 
+        <param name="ShowCaptioning" value="False"> 
+        <param name="ShowPositionControls" value="True"> 
+        <param name="AutoSize" value="False"> 
+        <param name="AutoRewind" value="True"> 
+        <param name="AutoStart" value="False"> 
+        <param name="ClickToPlay" value="False"> 
+        <param name="TransparentAtStart" value="False"> 
+        <embed type="application/x-mplayer2" 
+               pluginspage="http://www.microsoft.com/windows/windowsmedia/download/plugin.asp" 
+               src="%WM_FILE%" 
+               name="MediaPlayer1" 
+               width="%WMPLAYER_WIDTH%" 
+               height="%WMPLAYER_HEIGHT%" 
+               ShowControls="-1" 
+               ShowPositionControls="-1" 
+               ShowStatusBar="-1" 
+               ShowCaptioning="0" 
+               AutoSize="0" 
+               AutoRewind="-1" 
+               AutoStart="0" 
+               ClickToPlay="0" 
+               TransparentAtStart="0"> 
+        </embed> 
+      </object> 
+    </nobr>
+
+  </body>
+
+</html>

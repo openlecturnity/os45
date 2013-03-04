@@ -1,0 +1,16 @@
+LIBRARY "ppt2lecturnity"
+
+EXPORTS
+	ConvertWMFtoPNG         @1
+	ConvertMetafile			@2
+	StartGdiplus			@3
+	ShutdownGdiplus			@4
+	RewritePng				@5
+	SaveMetafileAsPNG		@6
+	GetImageDimension		@7
+	CheckMetafile			@8
+	ExtractFontFamily		@9
+	FontSupportsString		@10
+	GetFontMetrics			@11
+	GetEMFDimension			@12
+	SaveMetafileAsPNGWithoutGrid @13

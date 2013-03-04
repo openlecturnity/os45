@@ -1,0 +1,82 @@
+<!-- LECTURNITY version 1.6.1 -->
+
+<html>
+  <head>
+    <title>%AUTHOR%: %TITLE%</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+    <meta name="author" content="%AUTHOR%">
+    <meta name="keywords" content="%KEYWORDS%">
+
+    <style type="text/css">
+      #TableLogoLayer {position:absolute; top:%E_TABLE_LOGO_TOP%; left:%E_TABLE_LOGO_LEFT%; z-index:2; visibility:visible} 
+      #ImageWindowLayer {position:absolute; top:%E_RM_PLAYER1_TOP%; left:%E_RM_PLAYER1_LEFT%; z-index:2; visibility:visible}
+      #StatusBarLayer {position:absolute; top:%E_STATUSBAR_TOP%; left:%E_STATUSBAR_LEFT%; z-index:2; visibility:visible}
+      #ControlPanelLayer {position:absolute; top:%E_CONTROLPANEL_TOP%; left:%E_CONTROLPANEL_LEFT%; z-index:2; visibility:visible}
+    </style>
+  </head>
+  
+  <body style="background-color:%BACKGROUND_COLOR%;margin:0px;">
+
+    <map name="imc_lecturnity">
+      <area shape="rect" coords="20,6,49,40" href="#" onClick="javascript:window.open('http://www.im-c.de','imc_AG')" alt="www.im-c.de">
+      <area shape="rect" coords="203,12,339,40" href="#" onClick="javascript:window.open('http://www.lecturnity.de','Lecturnity')" alt="www.lecturnity.de">
+    </map>
+
+    <div id="TableLogoLayer">
+      <table id="TableLogo" 
+             border="0" 
+             cellspacing="0" 
+             cellpadding="0">
+        <tr> 
+          <td>
+            <img src="logo_340.gif" 
+                 width="340" 
+                 height="42" 
+                 border="0" 
+                 alt="" 
+                 usemap="#imc_lecturnity"></td>
+        </tr>
+      </table>
+    </div>
+
+    <br>
+    
+    <div id="ImageWindowLayer">
+      <embed name="PlayerImageWindow" 
+             width="%VIDEO_WIDTH%" 
+             height="%VIDEO_HEIGHT%" 
+             type="audio/x-pn-realaudio-plugin" 
+             console="one" 
+             controls="ImageWindow" 
+             autostart="false" 
+             nojava="false" 
+             src="%RM_FILE%" 
+             alt="">
+    </div>
+
+    <div id="StatusBarLayer">
+      <embed name="PlayerStatusBar" 
+             width="%REALPLAYER_WIDTH%" 
+             height="%REALPLAYER_HEIGHT%" 
+             type="audio/x-pn-realaudio-plugin" 
+             console="one" 
+             controls="StatusBar" 
+             autostart="false" 
+             nojava="false" 
+             alt="">
+    </div>
+
+    <div id="ControlPanelLayer">
+      <embed name="PlayerControlPanel" 
+             width="%REALPLAYER_WIDTH%" 
+             height="%REALPLAYER_HEIGHT%" 
+             type="audio/x-pn-realaudio-plugin" 
+             console="one" 
+             controls="ControlPanel" 
+             autostart="false" 
+             nojava="false" 
+             alt="">
+    </div>
+
+  </body>
+</html>

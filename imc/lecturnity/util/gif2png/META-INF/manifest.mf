@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: imc.lecturnity.util.gif2png.DocumentUpdater
+Created-By: Martin Danielsson
+

@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ppt2lecturnity", "ppt2lecturnity.vcproj", "{EE86C076-8313-4703-933C-9B41CD119A4C}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D59530D8-8310-4295-B319-7399743FBD09} = {D59530D8-8310-4295-B319-7399743FBD09}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lutils", "..\..\..\lecturnity\common\lutils\lutils.vcproj", "{D59530D8-8310-4295-B319-7399743FBD09}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{EE86C076-8313-4703-933C-9B41CD119A4C}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EE86C076-8313-4703-933C-9B41CD119A4C}.Debug|Win32.Build.0 = Debug|Win32
+		{EE86C076-8313-4703-933C-9B41CD119A4C}.Release|Win32.ActiveCfg = Release|Win32
+		{EE86C076-8313-4703-933C-9B41CD119A4C}.Release|Win32.Build.0 = Release|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.Debug|Win32.Build.0 = Debug|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.Release|Win32.ActiveCfg = Release|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

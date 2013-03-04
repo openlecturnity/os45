@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Document Overview</title>
+
+    <style type="text/css">
+      <!--
+      body {
+        background-color: %InfoPanelBgColor%;
+        padding:0px;
+        margin:0px;
+      }
+
+      div.textdiv {
+        font-family: Arial,Helvetica,sans-serif;
+        font-size: 10px;
+        vertical-align: middle;
+        overflow:hidden;
+        text-overflow:ellipsis;
+        white-space:nowrap;
+      }
+
+      div.outer {
+        position:absolute;
+        border-style:solid;
+        border-width:1px;
+        border-color:%BorderColor%;
+        font-size:1px;
+        left:0px;
+        top:1px;
+        background-color:%InfoTabBgColor%;
+        z-index:6;
+      }
+
+      div.inner {
+        position:absolute;
+        border-style:solid;
+        border-width:1px;
+        border-color:%BorderColor%;
+        font-size:1px;
+        left:4px;
+        top:5px;
+        z-index:7;
+        background-color:%InfoPanelBgColor%;
+      }
+
+      a {
+        text-decoration: none;
+        color: %LinkColor%;
+      }
+
+      a:hover {
+        color: %LinkHoverColor%;
+      }
+      -->
+    </style>
+
+    <script type="text/javascript" language="JavaScript">
+      <!--
+      var isIE = false;
+      if (document.all)
+        isIE = true;
+
+      var g_currentThumb = '';
+      var g_activeThumbSlide = 0;
+      
+      function thumbs_displayThumb(thumbDiv)
+      {
+        g_currentThumb = thumbDiv;
+        setTimeout("thumbs_delayedDisplay('" + thumbDiv + "')", 100);
+      }
+      
+      function thumbs_delayedDisplay(thumbDiv)
+      {
+        if (g_currentThumb == thumbDiv)
+          document.getElementById(thumbDiv).style.visibility = 'visible';
+      }
+      
+      function thumbs_hideThumb(thumbDiv)
+      {
+        document.getElementById(thumbDiv).style.visibility = 'hidden';
+        g_currentThumb = '';
+      }
+      
+      function thumb_s(id)
+      {
+        return document.getElementById(id).style;
+      }
+      
+      function thumb_o(id)
+      {
+        return document.getElementById(id);
+      }
+      
+      function thumbs_activateSlide(slideNr)
+      {
+        if (slideNr == g_activeThumbSlide)
+          return;
+        
+        if (g_activeThumbSlide > 0)
+        { 
+          thumb_s('slideNr' + g_activeThumbSlide).backgroundColor = '%InfoPanelBgColor%';
+          thumb_s('slideImg' + g_activeThumbSlide).backgroundColor = '%InfoPanelBgColor%';
+          thumb_s('slideTitle' + g_activeThumbSlide).backgroundColor = '%InfoPanelBgColor%';
+          thumb_s('slideTime' + g_activeThumbSlide).backgroundColor = '%InfoPanelBgColor%';
+        }
+        
+        thumb_s('slideNr' + slideNr).backgroundColor = '%ActiveSlideBgColor%';
+        thumb_s('slideImg' + slideNr).backgroundColor = '%ActiveSlideBgColor%';
+        thumb_s('slideTitle' + slideNr).backgroundColor = '%ActiveSlideBgColor%';
+        thumb_s('slideTime' + slideNr).backgroundColor = '%ActiveSlideBgColor%';
+        
+        // Set Anchor
+        if (slideNr > 1)
+          parent.thumbsFrame.location.href = "__thumbs.html#slideAnchor" + (slideNr-1);
+        else
+          parent.thumbsFrame.location.href = "__thumbs.html#slideAnchor" + slideNr;
+        
+        g_activeThumbSlide = slideNr;
+      }
+      
+      function thumbs_jumpTo(slideNr)
+      {
+        parent.control_seekTime(parent.g_thumbEntries[slideNr-1].timeStamp);
+      }
+      
+      function thumbs_outputThumb(thumbNr)
+      {
+        var index = thumbNr - 1;
+        var ieOffset = isIE ? 0 : 2;
+        var playerWidth = Math.max(300, Math.max(%VideoWidth%, %StillImageWidth%));
+
+        document.writeln('<div id="overviewThumb' + thumbNr + '" style="position: absolute; top: ' + (index*25 + 5) + 'px; left: 3px;">');
+        
+        document.writeln('  <div id="slideDivisor' + thumbNr + '" class="textdiv" style="position: absolute; top: 0px; height: 3px; width: 260px; left: 0px; border: 0px;"><p style="margin: 0px; border: 0px; padding-left: 5px; padding-right: 5px; padding-top: 0px; text-align: right;"><a name="slideAnchor' + thumbNr + '"></a></p></div>');
+        document.writeln('  <div id="slideNr' + thumbNr + '" class="textdiv" style="position: absolute; top: 3px; height: 22px; width: 25px; left: 0px; border: 0px;"><p style="margin: 0px; border: 0px; padding-left: 5px; padding-right: 5px; padding-top: 4px; text-align: right;">' + thumbNr + '</p></div>');
+
+        // document.writeln('  <div id="slideImg' + thumbNr + '" class="textdiv" style="position: absolute; top: 3px; height: 22px; width: 30px; left: 25px; border: 0px; z-index: 5;" onMouseOver="javascript:thumbs_displayThumb(\'thumb' + thumbNr + '\');" onMouseOut="javascript:thumbs_hideThumb(\'thumb' + thumbNr + '\');"><p style="padding-top: 2px;"><a href="javascript:thumbs_jumpTo(' + thumbNr + ');"><img id="slideImgImg' + thumbNr + '" src="images/slide.png" border="0"></a></p></div>');
+        document.writeln('  <div id="slideImg' + thumbNr + '" class="textDiv" style="position:absolute; top:3px; height:22px; width:30px; left:25px; border: 0px; z-index: 5;" onMouseOver="javascript:thumbs_displayThumb(\'thumb' + thumbNr + '\');" onMouseOut="javascript:thumbs_hideThumb(\'thumb' + thumbNr + '\');"><p style="margin: 0px; border: 0px; padding: 0px;"><div class="outer" style="width:' + (23-ieOffset) + 'px; height:' + (19-ieOffset) + 'px;"></div><div class="inner" style="width:' + (15-ieOffset) + 'px; height:' + (11-ieOffset) + 'px;"></div></p></div>');
+
+        if (parent.g_layoutNavigationDocumentStructure == 0)
+          document.writeln('  <div id="slideTitle' + thumbNr + '" class="textdiv" style="position: absolute; top: 3px; height: 22px; width: ' + (playerWidth - 122) + 'px; left: 55px; border: 0px; z-index:2;"><p style="margin: 0px; border: 0px; padding-top: 4px;"><a href="javascript:thumbs_jumpTo(' + thumbNr + ');" title="' + parent.g_thumbEntries[index].fullTitle + '">' + parent.g_thumbEntries[index].fullTitle + '</a></div>');
+        else
+          document.writeln('  <div id="slideTitle' + thumbNr + '" class="textdiv" style="position: absolute; top: 3px; height: 22px; width: ' + (playerWidth - 122) + 'px; left: 55px; border: 0px; z-index:2;"><p style="margin: 0px; border: 0px; padding-top: 4px;">' + parent.g_thumbEntries[index].fullTitle + '</div>');
+        document.writeln('  <div id="slideTime' + thumbNr + '" class="textdiv" style="position: absolute; top: 3px; height: 22px; width: 42px; left: ' + (playerWidth - 67) + 'px; border: 0px; text-align: right;"><p style="margin: 0px; border: 0px; padding-top: 4px;">' + parent.msToTime(parent.g_thumbEntries[index].timeStamp) + '</p></div>');
+        
+        document.writeln('</div>');
+        
+        document.writeln('<div id="thumb' + thumbNr + '" style="position: absolute; top: ' + (index * 25 + 24) + 'px; left: 46px; visibility: hidden; border: 0px; z-index: 10;">');
+        document.writeln('  <div style="position: absolute; left: 0px; top: 0px;"><img src="images/bubble.gif"></div>');
+        document.writeln('  <div style="position: absolute; left: 7px; top: 6px;"><img src="slides/' + parent.g_thumbEntries[index].thumbUrl + '"></div>');
+        document.writeln('</div>');
+      }
+      // -->
+    </script>
+  </head>
+
+  <body>
+    <script type="text/javascript" language="JavaScript">
+      <!--
+      for (var i=1; i<parent.g_thumbCount + 1; ++i)
+      {
+        thumbs_outputThumb(i);
+      }
+      // -->
+    </script>
+  </body>
+</html>

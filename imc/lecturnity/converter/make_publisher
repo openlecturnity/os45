@@ -1,0 +1,142 @@
+#!/bin/bash
+
+IFS=$'\n'
+
+if test "$1" == "" ; then
+  echo "Benutzung: make_publisher <sandbox path> <version>"
+  exit
+fi
+if test "$2" == "" ; then
+  echo "Benutzung: make_publisher <version>"
+  echo "  Das publisher.jar und die zusaetzlichen Bibliotheken"
+  echo "  werden erstellt und anschliessend nach"
+  echo "    S:\Releases\Publisher\latest"
+  echo "  und"
+  echo "    S:\Releases\Publisher\<version>"
+  echo "  kopiert. Dabei wird auch make_publisher_libs.bat"
+  echo "  aufgerufen."
+  exit
+elif test -f $SANDBOX/make/error.txt ; then
+  echo "make_publisher: $SANDBOX""/make/error.txt existiert."
+  echo "  Bitte loeschen."
+  exit
+fi
+
+SANDBOX_WIN=$1
+echo "make_publisher started..."
+echo "SANDBOX:     $SANDBOX"
+echo "SANDBOX_WIN: $SANDBOX_WIN"
+
+# Delete everything in the Release folders
+# Create all necessary directories.
+[ ! -d S:/Releases/Publisher ] && mkdir S:/Releases/Publisher
+cd S:/Releases/Publisher
+[ ! -d latest ] && mkdir latest
+rm -rf latest/*
+mkdir "latest/Streaming Templates"
+mkdir "latest/Streaming Templates/images"
+mkdir "latest/Web Templates"
+mkdir "latest/de"
+mkdir "latest/en"
+mkdir "latest/Flash"
+mkdir "latest/Flash/slidestar"
+[ ! -d $2 ] && mkdir $2
+rm -rf $2/*
+
+# CD Publisher Templates
+[ ! -d S:/Releases/distrib ] && mkdir S:/Releases/distrib
+cd S:/Releases/distrib
+[ ! -d latest ] && mkdir latest
+rm -rf latest/*
+[ ! -d $2 ] && mkdir $2
+rm -rf $2/*
+
+# Create the Flash Player 2
+cd $SANDBOX/lecturnity/publisher/FlashPlayer/
+cmd /c make_flash_player2.bat $SANDBOX_WIN $2
+
+if test ! -f $SANDBOX/make/error.txt ;
+then
+   # Create the Publisher libraries (/libs);
+   # the libs are copied to "latest"
+   cd $SANDBOX/imc/lecturnity/converter
+   cmd /c make_publisher_libs.bat $SANDBOX_WIN $2
+fi
+
+
+# Was that successful?
+if test ! -f $SANDBOX/make/error.txt ;
+then
+  # Create the java Publisher jar and refresh the
+  # Streaming Media Templates.
+  cd $SANDBOX/imc/lecturnity/converter
+  make clean all export
+  if [ "$?" == "0" ] ;
+  then
+    
+    # copy the templates
+    cp -R templates/* "S:/Releases/Publisher/latest/Streaming Templates"
+    cp -R templates2/Web* "S:/Releases/Publisher/latest/Web Templates"
+    cp -R templates2/CommonFiles "S:/Releases/Publisher/latest"
+    cp -R templates2/Flash S:/Releases/Publisher/latest
+    cp -R cdtemplates/* "S:/Releases/distrib/latest"
+    cp -R Flash/slidestar "S:/Releases/Publisher/latest/Flash/"
+
+    # remove CVS files
+    cd S:/Releases/Publisher/latest/
+    if [ "$?" == "0" ] ;
+    then
+       for f in `find . | grep "/CVS/"`; do rm $f; done
+       for f in `find . | grep "/CVS"`; do rmdir $f; done
+    fi
+    cd S:/Releases/distrib/latest 
+    if [ "$?" == "0" ] ;
+    then
+       for f in `find . | grep "/CVS/"`; do rm $f; done
+       for f in `find . | grep "/CVS"`; do rmdir $f; done
+    fi
+
+    # remove SVN files
+    cd S:/Releases/Publisher/latest/
+    if [ "$?" == "0" ] ;
+    then
+       for f in `find . | grep "/.svn/"`; do rm -rf $f; done
+       for f in `find . | grep "/.svn"`; do rmdir $f; done
+    fi
+    cd S:/Releases/distrib/latest 
+    if [ "$?" == "0" ] ;
+    then
+       for f in `find . | grep "/.svn/"`; do rm -rf $f; done
+       for f in `find . | grep "/.svn"`; do rmdir $f; done
+    fi
+
+    # Copy the publisher itself
+    cp $SANDBOX/publisher.jar S:/Releases/Publisher/latest
+
+    # ... And the non-changing DLLs and Libs
+    cp S:/Releases/Publisher/static/* S:/Releases/Publisher/latest
+
+    # Some Flash EXEs and Fonts
+    cd $SANDBOX/LPming
+    cp -R bin S:/Releases/Publisher/latest/Flash/
+    rm -rf S:/Releases/Publisher/latest/Flash/bin/CVS
+    rm -rf S:/Releases/Publisher/latest/Flash/bin/.svn
+    mkdir S:/Releases/Publisher/latest/Flash/fdb
+    cd BitstreamFdb
+    cp "Bitstream Vera Sans.fdb" S:/Releases/Publisher/latest/Flash/fdb
+    cp "Bitstream Vera Sans-B.fdb" S:/Releases/Publisher/latest/Flash/fdb
+    cp "Bitstream Vera Sans-B-I.fdb" S:/Releases/Publisher/latest/Flash/fdb
+    cp "Bitstream Vera Sans-I.fdb" S:/Releases/Publisher/latest/Flash/fdb
+    cp "Lecturnity.fdb" S:/Releases/Publisher/latest/Flash/fdb
+
+    cd $SANDBOX/imc/lecturnity/converter
+
+    # Now copy everything to the <version> folder
+    cp -rf S:/Releases/Publisher/latest/* "S:/Releases/Publisher/$2"
+    cp -rf S:/Releases/distrib/latest/* "S:/Releases/distrib/$2"
+  else
+    echo "Beim Erstellen des Publisher (java) ist ein Fehler aufgetreten." > $SANDBOX/make/error.txt
+  fi
+fi
+
+echo "=== Operation abgeschlossen."

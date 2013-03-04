@@ -1,0 +1,928 @@
+/* LECTURNITY version 1.6.1 */
+
+/* ------------------------------------------------------------------------
+ * Global variables
+ * ------------------------------------------------------------------------ */
+
+// browser specific stuff
+var isNS4                  = false;
+var isIE4                  = false;
+var isDOM                  = false;
+var pre                    = '';
+var post                   = '';
+var pre1                   = '';
+var post1                  = '';
+var pre2                   = '';
+var pre2_embed             = '';
+var post_embed             = '';
+var post_style             = '';
+var bgCol                  = '';
+
+// Arrays containing stuff for slides, telepointer, thumbs
+var sldEntries             = new Array();
+var tpEntries              = new Array();
+var slides                 = new Array();
+var thumbTimestamps        = new Array();
+
+var slideIndex             = 0;
+var oldSlideIndex          = 0;
+var curSlideIndex          = 0;
+var curPointerIndex        = 0;
+
+// Timestamps
+var offset                 = null;
+var actualTimestamp        = 0;
+var lastTimestamp          = 0;
+var oldTimestamp           = 0;
+var timerID                = null;
+
+// Objects and styles
+var TelepointerStyle       = null;
+var TelepointerImage       = null;
+var TableMetadataStyle     = null;
+var TableSlideview         = null;
+var SlideViewStyle         = null;
+var StillimageImage        = null;
+var StillimageStyle        = null;
+var ListField              = null;
+var SlideAreasImage        = new Array();
+var SlideAreasStyle        = new Array();
+var InitImageStyle         = null;
+
+// Other stuff
+var stillimageWidth        = 0;
+var stillimageHeight       = 0;
+var slideareaTop           = 0;
+var videoframeWidth        = 0;
+var videoframeHeight       = 0;
+var viewframeWidth         = 0;
+var viewframeHeight        = 0;
+var allframesWidth         = 0;
+var allframesHeight        = 0;
+var aspectRatioVideo       = 0.0;
+var aspectRatioSlide       = 0.0;
+var oldSlidesTop           = new Array();
+var oldSlidesLeft          = new Array();
+var oldSlidesWidth         = new Array();
+var oldSlidesHeight        = new Array();
+var oldTpWidth             = 0;
+var scaleSlide             = 1.0;
+var screenWidth            = 0;
+var screenHeight           = 0;
+var TYPE_NOVIDEO           = 0;
+var TYPE_VIDEO             = 1;
+var TYPE_STILLIMAGE        = 2;
+var videoType              = %VIDEO_TYPE%;
+var videoWidth             = %VIDEO_WIDTH%;
+var videoHeight            = %VIDEO_HEIGHT%;
+var numOfThumbnails        = %NUM_OF_THUMBNAILS%;
+var numOfClips             = %NUM_OF_CLIPS%;
+var thumbIndex             = 0;
+var oldThumbIndex          = 0;
+var maxLayerIndex          = %MAX_LAYER_INDEX%;
+var hasMetadataTable       = %HAS_METADATATABLE%;
+var isScalable             = %IS_SCALABLE%;
+var isClipsSeparated       = %CLIPS_SEPARATED%;
+var tryouts                = 0;
+var initPlayerFinished     = false;
+
+var i = 0;
+var k = 0;
+
+
+/* ------------------------------------------------------------------------
+ * Init
+ * ------------------------------------------------------------------------ */
+function init()
+{
+  determineBrowser();
+  initThumbTimestamps();
+  initSldEntries();
+  %SMIL_INIT_CLIP_ENTRIES%
+  initTpEntries();
+  initSlides();
+  loadAllSlides();
+
+  // We need to wait for the other frames to finish loading  
+  delayedInit();
+}
+
+function delayedInit()
+{
+  // frames already loaded?
+  if (!top.indexframe.document ||
+      !top.videoframe.document ||
+      !top.viewframe.document || 
+      !getHtmlObject("viewframe", "TelepointerLayer", "Telepointer24")) 
+  {
+    setTimeout("delayedInit()", 100);
+  }
+  else 
+  {
+    // Image showing the "Intializing ..." message
+    InitImageStyle = getHtmlObject("viewframe", "MessageLayer", "InitImage", true, true);
+  
+    delayedInitCheck1();
+
+    determineMediaPlayers();
+    determineDocumentObjects();
+    getAspectRatios();
+    loadSlide(0);
+    activateSegment(0);
+    getMediaPlayerPosition();
+
+    delayedInitCheck2();
+  }
+}
+
+
+/* ------------------------------------------------------------------------
+ * Init: Determine the browser
+ * ------------------------------------------------------------------------ */
+function determineBrowser()
+{
+  var ua = navigator.userAgent.toLowerCase();
+  var netscapebrowser = ( (ua.indexOf("mozilla") != -1) 
+                       && (ua.indexOf("compatible") == -1) 
+                       && (ua.indexOf("opera") == -1) );
+  var av = navigator.appVersion;
+  var version = av.substring(0, av.indexOf(" ")) *1;
+  var version2 = av.substring(0, av.indexOf(".")) *1;
+
+  // Netscape 4.x
+  if (document.layers)
+  {
+    isNS4          = true;
+    isIE4          = false;
+    isDOM          = false;
+    pre            = 'document.';
+    post           = '';
+    pre1           = 'document.layers["';
+    post1          = '';
+    pre2           = '"].document.';
+    pre2_embed     = '"].document.embeds["';
+    post_embed     = '"]';
+    post_style     = '';
+    bgCol          = '.bgColor';
+  }
+
+  // Internet Explorer 4.x or higher
+  if (document.all && ua.indexOf("mac")<0)
+  {
+    isNS4          = false;
+    isIE4          = true;
+    isDOM          = false;
+    pre            = 'document.all.';
+    post           = '';
+    pre1           = 'document.all.';
+    post1          = '';
+    pre2           = '';
+    pre2_embed     = '';
+    post_embed     = '';
+    post_style     = '.style';
+    bgCol          = '.backgroundColor';
+  }
+
+  // DOM interpreting browser 
+  if (document.documentElement)
+  {
+    isNS4          = false;
+    isIE4          = false;
+    isDOM          = true;
+    pre            = 'document.getElementById("';
+    post           = '")';
+    pre1           = 'document.getElementsByName("';
+    post1          = '")[0]';
+    pre2           = '';
+    pre2_embed     = '';
+    post_embed     = '")[0]';
+    post_style     = '.style';
+    bgCol          = '.backgroundColor';
+  }
+
+  if (!isNS4 && !isIE4  && !isDOM)
+    alert("%NO_STD_BROWSER_NEW%");
+}
+
+
+/* ------------------------------------------------------------------------
+ * Init: Get HTML objects and styles
+ * ------------------------------------------------------------------------ */
+function getEmbeddedObject(frame, name)
+{
+  var htmlObject = null;
+
+  var preNS4 = '';
+  var postNS4 = '';
+  
+  if (isNS4)
+  {
+    preNS4 = 'embeds["';
+    postNS4 = '"]';
+  }
+
+  var htmlObjectString = 'top.' + frame + '.' + pre + preNS4 + name + post + postNS4;
+
+  htmlObject = eval(htmlObjectString);
+  
+  return htmlObject;
+}
+
+function getHtmlObject(frame, layer, name)
+{
+  return getHtmlObject(frame, layer, name, false);
+}
+
+function getHtmlObject(frame, layer, name, bGetStyle)
+{
+  return getHtmlObject(frame, layer, name, bGetStyle, false);
+}
+
+function getHtmlObject(frame, layer, name, bGetStyle, bOnlyLayer)
+{
+  var htmlObject = null;
+  
+  var styleSuffix = '';
+  if (bGetStyle)
+    styleSuffix = post_style;
+     
+  // this should work for most browsers and things (except for the special cases below): 
+  var htmlObjectString = 'top.' + frame + '.' + pre1 + name + post1;
+  if (isNS4)
+    htmlObjectString = 'top.' + frame + '.' + pre1 + layer + pre2 + name + post1;
+
+  // only layer should be detected
+  if (bOnlyLayer)
+    htmlObjectString = 'top.' + frame + '.' + pre + layer + post;
+  
+  htmlObject = eval(htmlObjectString + styleSuffix);
+  
+  if (htmlObject == null && isNS4 && !bOnlyLayer)
+  {
+    // Netscape 4.x specific special case:
+
+    // look for an embedded player
+    htmlObjectString = htmlObjectString = 'top.' + frame + '.' + pre1 + layer + pre2_embed + name + post_embed;
+    htmlObject = eval(htmlObjectString + styleSuffix);
+  }
+
+  return htmlObject;
+} 
+
+
+/* ------------------------------------------------------------------------
+ * Init: Determine some objects and their styles from the document 
+ *       (Player, Telepointer, Slidearea, etc.)
+ * ------------------------------------------------------------------------ */
+
+function determineDocumentObjects()
+{
+  // Player specific styles
+  determinePlayerObjectStyles();
+  
+  // Telepointer
+  TelepointerImage = getHtmlObject("viewframe", "TelepointerLayer", "Telepointer24");
+  TelepointerStyle = getHtmlObject("viewframe", "TelepointerLayer", "Telepointer24", true, true);
+  oldTpWidth = TelepointerImage.width;
+
+  // Table "Slide view"
+  TableSlideview = getHtmlObject("viewframe", "TableSlideviewLayer", "TableSlideview");
+  SlideViewStyle = getHtmlObject("viewframe", "TableSlideviewLayer", "TableSlideview", true, true);
+
+  // List field containing the captions
+  ListField = %LIST_FIELD%
+  
+  // Slide images
+  for (i = 0; i <= maxLayerIndex; i++)
+  {
+    SlideAreasImage[i] = getHtmlObject("viewframe", ("SlideareaLayer"+i), ("Slidefield"+i));
+    SlideAreasStyle[i] = getHtmlObject("viewframe", ("SlideareaLayer"+i), ("Slidefield"+i), true, true);
+  }
+
+  if ( (videoType == TYPE_NOVIDEO) ||
+       (videoType == TYPE_VIDEO) && (hasMetadataTable) )
+  {
+    // Table "Metadata"
+    TableMetadataStyle = getHtmlObject("videoframe", "TableMetadataLayer", "TableMetadata", true, true);
+  }
+
+  if ( (videoType == TYPE_NOVIDEO) || (videoType == TYPE_STILLIMAGE) )
+  {
+    // Still image
+    StillimageImage = getHtmlObject("videoframe", "StillimageLayer", "Stillimage1");
+    StillimageStyle = getHtmlObject("videoframe", "StillimageLayer", "Stillimage1", true, true);
+  }
+}
+
+
+/* ------------------------------------------------------------------------
+ * Move Objects via CSS properties "left" and "top"
+ * Note: some browsers use e.g. "20" (number) and other use "20px"
+ * ------------------------------------------------------------------------ */
+
+function moveHtmlObjectToXY(objStyle, x, y)
+{
+  if (typeof(objStyle.left) == 'number')
+  {
+    objStyle.left = x;
+    objStyle.top  = y;
+  }
+  else
+  {
+    objStyle.left = '' + x + 'px';
+    objStyle.top  = '' + y + 'px';
+  }
+}
+
+function moveHtmlObjectToX(objStyle, x)
+{
+  if (typeof(objStyle.left) == 'number')
+  {
+    objStyle.left = x;
+  }
+  else
+  {
+    objStyle.left = '' + x + 'px';
+  }
+}
+
+function moveHtmlObjectToY(objStyle, y)
+{
+  if (typeof(objStyle.top) == 'number')
+  {
+    objStyle.top  = y;
+  }
+  else
+  {
+    objStyle.top  = '' + y + 'px';
+  }
+}
+
+
+/* ------------------------------------------------------------------------
+ * Functions for slides
+ * ------------------------------------------------------------------------ */
+function initSlides()
+{
+  for(i = 0; i < sldEntries.length; i++)
+    slides[i] = new Image();
+}
+
+function loadAllSlides()
+{
+  for(i = 0; i < sldEntries.length; i++)
+    slides[i].src = sldEntries[i].url;
+}
+
+function showSlide(position)
+{
+  loadSlide(position);
+  offset = sldEntries[position].slideTime;
+  fastForward();
+}
+
+function loadSlide(position)
+{
+  // Hide the Telepointer
+  TelepointerStyle.visibility = "hidden";
+
+  oldSlideIndex = slideIndex;
+  slideIndex = position;
+  
+  if (slides[position].src == "")
+    slides[position].src = sldEntries[position].url;
+ 
+  var layerIndex = sldEntries[position].layerIndex;
+  // Layer index 0 ==> full slide
+  if (layerIndex == 0)
+  {
+    // Clear all slide layers on top of this layer
+    for (i = 1; i <= maxLayerIndex; i++)
+    {
+      SlideAreasStyle[i].visibility = "hidden";
+    }
+
+    SlideAreasImage[0].src = slides[position].src;
+  }
+  else
+  {
+    var sldNumber  = sldEntries[position].slideNumber;
+    for (i = 0; i < sldEntries.length; i++)
+    {
+      if (sldEntries[i].layerIndex > 0)
+      {
+        if (sldEntries[i].slideNumber == sldNumber)
+        {
+          if (sldEntries[i].slideTime <= actualTimestamp)
+          {
+            SlideAreasStyle[sldEntries[i].layerIndex].visibility = "visible";
+          }
+          else
+          {
+            SlideAreasStyle[sldEntries[i].layerIndex].visibility = "hidden";
+          }
+        }
+        else
+        {
+          SlideAreasStyle[sldEntries[i].layerIndex].visibility = "hidden";
+        }
+      }
+      else
+      {
+        if (sldEntries[i].slideNumber == sldNumber)
+        {
+          SlideAreasImage[0].src = slides[i].src;
+        }
+      }
+    }  
+  }
+}
+
+
+/* ------------------------------------------------------------------------
+ * Player Control functions
+ * ------------------------------------------------------------------------ */
+function seekTime(timestamp)
+{
+  var actualTime = new Date();
+  var newTimestamp = actualTime.getTime();
+  var deltaTimestamp = newTimestamp - oldTimestamp;
+  if (deltaTimestamp > 1000)
+  {
+    oldTimestamp = newTimestamp;
+    playerControlSeekTime(timestamp);
+  }
+  else
+  {
+    oldTimestamp = newTimestamp;
+    // do nothing else
+  }
+}
+
+function playerControlSeekTime(timestamp)
+{
+  offset = timestamp;
+   
+  if (!isPlaying(MediaPlayer1))
+    doPlay(MediaPlayer1);
+  
+  timerID = setInterval("fastForward()", 1000);
+  // why is fastForward() necessary? Why not call setPosition() directly?
+  // this procedure seems to cause some problems with synchronization 
+  // and clip starting...
+
+}
+
+function fastForward()
+{
+  if (offset > 0)
+    setPosition(MediaPlayer1, Math.round(offset));
+  else
+    setPosition(MediaPlayer1, 0);
+  
+  if ( isPlaying(MediaPlayer1) ||
+       isSeeking(MediaPlayer1) ||
+       isBuffering(MediaPlayer1) ||
+       isWaiting(MediaPlayer1) ||
+       isScanningForward(MediaPlayer1) ||
+       isScanningReverse(MediaPlayer1) )
+  {
+    clearInterval(timerID);
+    timerID = null;
+    offset = null;
+  }
+}  
+
+
+/* ------------------------------------------------------------------------
+ * Get the Position of the Media Player
+ * and related functions
+ * ------------------------------------------------------------------------ */
+function getMediaPlayerPosition()
+{
+  if (initPlayerFinished)
+  {
+    // Check Frames first
+    checkFrameSize();
+  
+    if (!isStopped(MediaPlayer1))
+      actualTimestamp = getPosition(MediaPlayer1);
+    else
+      actualTimestamp = offset;
+  
+    //if (actualTimestamp < lastTimestamp)
+      resetCurrentIndices();
+  
+    lastTimestamp = actualTimestamp;
+    
+    setThumbnail(actualTimestamp);
+    setSlide(actualTimestamp);
+    setTP(actualTimestamp);
+    %SMIL_JS_FUNCTION_CALL%
+  }
+
+  window.setTimeout("getMediaPlayerPosition()", 50);
+}
+
+function setThumbnail(msTime)
+{
+  var n = numOfThumbnails - 1;
+  for (i = 0; i < n; i++)
+  {
+    if ((msTime >= thumbTimestamps[i]) && (msTime < thumbTimestamps[i+1]))
+    {
+      if (i != thumbIndex)
+      {
+        activateSegment(i);
+        setAnchor(i);
+        setFormSelect(i);
+        break;
+      }
+    }
+  }
+
+  if (msTime >= thumbTimestamps[n])
+  {
+    if (n != thumbIndex)
+    {
+        activateSegment(n);
+        setAnchor(n);
+        setFormSelect(n);
+    }
+  }
+}
+
+function setSlide(msTime)
+{
+  var n = sldEntries.length - 1;
+  for (i = curSlideIndex; i < n; i++)
+  {
+    if ((msTime >= sldEntries[i].slideTime) && (msTime < sldEntries[i+1].slideTime))
+    {
+      if (i != slideIndex)
+      {
+        loadSlide(i);
+        curSlideIndex = i;
+        break;
+      }
+    }
+  }
+
+  if (msTime >= sldEntries[n].slideTime)
+  {
+    if (n != slideIndex)
+    {
+      loadSlide(n);
+      curSlideIndex = n;
+    }
+  }
+}
+
+function setAnchor(position)
+{
+  var slideNumberLeft = position - 1;
+  if (slideNumberLeft < 0)
+    slideNumberLeft = 0;
+  var slideNumberRight = position + 2;
+  if (slideNumberRight > numOfThumbnails)
+    slideNumberRight = numOfThumbnails;
+
+  var reference = "%OUTPUT_NAME%_indexframe.html#slide";
+
+  var reference1 = reference + slideNumberLeft;
+  var reference2 = reference + slideNumberRight;
+
+  if (slideIndex < oldSlideIndex)
+    top.indexframe.location.href = reference1;
+  else
+    top.indexframe.location.href = reference2;
+
+  if (isNS4)
+    top.indexframe.location.href = reference1;
+}
+
+function setFormSelect(position)
+{
+  if (ListField != null)
+    ListField.Select1.selectedIndex = position;
+}
+
+function setTP(msTime)
+{
+  var n = tpEntries.length - 1;
+  for (i = curPointerIndex; i < n; i++)
+  {
+    if ((msTime >= tpEntries[i].tpTime) && (msTime < tpEntries[i+1].tpTime))
+    {
+     	showTP(i);
+     	curPointerIndex = i;
+     	break;
+    }
+  }
+
+  if (msTime >= tpEntries[n].tpTime)
+  {
+    showTP(n);
+    curPointerIndex = n;
+  }
+}
+
+function showTP(idx)
+{
+  if (tpEntries[idx].isVisible == true)
+  {
+    var tpX = parseInt( tpEntries[idx].x * scaleSlide + %E_SLIDEAREA_LEFT% );
+    var tpY = parseInt( tpEntries[idx].y * scaleSlide + slideareaTop 
+              - (0.5 * oldTpWidth * (1 - scaleSlide)) );
+    if ( (tpX-%E_SLIDEAREA_LEFT% >= 0) && (tpX-%E_SLIDEAREA_LEFT% < scaleSlide*(oldSlidesWidth[0]-oldTpWidth)) 
+      && (tpY-slideareaTop >= 0) && (tpY-slideareaTop < scaleSlide*(oldSlidesHeight[0]-oldTpWidth)) )
+    {
+      moveHtmlObjectToXY(TelepointerStyle, tpX, tpY)
+      TelepointerStyle.visibility = "visible";
+    }
+    else
+      TelepointerStyle.visibility = "hidden";
+  }
+  else
+    TelepointerStyle.visibility = "hidden";
+}
+
+function resetCurrentIndices()
+{
+  curSlideIndex = 0;
+  curPointerIndex = 0;
+}
+
+
+/* ----------------------------------------------------------------------------
+ * Highlight the actual thumbnail
+ * ---------------------------------------------------------------------------- */
+function activateSegment(segmentID)
+{
+  if (!top.indexframe && !top.indexframe.document)
+    return;
+    
+  oldThumbIndex = thumbIndex;
+  thumbIndex = segmentID;
+  
+  if (isNS4)
+  {
+    // Netscape 4.x specific: extend the marked area to the thumbnail width
+    top.indexframe.document.layers[thumbIndex].clip.width = 100;
+  }
+
+  eval('top.indexframe.' + pre + 'Slide' + oldThumbIndex + 'a' + post + post_style + bgCol + '="#FFFFFF"')
+  eval('top.indexframe.' + pre + 'Slide' + oldThumbIndex + 'b' + post + post_style + bgCol + '="#FFFFFF"')
+  eval('top.indexframe.' + pre + 'Slide' + thumbIndex + 'a' + post + post_style + bgCol + '="#A6C7F5"')
+  eval('top.indexframe.' + pre + 'Slide' + thumbIndex + 'b' + post + post_style + bgCol + '="#A6C7F5"')
+}
+
+
+/* ------------------------------------------------------------------------
+ * Part for Dynamic Frames
+ * ----------------------------------------------------------------------- */
+function getAspectRatios()
+{
+  // Get the video size
+  var playerWidth = 0;
+  var playerHeight = 0;
+
+  if ( (videoType == TYPE_NOVIDEO) || (videoType == TYPE_STILLIMAGE) )
+  {
+    playerWidth =  StillimageImage.width;
+    playerHeight =  StillimageImage.height;
+    StillimageWidth = playerWidth;
+    StillimageHeight = playerHeight;
+  }
+  else
+  {
+    if (isNS4) // Netscape 4.x
+    {
+      // Use default values; width and height can not be changed dynamically
+      playerWidth = videoWidth;
+      playerHeight = videoHeight;
+    }
+    else
+    {
+      playerWidth =  MediaPlayer1.width;
+      playerHeight =  MediaPlayer1.height - getWMControlsHeight();
+    }
+  }
+  aspectRatioVideo = (playerHeight > 1) ? (playerWidth / playerHeight) : 0;
+  
+  // Get the slides position & size
+  for (i = 0; i <= maxLayerIndex; i++)
+  {
+    var idx = 0;
+    for(k = 0; k < sldEntries.length; k++)
+    {
+      idx = k;
+      if (sldEntries[k].layerIndex == i)
+        break;
+    }
+    
+    moveHtmlObjectToXY(SlideAreasStyle[i], 
+                       sldEntries[idx].x + 20, 
+                       sldEntries[idx].y + 24);
+    oldSlidesTop[i]         = sldEntries[idx].y;
+    oldSlidesLeft[i]        = sldEntries[idx].x;
+    oldSlidesWidth[i]       = sldEntries[idx].width;
+    oldSlidesHeight[i]      = sldEntries[idx].height;
+  }
+  slideareaTop = parseInt(SlideAreasStyle[0].top);
+
+  aspectRatioSlide = (oldSlidesHeight[0] > 0) ? (oldSlidesWidth[0] / oldSlidesHeight[0]) : (videoWidth / videoHeight);
+
+  %SMIL_GET_CLIPS_SIZE%
+  // Get the screen size
+  screenWidth = screen.width;
+  screenHeight = screen.height;
+}
+
+function checkFrameSize()
+{
+  if (!top.videoframe || !top.viewframe)
+    return;
+    
+  var videoframeHasChanged = false;
+  var viewframeHasChanged = false;
+
+  var videoframeW = 0;
+  var videoframeH = 0;
+  var viewframeW  = 0;
+  var viewframeH  = 0;
+
+  if (document.all) // Special case: Internet Explorer
+  {
+    videoframeW = top.videoframe.document.body.offsetWidth;
+    videoframeH = top.videoframe.document.body.offsetHeight;
+    viewframeW  = top.viewframe.document.body.offsetWidth;
+    viewframeH  = top.viewframe.document.body.offsetHeight;
+  }
+  else 
+  {
+//    videoframeW = top.videoframe.window.innerWidth;
+//    videoframeH = top.videoframe.window.innerHeight;
+//    viewframeW  = top.viewframe.window.innerWidth;
+//    viewframeH  = top.viewframe.window.innerHeight;
+  }
+  
+  if (videoframeWidth != videoframeW)
+  {
+    videoframeWidth = videoframeW;
+    videoframeHasChanged = true;
+  }
+  if (videoframeHeight != videoframeH)
+  {
+    videoframeHeight = videoframeH;
+    videoframeHasChanged = true;
+  }
+  if (viewframeWidth != viewframeW)
+  {
+    viewframeWidth = viewframeW;
+    viewframeHasChanged = true;
+  }
+  if (viewframeHeight != viewframeH)
+  {
+    viewframeHeight = viewframeH;
+    viewframeHasChanged = true;
+  }
+
+  if (videoframeHasChanged)
+  {
+    resizeMediaPlayer(videoframeWidth, videoframeHeight);
+  }
+  if (viewframeHasChanged)
+  {
+    resizeSlides(viewframeWidth, viewframeHeight);
+  }
+}
+
+function resizeSlides(frameWidth, frameHeight)
+{
+  if (frameWidth < 100)
+    return;
+  if (frameHeight < 40)
+    return;
+  
+  var maxSlideWidth = frameWidth - 40;
+  var maxSlideHeight = frameHeight - 37;
+  var tempSlideHeight = (maxSlideWidth / aspectRatioSlide);
+
+  // Netscape 4.x: width and height can not be changed dynamically
+  if ((!isNS4) && (isScalable == true))
+  {
+    if (tempSlideHeight > maxSlideHeight)
+    {
+      scaleSlide = maxSlideHeight / oldSlidesHeight[0];
+    }
+    else
+    {
+      scaleSlide = maxSlideWidth / oldSlidesWidth[0];
+    }
+
+    if ((scaleSlide > 0.95) && (scaleSlide < 1.05))
+      scaleSlide = 1.0;
+          
+    moveHtmlObjectToXY(SlideAreasStyle[0], 
+                       parseInt(oldSlidesLeft[0] * scaleSlide + 0.5) + parseInt(SlideAreasStyle[0].left), 
+                       parseInt(oldSlidesTop[0] * scaleSlide + 0.5) + parseInt(SlideAreasStyle[0].top));
+    SlideAreasImage[0].width  = parseInt(oldSlidesWidth[0] * scaleSlide + 0.5); // + 2;
+    SlideAreasImage[0].height = parseInt(oldSlidesHeight[0] * scaleSlide + 0.5); // + 2;
+    moveHtmlObjectToY(SlideAreasStyle[0], parseInt(0.5 * (frameHeight - SlideAreasImage[0].height)) + 11);
+    moveHtmlObjectToY(SlideViewStyle, parseInt(0.5 * (frameHeight - SlideAreasImage[0].height)) - 8);
+  
+    for (i = 1; i <= maxLayerIndex; i++)
+    {
+      moveHtmlObjectToXY(SlideAreasStyle[i], 
+                         parseInt(oldSlidesLeft[i] * scaleSlide + 0.5) + parseInt(SlideAreasStyle[0].left), 
+                         parseInt(oldSlidesTop[i] * scaleSlide + 0.5) + parseInt(SlideAreasStyle[0].top));
+      SlideAreasImage[i].width  = parseInt(oldSlidesWidth[i] * scaleSlide + 0.5);
+      SlideAreasImage[i].height = parseInt(oldSlidesHeight[i] * scaleSlide + 0.5);
+    }
+//    TableSlideview.document.headline.width = SlideAreasImage[0].width;
+    top.viewframe.document.headline.width = SlideAreasImage[0].width;
+  
+    slideareaTop = parseInt(SlideAreasStyle[0].top);
+  
+    %SMIL_RESIZE_CLIPS%
+    // Resize Telepointer
+    TelepointerImage.width = parseInt(oldTpWidth * scaleSlide + 0.5);
+    TelepointerImage.height = parseInt(oldTpWidth * scaleSlide + 0.5); 
+  }
+}
+
+
+/* ------------------------------------------------------------------------
+ * Other stuff
+ * ------------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------------
+ * Functions for new URLs
+ * ------------------------------------------------------------------------ */
+function gotoImc()
+{
+  F1 = window.open("http://www.im-c.de","imc_AG");
+}
+
+function gotoLecturnity()
+{
+  F1 = window.open("http://www.lecturnity.de","Lecturnity");
+}
+
+
+/* ------------------------------------------------------------------------
+ * Init: initialize other stuff
+ * ------------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------------
+ * Get the Timestamps of the Thumbnails
+ * ------------------------------------------------------------------------ */
+function initThumbTimestamps()
+{
+  %THUMB_ENTRIES%
+}
+
+/* ------------------------------------------------------------------------
+ * The "sldEntry" object
+ * ------------------------------------------------------------------------ */
+function sldEntry(slideNumber, slideTime, url, 
+                  layerIndex, x, y, width, height)
+{
+  this.slideNumber = slideNumber;
+  this.slideTime = slideTime;
+  this.url = url;
+  this.layerIndex = layerIndex;
+  this.x = x;
+  this.y = y;
+  this.width = width;
+  this.height = height;
+}
+
+/* ------------------------------------------------------------------------
+ * Create instances of the "sldEntry" object
+ * ------------------------------------------------------------------------ */
+function initSldEntries()
+{
+  %SLD_ENTRIES%
+}
+
+%SMIL_CLIP_ENTRIES_INIT%
+/* ------------------------------------------------------------------------
+ * The "tpEntry" object
+ * ------------------------------------------------------------------------ */
+function tpEntry(tpTime, x, y, isVisible)
+{
+  this.tpTime = tpTime;
+  this.x = x;
+  this.y = y;
+  this.isVisible = isVisible;
+}
+
+/* ------------------------------------------------------------------------
+ * Create instances of the "tpEntry" object
+ * ------------------------------------------------------------------------ */
+function initTpEntries()
+{
+  %TP_ENTRIES%
+}

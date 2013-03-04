@@ -1,0 +1,496 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta http-equiv="imagetoolbar" content="false">
+    <title>%Author%: %Title% %LecturnityWebPlayer% %Version%</title>
+    <meta name="author" content="%Author%">
+    <meta name="keywords" content="%MetadataKeywords%">
+
+    <link rel="stylesheet" type="text/css" href="style.css">
+    <link rel="stylesheet" type="text/css" href="slides.css">
+
+    <script type="text/javascript">
+      <!--
+      var g_scormEnabled = %ScormEnabled%;
+      // -->
+    </script>
+    
+    %ScormFiles%
+    
+    <script src="js/slides.js" type="text/javascript"></script>
+    <script src="js/variables.js" type="text/javascript"></script>
+    <script src="js/browserlib.js" type="text/javascript"></script>
+    <script src="js/evhandler.js" type="text/javascript"></script>
+    <script src="js/lslider.js" type="text/javascript"></script>
+    <script src="js/utils.js" type="text/javascript"></script>
+    <script src="js/button.js" type="text/javascript"></script>
+    <script src="js/layout.js" type="text/javascript"></script>
+    <script src="js/layoutapi.js" type="text/javascript"></script>
+    <script src="js/%ControlJavaScript%" type="text/javascript"></script>
+    <script src="js/testing.js" type="text/javascript"></script>
+    <script src="js/questionnaire.js" type="text/javascript"></script>
+    <script src="js/search.js" type="text/javascript"></script>
+
+    <style type="text/css">
+      #OverviewList {visibility:hidden;}
+      #PlayerLayer {visibility:hidden;}
+    </style>
+
+    <script language="JavaScript">
+      <!--
+      document.writeln('<style type="text/css">');
+      document.writeln('  #OverviewList {visibility:visible;}');
+      document.writeln('  #PlayerLayer {visibility:visible;}');
+      document.writeln('</style>');
+      // -->
+    </script>
+
+    <script language="JavaScript">
+      <!--
+      // initialize a variable to test for JavaScript 1.1.
+      // which is necessary for the window.location.replace method
+      var javascriptVersion1_1 = false;
+      // -->
+    </script>
+    
+    <script language="JavaScript1.1">
+      <!--
+      javascriptVersion1_1 = true;
+      // -->
+    </script>
+
+    <script type="text/javascript">
+      <!--
+      determineBrowser();     
+      if (!isNS4 && !isIE4  && !isDOM)
+        alert("%NoStandardBrowser%");
+
+      calcSizes(1, 1);
+      
+      button_setImageDir("images/");
+
+%PrepareInteractiveObjects%
+%CreateInteractiveObjects%
+
+      function init_All()
+      {
+        if(g_scormEnabled)
+        {
+          g_scormLoaded = scorm_init();
+          scutils_PreInit();
+        }
+        detectPlugins();
+        layoutInit();
+        slidesInit();
+        controlInit();
+        %TestingInit%
+        control_checkAutostart();
+        if(g_scormEnabled)
+        {
+          scutils_PostInit();
+        }
+        %ScormRMClips%
+      }
+
+      function finish_All()
+      {
+        if(g_scormEnabled)
+        {
+          scutils_Finish();
+          scorm_unload();
+        }
+      }
+      // -->
+    </script>
+
+    <script language="JavaScript">
+      <!--
+      // Here we write out the VBScript block for MSIE Windows
+      if ((navigator.userAgent.indexOf('MSIE') != -1) && (navigator.userAgent.indexOf('Win') != -1))
+      {
+        document.writeln('<script language="VBscript">');
+      
+        document.writeln('\'do a one-time test for a version of VBScript that can handle this code');
+        document.writeln('detectableWithVB = False');
+        document.writeln('If ScriptEngineMajorVersion >= 2 then');
+        document.writeln('  detectableWithVB = True');
+        document.writeln('End If');
+      
+        document.writeln('\'this next function will detect most plugins');
+        document.writeln('Function detectActiveXControl(activeXControlName)');
+        document.writeln('  on error resume next');
+        document.writeln('  detectActiveXControl = False');
+        document.writeln('  If detectableWithVB Then');
+        document.writeln('     detectActiveXControl = IsObject(CreateObject(activeXControlName))');
+        document.writeln('  End If');
+        document.writeln('End Function');
+      
+        document.writeln('</scr' + 'ipt>');
+      }
+      // -->
+    </script>
+
+  </head>
+
+  <body onLoad="init_All();" onUnload="finish_All();" onResize="resizeLayout();">
+
+    <div id="backgroundLeftMiddle" class="backgroundLeftMiddle">&nbsp;</div>
+    <div id="backgroundRight" class="backgroundRight">&nbsp;</div>
+
+
+    <table class="totallayout" cellspacing="0" cellpadding="0" border="0">
+
+        <tr>
+
+          <td id="header">
+            <table cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td><img src="images/trans.gif" width="10" height="1"></td>
+                  <td><img src="images/trans.gif" width="81" height="1"></td>
+                  <td><img id="headerwidth" src="images/trans.gif" width="%HeaderImgWidth%" height="1"></td> <!-- Header width -->
+                  <td><img src="images/trans.gif" width="10" height="1"></td>
+                </tr>
+                <tr>
+                  <td colspan="2" height="10"><img src="images/header0_0.png"></td>
+                  <td style="background-image:url(images/header2_0.png);"><img src="images/trans.gif" width="1" height="1"></td>
+                  <td><img src="images/header3_0.png"></td>
+                </tr>
+                <tr>
+                  <td style="background-image:url(images/header0_1.png);"><img id="headerheight" src="images/trans.gif" width="1" height="110"></td> <!-- Header height -->
+                  <td colspan="2" id="headercell" class="headercell">
+                    <a href="%LogoImageUrl%" target="_blank">%LogoImage%</a>
+                    
+                    <div style="font-size:16px; font-weight:bold; width:260px;">%Title%</div>
+                    <div><span style="font-size:12px; font-weight:bold;">%AuthorLC%:</span> <span style="font-size:12px;">%Author%</span></div>
+                    
+                  </td>
+                  <td style="background-image:url(images/header3_1.png);"><img src="images/trans.gif" width="1" height="1"></td>
+                </tr>
+                <tr>
+                  <td colspan="2" height="10"><img src="images/header0_2.png"></td>
+                  <td style="background-image:url(images/header2_2.png);"><img src="images/trans.gif" width="1" height="1"></td>
+                  <td><img src="images/header3_2.png"></td>
+                </tr>
+            </table>
+          </td>
+          
+          <td id="slides" rowspan="4">
+            <table cellpadding="0" cellspacing="0" border="0">
+                <tr>
+                  <td><img src="images/trans.gif" width="1" height="1"></td>
+                  <td><img src="images/trans.gif" width="10" height="1"></td>
+                  <td><img id="slideswidth" src="images/trans.gif" width="%SlidesImgWidth%" height="1"></td> <!-- Slides width -->
+                  <td><img src="images/trans.gif" width="20" height="1"></td>
+                </tr>
+                <tr>
+                  <td><img src="images/trans.gif" width="1" height="1"></td>
+                  <td height="10"><img src="images/slides0_0.png"></td>
+                  <td style="background-image:url(images/slides1_0.png);"><img src="images/trans.gif" width="1" height="1"></td>
+                  <td><img src="images/slides2_0.png"></td>
+                </tr>
+                <tr>
+                  <td><img id="slidesheight" src="images/trans.gif" width="1" height="%SlidesImgHeight%"></td> <!-- Slides height -->
+                  <td style="background-image:url(images/slides0_1.png);"><img src="images/trans.gif" width="1" height="1"></td>
+                  <td class="slidescell" id="slidescell">
+                    
+                    <div id="slidesDiv" style="position:relative; top:0px; left:0px;">
+                      &nbsp;
+                    </div> <!-- of complete slides -->
+                    
+                  </td>
+                  <td style="background-image:url(images/slides2_1.png);"><img src="images/trans.gif" width="1" height="1"></td>
+                </tr>
+                <tr>
+                  <td><img src="images/trans.gif" width="1" height="1"></td>
+                  <td height="10"><img src="images/slides0_2.png"></td>
+                  <td style="background-image:url(images/slides1_2.png);"><img src="images/trans.gif" width="1" height="1"></td>
+                  <td height="10"><img src="images/slides2_2.png"></td>
+                </tr>
+            </table>
+          </td>
+
+        </tr>
+        <tr>
+
+          <td id="searchField"> <!-- Search Field -->
+            <table cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td><img src="images/trans.gif" width="7" height="1"></td>
+                  <td><img src="images/trans.gif" width="84" height="1"></td>
+                  <td><img id="searchwidth" src="images/trans.gif" width="%ThumbImgWidth%" height="1"></td> <!-- Search Width -->
+                  <td><img src="images/trans.gif" width="7" height="1"></td>
+                </tr>
+                <tr>
+                  <td colspan="2" height="7"><img src="images/thumb0_0.png"></td>
+                  <td style="background-image:url(images/thumb2_0.png);"><img src="images/trans.gif" width="1" height="1"></td>
+                  <td><img src="images/thumb3_0.png"></td>
+                </tr>
+                <tr>
+                  <td style="background-image:url(images/thumb0_1.png);"><img id="searchheight" src="images/trans.gif" width="1" height="10"></td> <!-- Search height -->
+                  <td colspan="2" style="background-image:url(images/thumb_bg.gif); background-repeat:repeat-y; background-color:#D7D7D7; vertical-align:top;">
+
+                     <form name="searchForm" id="searchForm" style="height: 10px;">
+                        <input type=text name="searchField" value="" onkeypress="return handleEnterKey(event)" style="width: 245px; font-family: Arial,Helvetica,sans-serif; font-size: 10px; ">
+                        <input type=button value="%TabSearch%" onClick="search()" style="width: 55px; font-family: Arial,Helvetica,sans-serif; font-size: 10px;">
+                     </form>
+                    
+                  </td>
+                  <td style="background-image:url(images/thumb3_1.png);"><img src="images/trans.gif" width="1" height="1"></td>
+                </tr>
+                <tr>
+                  <td colspan="2" height="7"><img src="images/thumb0_2.png"></td>
+                  <td style="background-image:url(images/thumb2_2.png);"><img src="images/trans.gif" width="1" height="1"></td>
+                  <td><img src="images/thumb3_2.png"></td>
+                </tr>
+            </table>
+          </td>
+
+        </tr>
+        <tr>
+
+          <td id="thumbnails"> <!-- Thumbnails -->
+            <table cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td><img src="images/trans.gif" width="7" height="1"></td>
+                  <td><img src="images/trans.gif" width="84" height="1"></td>
+                  <td><img id="thumbswidth" src="images/trans.gif" width="%ThumbImgWidth%" height="1"></td> <!-- Thumbs Width -->
+                  <td><img src="images/trans.gif" width="7" height="1"></td>
+                </tr>
+                <tr>
+                  <td colspan="2" height="7"><img src="images/thumb0_0.png"></td>
+                  <td style="background-image:url(images/thumb2_0.png);"><img src="images/trans.gif" width="1" height="1"></td>
+                  <td><img src="images/thumb3_0.png"></td>
+                </tr>
+                <tr>
+                  <td style="background-image:url(images/thumb0_1.png);"><img id="thumbsheight" src="images/trans.gif" width="1" height="227"></td> <!-- Thumbs height -->
+                  <td colspan="2" style="background-image:url(images/thumb_bg.gif); background-repeat:repeat-y; background-color:#D7D7D7; vertical-align:top;">
+
+<div id="OverviewList">
+%Ns4Select%
+</div>
+                    
+                  </td>
+                  <td style="background-image:url(images/thumb3_1.png);"><img src="images/trans.gif" width="1" height="1"></td>
+                </tr>
+                <tr>
+                  <td colspan="2" height="7"><img src="images/thumb0_2.png"></td>
+                  <td style="background-image:url(images/thumb2_2.png);"><img src="images/trans.gif" width="1" height="1"></td>
+                  <td><img src="images/thumb3_2.png"></td>
+                </tr>
+            </table>
+          </td>
+
+        </tr>
+        <tr>
+
+          <td id="video">
+            <table cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td><img src="images/trans.gif" width="7" height="1"></td>
+                  <td><img src="images/trans.gif" width="84" height="1"></td>
+                  <td><img id="videowidth" src="images/trans.gif" width="%VideoImgWidth%" height="1"></td> <!-- Video Width -->
+                  <td><img src="images/trans.gif" width="7" height="1"></td>
+                </tr>
+                <tr>
+                  <td colspan="2" height="7"><img src="images/video0_0.png"></td>
+                  <td style="background-image:url(images/video2_0.png);"><img src="images/trans.gif" width="1" height="1"></td>
+                  <td><img src="images/video3_0.png"></td>
+                </tr>
+                <tr>
+                  <td style="background-image:url(images/video0_1.png);"><img id="videoheight" src="images/trans.gif" width="1" height="%VideoImgHeight%"></td> <!-- Video Height -->
+                  <td colspan="2" style="background-image:url(images/video_bg.gif); background-repeat:repeat-y; background-color:#CCCCCC; text-align:center; vertical-align:middle;"><nobr>
+
+<div id="PlayerLayer">
+%StillImage%
+%MasterPlayer%
+</div>
+
+                  </nobr></td>
+                  <td style="background-image:url(images/video3_1.png);"><img src="images/trans.gif" width="1" height="1"></td>
+                </tr>
+                <tr>
+                  <td colspan="2" height="7"><img src="images/video0_2.png"></td>
+                  <td style="background-image:url(images/video2_2.png);"><img src="images/trans.gif" width="1" height="1"></td>
+                  <td><img src="images/video3_2.png"></td>
+                </tr>
+            </table>
+          </td>
+
+        </tr>
+        <tr>
+
+          <td id="player" colspan="2" class="player">
+            <table cellspacing="0" cellpadding="0" border="0">
+                <tr>
+                  <td><img src="images/trans.gif" width="254" height="1"></td>
+                  <td><img src="images/trans.gif" width="1" height="1"></td>
+                </tr>
+                <tr>
+                  <td>
+                    <table cellspacing="0" cellpadding="0" border="0">
+                        <tr>
+                          <td><img src="images/trans.gif" width="6" height="1"></td>
+                          <td><img src="images/trans.gif" width="26" height="1"></td>
+                          <td><img src="images/trans.gif" width="26" height="1"></td>
+                          <td><img src="images/trans.gif" width="62" height="1"></td>
+                          <td><img src="images/trans.gif" width="8" height="1"></td>
+                          <td><img src="images/trans.gif" width="25" height="1"></td>
+                          <td><img src="images/trans.gif" width="101" height="1"></td>
+                        </tr>
+                        
+                        <tr>
+                          <td colspan="3" rowspan="3"><img id="player0_0" src="images/player0_0.png" height="46" border="0"></td>
+                          <td colspan="4" height="8"><img id="player0_3" src="images/player0_3.png"></td>
+                        </tr>
+                        <tr>
+                          <td class="playButton" rowspan="3" height="64"><div id="playButtonDiv"><script type="text/javascript">
+                              <!--
+                              button_outputButton("layoutplay", 62, 64);
+                              // -->
+                            </script></div></td>
+                          <td colspan="3" height="26">
+                            <table cellpadding="0" cellspacing="0" border="0">
+                                <tr>
+                                  <td class="forwardButton"><div id="forwardButtonDiv"><script type="text/javascript">
+                                      <!--
+                                      button_outputButton("layoutforward", 25, 26); 
+                                      // -->
+                                    </script></div></td>
+                                  <td class="endButton"><div id="endButtonDiv"><script type="text/javascript">
+                                      <!--
+                                      button_outputButton("layoutend", 26, 26);
+                                      // -->
+                                    </script></div></td>
+                                  <td class="timefield" id="timefield" width="83" height="26">
+                                    <div class="timefield" id="TimeLabel">&nbsp;</div></td>
+                                </tr>
+                            </table>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td colspan="2" height="12"><img id="player4_2" src="images/player4_2.png"></td>
+                          <td><img id="player7_2" src="images/player7_2.png"></td>
+                        </tr>
+                        <tr>
+                          <td rowspan="2" height="34"><img id="player0_1" src="images/player0_1.png"></td>
+                          <td  class="homeButton"height="26"><div id="homeButtonDiv"><script type="text/javascript">
+                              <!--
+                              button_outputButton("layouthome", 26, 26);
+                              // -->
+                            </script></div></td>
+                          <td class="backButton" height="26"><div id="backButtonDiv"><script type="text/javascript">
+                              <!--
+                              button_outputButton("layoutback", 26, 26);
+                              // -->
+                            </script></div></td>
+                          <td height="26"><img id="player4_3" src="images/player4_3.png"></td>
+                          <td height="26"><script type="text/javascript">
+                              <!--
+                              button_outputButton("layoutmute", 25, 26);
+                              // -->
+                            </script></td>
+                          <td height="26" style="background-image:url(images/player_volume.png); vertical-align:top;"><span id="volumeSliderDiv">&nbsp;</span></td>
+                        </tr>
+                        <tr>
+                          <td colspan="6" height="16"><img id="player1_2" src="images/player1_2.png"></td>
+                        </tr>
+                    </table>
+                  </td>
+                  <td>
+                    <table cellpadding="0" cellspacing="0" border="0">
+                        <tr>
+                          <td><img src="images/trans.gif" width="15" height="1"></td>
+                          <td><img src="images/trans.gif" width="222" height="1"></td>
+                          <td><img id="playerwidth" src="images/trans.gif" width="%PlayerImgWidth%" height="1"></td> <!-- Player width -->
+                          <td><img src="images/trans.gif" width="29" height="1"></td>
+                        </tr>
+                        <tr>
+                          <td height="88" rowspan="2"><img id="slidercellLeft" src="images/player10_0.png"></td>
+                          <td id="slidercell" height="25" colspan="2" style="background-image:url(images/player_slider_bg.png); vertical-align:top;"><span id="timeSliderDiv">&nbsp;</span></td>
+                          <td height="88" rowspan="2"><img id="slidercellRight" src="images/player13_0.png"></td>
+                        </tr>
+                        <tr>
+                          <td id="bufferfield" height="63" style="background-image:url(images/player11_1.png); vertical-align:top;"><div id="BufferLabel" style="position:relative; top:0px; left:0px;" class="bufferLabel">&nbsp;</div></td>
+                          <td id="stretchcell" height="63" style="background-image:url(images/player12_1.png);">&nbsp;</td>
+                        </tr>
+                    </table>
+                  </td>
+                </tr>
+            </table>
+            <script type="text/javascript">
+            <!--
+              layout_addWebPlayerLogo();
+            // -->
+            </script>
+          </td>
+
+        </tr>
+
+    </table>
+
+%Slides%
+
+%FormBegin%
+%RadioDynamics%
+%TextFieldDynamics%
+%FormEnd%
+%MoveableObjects%
+%ChangeTexts%
+%QuestionTexts%
+%FeedbackObjects%
+
+
+   <div id="notFoundDiv" style="visibility: hidden; position: absolute; left: 25px; top: 210px; font-family: Arial,Helvetica,sans-serif; font-size: 14px; z-index: 11; color:#000000;">%NoResults%</div>
+   <div id="searchDivOuter" class="searchDivOuter" style="visibility: hidden; position: absolute; z-index: 9; overflow: hidden;">
+
+      <input type=image src="images/button_close.png" onClick="clearResults();" style="position: absolute; right: 1px; top:2px; z-index: 12;">
+
+      <div id="searchDivInner" class="searchDivInner" style="position: absolute; z-index: 10; overflow: scroll;">   
+         <script type="text/javascript">
+            <!--
+            var searchEnabled = (typeof parent.g_searchEntries!="undefined");
+            if(!searchEnabled) {
+               parent.d_s('searchFrame','searchForm').visibility = 'hidden';
+               document.write('not supported');
+            }
+            else
+               for (var i=1; i<parent.g_thumbCount + 1; ++i)
+               {
+                  thumbs_outputThumb(i);
+                  thumb_s('slideNr' + i).backgroundColor = '#f5f5f5';
+                  thumb_s('slideImg' + i).backgroundColor = '#f5f5f5';
+                  thumb_s('slideTitle' + i).backgroundColor = '#f5f5f5';
+                  thumb_s('slideTime' + i).backgroundColor = '#f5f5f5';
+               }
+            // -->
+         </script>
+      </div>
+   </div>
+
+
+    <iframe name="thumbsFrame" id="thumbsFrame" src="%BaseDocumentName%_thumbs.html" width="%ThumbFrameWidth%" height="%ThumbImgHeight%" frameborder="1" style="position: absolute; left: 17px; top: 150px; background-color: #ffffff; visibility: hidden;"></iframe>
+
+    <noscript>
+      <table width="100%" style="position:absolute;top:0px;left0px;z-index:99999;background-color:#121627">
+        <tr><td width="500px">
+          <p style="font-family:Arial,Helvetica,sans-serif;font-size:16px;color:#CC0018;font-weight:bold;">
+            %NoJavascriptHeader%<br>
+          </p>
+          <p style="font-family:Arial,Helvetica,sans-serif;font-size:12px;font-weight:normal;">
+            %NoJavascriptReason%
+          </p>
+          <ul style="list-style-type:disc;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:%IntroTextColor%;font-weight:normal;">
+            <li>%NoJavascriptCause1%</li><br>
+            <li>%NoJavascriptSpecial%<br>%NoJavascriptCause2%<br><br>
+            <img src="images/%NoJavascriptImage%"></li>
+          </ul>
+          <br><br><br><br><br><br>
+        </td><td>&nbsp;</td></tr>
+      </table>
+    </noscript>
+  
+  </body>
+
+</html>

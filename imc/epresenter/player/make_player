@@ -1,0 +1,36 @@
+#!/bin/bash
+
+if [ "$1" == "" ] ; then
+  echo "Benutzung: make_player.bat <sandbox path> <version>"
+  exit
+fi
+if [ "$2" == "" ] ; then
+  echo "Benutzung: make_player.bat <sandbox path> <version>"
+  echo "  Erstellt ein player.jar und kopiert dies in"
+  echo "  das passende Verzeichnis auf dem Server:"
+  echo "    S:\Releases\Player\latest"
+  echo "    S:\Releases\Player\<version>"
+  exit
+fi
+
+SANDBOX_WIN=$1
+echo "make_player started..."
+echo "SANDBOX:     $SANDBOX"
+echo "SANDBOX_WIN: $SANDBOX_WIN"
+
+# Den Player erstellen
+cd $SANDBOX/imc/epresenter/player
+make clean all real
+if [ "$?" != "0" ] ; then
+  echo "Beim Kompilieren des Players ist ein Fehler aufgetreten." > $SANDBOX/make/error.txt
+else
+  # Das ging gut, jetzt noch kopieren
+  mkdir -p S:/Releases/Player/$2
+  mkdir S:/Releases/Player/latest/
+  cp $SANDBOX/player-real.jar S:/Releases/Player/latest/player.jar
+  cp $SANDBOX/player-real.jar S:/Releases/Player/$2/player_$2.jar
+  rm -f $SANDBOX/player-real.jar
+fi
+
+echo "=== Operation abgeschlossen."
+

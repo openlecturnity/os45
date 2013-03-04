@@ -1,0 +1,441 @@
+var g_isSliding = false;
+var g_wasPlaying = false;
+
+var g_TimeLabel = null;
+var g_lastDisplayedTimeMs = -1000;
+var g_layoutIgnoreTimeChange = false;
+var g_currentDate = 0;
+
+//var g_layoutTimeSlider = null;
+//var g_layoutVolumeSlider = null;
+var g_layoutCurrentSlide = -1;
+
+var g_layoutLogoCode = '%LogoImage%';
+
+// States of 'standard navigation':
+// 0: enabled; 1: disabled; 2: hidden
+var g_layoutNavigationControlBar        = %NavigationControlBar%;
+var g_layoutNavigationStandardButtons   = %NavigationStandardButtons%;
+var g_layoutNavigationTimeLine          = %NavigationTimeLine%;
+var g_layoutNavigationTimeDisplay       = %NavigationTimeDisplay%;
+var g_layoutNavigationDocumentStructure = 0;
+// 0: visible; 1: hidden
+var g_layoutLecturnityWebPlayerLogo     = %LecturnityWebPlayerLogo%;
+
+var g_slidesOffset = 0;
+
+var isIE = false;
+
+if (document.all)
+  isIE = true;
+
+function layout_init()
+{
+}
+
+function s(id)
+{
+  if (isNS4)
+    return eval('document.' + id);
+  else
+    return document.getElementById(id).style;
+}
+
+function o(id)
+{
+  if (isNS4)
+    return s(id);
+  return document.getElementById(id);
+}
+
+function d_s(documentName, id)
+{
+  if (isNS4)
+    return eval(documentName + '.document.' + id);
+  else
+    return eval(documentName + '.document.getElementById("' + id + '").style');
+}
+
+function d_o(documentName, id)
+{
+  if (isNS4)
+    return d_s(documentName, id);
+  return eval(documentName + '.document.getElementById("' + id + '")');
+}
+
+function layout_getSlideForTime(msTime)
+{
+  var newSlideNr = -1;
+  for (var i=0; i<g_thumbCount-1; ++i)
+  {
+      // alert("checking between " + parent.g_thumbEntries[i].timeStamp + " and " + parent.g_thumbEntries[i+1].timeStamp);
+      if (msTime >= g_thumbEntries[i].timeStamp &&
+          msTime < g_thumbEntries[i+1].timeStamp)
+      {
+        newSlideNr = i;
+      }
+  }
+  if (newSlideNr == -1)
+  {
+    if (msTime < g_thumbEntries[0].timeStamp)
+      newSlideNr = 0;
+    else
+      newSlideNr = g_thumbCount - 1;
+  }
+
+  return newSlideNr;
+}
+
+function layout_checkDelayedPlaystate()
+{
+  var bSpecialTimestampIsStopmark = slides_specialTimestampIsStopmark(g_lastPositionMs);
+  if (g_wasPlaying && !control_isPlayerPlaying(control_getMasterPlayer()) && !bSpecialTimestampIsStopmark)
+    control_play();
+}
+
+function layout_onPlayPause()
+{
+  control_playPause();
+  g_wasPlaying = !g_wasPlaying;
+}
+
+function layout_onPlay()
+{
+  control_play();
+  g_wasPlaying = true;
+}
+
+function layout_onPause()
+{
+  control_pause();
+  g_wasPlaying = false;
+}
+
+function layout_onMute(playState)
+{
+  control_mute();
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  //setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onMuteOn(playState)
+{
+  control_muteOn();
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  //setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onMuteOff(playState)
+{
+  control_muteOff();
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  //setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onHome(playState)
+{
+  control_seekTime(0);
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onBack(playState)
+{
+  var currentSlide = layout_getCurrentSlide();
+  if (currentSlide > 0)
+    control_seekTime(g_thumbEntries[currentSlide - 1].timeStamp);
+  else
+    layout_onHome();
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onEnd(playState)
+{
+  control_seekTime(g_mediaDurations[0]-1);
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onForward(playState)
+{
+  var currentSlide = layout_getCurrentSlide();
+  if (currentSlide < g_thumbCount - 1)
+    control_seekTime(g_thumbEntries[currentSlide + 1].timeStamp);
+  else
+    layout_onEnd();
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onGotoSlide(slideNumber, playState)
+{
+  control_seekTime(g_thumbEntries[slideNumber].timeStamp);
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onGotoTargetmark(idTarget, playState)
+{
+  control_seekTime(g_targetmarkTimes[idTarget]);
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onGotoTimestamp(timeMs, playState)
+{
+  control_seekTime(timeMs);
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onGotoTimestampR(timeMs, playState)
+{
+    g_JumpRandomTimestamp = timeMs;
+  control_seekTime(timeMs);
+   
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onGotoQuestion()
+{
+    if(g_bAllQuestionsAnswered)
+        return;
+    layout_onGotoTimestampR(g_JumpRandomTimestamp, 'play');
+}
+
+function layout_onOpenUrl(url, playState)
+{
+  var currentDate = new Date().getTime(); 
+  if (currentDate - g_currentDate < 1000)
+    return;
+  
+  g_currentDate = currentDate;
+  
+   if (g_fullScreen != 0)
+    window.open(url, "_blank", "width=800,height=600,resizable=yes");
+  else
+    window.open(url, "_blank");
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  //setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onOpenFile(filename, playState)
+{
+  var currentDate = new Date().getTime(); 
+  if (currentDate - g_currentDate < 1000)
+    return;
+  
+  g_currentDate = currentDate;
+  
+  if (g_fullScreen != 0)
+    window.open(filename, "_blank", "width=800,height=600,resizable=yes");
+  else
+    window.open(filename, "_blank");
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  //setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onResetQuestion(pageNumber)
+{
+  testing_resetQuestion(pageNumber);
+}
+
+function layout_onSubmitAnswer(pageNumber)
+{
+  if (control_isPlaying())
+    control_pause();
+  testing_submitAnswer(pageNumber);
+}
+
+function layout_onResetQuestionnaire(pageNumber)
+{
+  testing_resetQuestionnaire(pageNumber);
+}
+
+function layout_onSubmitTesting(pageNumber)
+{
+  if (control_isPlaying())
+    control_pause();
+  testing_submitTesting(pageNumber);
+}
+
+function layout_onClose()
+{
+  top.window.close();
+}
+
+function layout_onDoNothing()
+{
+  return;
+}
+
+function layout_getSlide(timeMs)
+{
+  var slideNr = -1;
+  for (var i=0; i<g_thumbCount-1; ++i)
+  {
+    if ((timeMs >= g_thumbEntries[i].timeStamp &&
+        timeMs < g_thumbEntries[i+1].timeStamp) ||
+	  (i == 0 && timeMs < g_thumbEntries[i+1].timeStamp))
+      slideNr = i;
+  }
+  if (slideNr == -1)
+    slideNr = g_thumbCount-1;
+  return slideNr;
+}
+
+function layout_getCurrentSlide()
+{
+  var timeMs = control_getTimeMs();
+  return layout_getSlide(timeMs);
+}
+
+
+function layout_onResize()
+{
+  layout_checkStandardNavigation();
+  
+  for (var i=0; i<g_interactionEntries.length; ++i)
+  {
+    s(''+ g_interactionEntries[i].strId +'Layer').left = g_interactionEntries[i].x + layout_getSlidesLeft();
+    s(''+ g_interactionEntries[i].strId +'Layer').top = g_interactionEntries[i].y + layout_getSlidesTop();
+  }
+  var protectiveImg = o('protectiveImg');
+  if (protectiveImg)
+  {
+    protectiveImg.width = g_slidesWidth;
+    protectiveImg.height = g_slidesHeight;
+    s('protectiveLayer').left = layout_getSlidesLeft();
+    s('protectiveLayer').top = layout_getSlidesTop();
+  }
+}
+
+function layout_checkStandardNavigation()
+{
+  if (g_layoutNavigationControlBar > 0)
+  {
+    g_layoutNavigationStandardButtons = g_layoutNavigationControlBar;
+    g_layoutNavigationTimeLine        = g_layoutNavigationControlBar;
+    g_layoutNavigationTimeDisplay     = g_layoutNavigationControlBar;
+
+    if (g_layoutNavigationControlBar == 2)
+    {
+      // hide the control bar
+      top.document.getElementById("FrameSet").rows = "*, 0";
+    }
+  }
+  
+  if (g_layoutNavigationStandardButtons > 0)
+  {
+    layout_enableControl("play", false);
+    layout_enableControl("end", false);
+    layout_enableControl("home", false);
+    layout_enableControl("back", false);
+    layout_enableControl("forward", false);
+
+    if (g_layoutNavigationStandardButtons == 2)
+    {
+      d_s('parent.control', 'playButtonDiv').visibility ='hidden';
+      d_s('parent.control', 'endButtonDiv').visibility ='hidden';
+      d_s('parent.control', 'homeButtonDiv').visibility ='hidden';
+      d_s('parent.control', 'backButtonDiv').visibility ='hidden';
+      d_s('parent.control', 'forwardButtonDiv').visibility ='hidden';
+    }
+  }
+  
+  if (g_layoutNavigationTimeLine > 0)
+  {
+    parent.control.g_layoutTimeSlider.setSliderIcon('images/timeslider_knob_f4.png', 24, 8);
+    parent.control.g_layoutTimeSlider.setBackgroundImage('images/trans.gif', 'no-repeat');
+    parent.control.g_layoutTimeSlider.setDisabled();
+
+    if (g_layoutNavigationTimeLine == 2)
+    {
+      if (g_layoutNavigationTimeDisplay == 2)
+      {
+        // see below
+      }
+      else
+        d_s('parent.control', 'controlleft').backgroundImage = "url(images/controlbar_left_notl.png)";
+    }
+  }
+  
+  if (g_layoutNavigationTimeDisplay > 0)
+  {
+    d_s('parent.control', 'statusAreaDiv').visibility ='hidden';
+    d_s('parent.control', 'slidesAreaDiv').visibility ='hidden';
+
+    if (g_layoutNavigationTimeDisplay == 2)
+    {
+      if (g_layoutNavigationTimeLine == 2)
+      {
+        d_s('parent.control', 'timeSliderDiv').visibility ='hidden';
+        d_s('parent.control', 'controlleft').backgroundImage = "url(images/controlbar_left_notltd.png)";
+        parent.control.g_layoutTimeSlider.setSliderIcon('images/trans.gif', 24, 8);
+        parent.control.g_layoutTimeSlider.setBackgroundImage('images/trans.gif', 'no-repeat');
+      }
+      else
+        d_s('parent.control', 'controlleft').backgroundImage = "url(images/controlbar_left_notd.png)";
+    }
+  }
+  
+  if (g_layoutLecturnityWebPlayerLogo > 0)
+  {
+    d_s('parent.control', 'controlright').backgroundImage = "url(images/controlbar_bg.png)";
+    d_o('parent.control', 'LecturnityWebPlayerLogo').width = 0;
+    d_o('parent.control', 'LecturnityWebPlayerLogo').height = 0;
+  }
+}

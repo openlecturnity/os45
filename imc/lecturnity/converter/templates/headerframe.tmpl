@@ -1,0 +1,86 @@
+<!-- LECTURNITY version 1.6.1 -->
+
+<html>
+  <head>
+    <title>%AUTHOR%: %TITLE%</title>
+    <style type="text/css">
+      #TableLogoLayer {position:absolute; left:%E_TABLE_LOGO_LEFT%; top:%E_TABLE_LOGO_TOP%; z-index:2; visibility:visible}
+      #TableOverviewLayer {position:absolute; left:%E_TABLE_OVERVIEW_LEFT%; top:%E_TABLE_OVERVIEW_TOP%; z-index:2; visibility:visible}
+      #ListBoxLayer {position:absolute; left:%E_LISTBOX_LEFT%; top:%E_LISTBOX_TOP%; z-index:2; visibility:visible}
+    </style>
+    
+    <script language="JavaScript" type="text/javascript">
+    <!--
+      if ((navigator.appName=="Netscape") && (parseFloat(navigator.appVersion.substring(0,4))<5.0) )
+      {
+        document.open();
+        document.writeln('<link rel="stylesheet" href="imcns.css">');
+      }
+      else
+      {
+        document.open();
+        document.writeln('<link rel="stylesheet" href="imc.css">');
+      }
+      document.close();
+    //-->
+    </script>
+
+  </head>
+   
+  <body style="background-color:%BACKGROUND_COLOR%;margin:0px;">
+         
+    <map name="imc_lecturnity">
+      <area shape="rect" coords="20,1,46,34" href="#" onClick="javascript:parent.parent.videoframe.gotoImc()" alt="www.im-c.de">
+      <area shape="rect" coords="220,2,339,36" href="#" onClick="javascript:parent.parent.videoframe.gotoLecturnity()" alt="www.lecturnity.de">
+    </map>
+
+    <div id="TableLogoLayer">
+      <table id="TableLogo" 
+             name="TableLogo" 
+             border="0" 
+             cellspacing="0" 
+             cellpadding="0">
+        <tr> 
+          <td>
+            <img src="logo_340.gif" 
+                 width="340" 
+                 height="42" 
+                 border="0" 
+                 alt="" 
+                 usemap="#imc_lecturnity"></td>
+        </tr>
+      </table>
+    </div>
+
+    <div id="TableOverviewLayer">
+      <table id="TableOverview" 
+             width="340" 
+             border="0" 
+             cellspacing="0" 
+             cellpadding="0">
+        <tr> 
+          <td>
+            <img src="trans.gif" width="20" height="9" alt=""></td>
+          <td>
+            <img src="trans.gif" width="320" height="9" alt=""></td>
+        </tr>
+        <tr> 
+          <td>
+            <img src="trans.gif" width="20" height="12" alt=""></td>
+          <td class="headline">
+            %HEADER_TITLE%</td>
+        </tr>
+        <tr> 
+          <td>
+            <img src="trans.gif" width="20" height="2" alt=""></td>
+          <td>
+            <img src="trans.gif" width="320" height="2" alt=""></td>
+        </tr>
+      </table>
+    </div>
+
+    %SELECT_OPTIONS%
+
+  </body>
+
+</html>

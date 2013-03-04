@@ -1,0 +1,23 @@
+<smil>
+
+  <head>
+    <meta name="author" content="%AUTHOR%" />
+    <meta name="title" content="%TITLE%" />
+    <preroll="10s" />
+    <layout>
+      <root-layout />
+    </layout>
+  </head>
+
+  <body>
+    <par>
+      <seq>
+        <par id="presentation">
+          <video src="%RM2_FILE%" region="video_region" fill="freeze" begin="0ms" />
+          %SMIL_CLIP_ENTRIES%
+        </par>
+      </seq>
+    </par>
+  </body>
+
+</smil>

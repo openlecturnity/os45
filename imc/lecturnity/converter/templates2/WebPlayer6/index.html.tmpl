@@ -1,0 +1,147 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>%Author%: %Title% %LecturnityWebPlayer% %Version%</title>
+    <meta name="author" content="%Author%">
+    <meta name="keywords" content="%MetadataKeywords%">
+
+    <script type="text/javascript">
+      <!--
+      var g_languageCode = "%LanguageCode%";
+
+      var g_fullScreen = %FullScreen%;
+      var g_menuBar = %MenuBar%;
+      var g_toolBar = %ToolBar%;
+      var g_locationBar = %LocationBar%;
+      var g_statusBar = %StatusBar%;
+
+      var g_isStandaloneMode = %IsStandalone%; 
+      var g_slidesWidth = %SlidesWidth%;
+      var g_slidesHeight = %SlidesHeight%;
+      var g_videoWidth = %VideoWidth%;
+      var g_videoHeight = %VideoHeight%;
+      // -->
+    </script>
+
+    %ScormFiles%
+
+    <script type="text/javascript">
+      <!--
+      var DocumentWindow = null;
+
+      function openWebDocument() 
+      {
+        var g_layoutNavigationControlBar = %NavigationControlBar%;
+        var page = "__frames.html";
+        var win = "webDocument";
+        var options = "";
+        if (g_fullScreen != 0)
+        {
+          options = "channelmode=yes,fullscreen=yes,menubar=no,toolbar=no,location=no,status=no";
+        }
+        else
+        {
+          // non-full-screen mode
+          var width = g_slidesWidth + 20;
+          if (g_isStandaloneMode)
+            width = g_videoWidth + 20;
+          if (width < 760)
+            width = 760;
+
+          var height = g_slidesHeight + 20;
+          if (g_isStandaloneMode)
+            height = g_videoHeight + 20;
+          if (g_layoutNavigationControlBar != 2)
+            height += 35; // control bar
+          if (g_menuBar != 0)
+            height += 24;
+          if (g_toolBar != 0)
+            height += 42;
+          if (g_locationBar != 0)
+            height += 24;
+          if (g_statusBar != 0)
+            height += 24;
+
+          var left = (screen.availWidth - width) / 2;
+          if (left < 0)
+            left = 0;
+          var top = (screen.availHeight - height - 36) / 2; // 36 --> IE fix: taskbar not taken into account by availHeight
+          if (top < 0)
+            top = 0;
+
+          options = "top=" + top + ",left=" + left +
+            ",width=" + width + ",height=" + height +
+            ",menubar=" + (g_menuBar != 0 ? "yes" : "no") +
+            ",toolbar=" + (g_toolBar != 0 ? "yes" : "no") +
+            ",location=" + (g_locationBar != 0 ? "yes" : "no") +
+            ",status=" + (g_statusBar != 0 ? "yes" : "no");
+
+          //alert("options==" + options);
+        }
+      
+        DocumentWindow = window.open(page, win, options);
+        if (DocumentWindow != null)
+        {
+          DocumentWindow.focus();
+        }
+        else
+        {
+          // Popup Blocker!
+          alert("%PopupBlockerAlert%");
+        }
+      }
+      
+      function closeWebDocument()
+      {
+        DocumentWindow.close();
+      }
+      //-->
+    </script>
+  </head>
+
+   <body onLoad="javascript:openWebDocument()" onUnload="javascript:closeWebDocument()" style="background-color:%IntroBackgroundColor%; margin:10px;">
+
+   <table style="width:100%; height:100%; border-color:%IntroBorderColor%; border-width:%IntroBorderWidth%px; border-style:solid;">
+   <tr>
+      <td style="padding:10px; vertical-align:top;">
+   <div>%IntroPageLogo%</div>
+   <script type="text/javascript">
+   <!--
+   document.writeln('<br>');
+   document.writeln('<p style="font-family:Arial,Helvetica,sans-serif;font-size:12px;color:%IntroTextColor%;font-weight:normal;">');
+   document.writeln('  %PopupBlockerText1%<br>');
+   document.writeln('  <br>');
+   document.writeln('  %PopupBlockerText2%<br>');
+   document.writeln('  %PopupBlockerText3%<br>');
+   document.writeln('  %PopupBlockerText4%<br>');
+   document.writeln('  <br>');
+   document.writeln('  <br>');
+   document.writeln('  %PopupBlockerText5%<br>');
+   document.writeln('</p>');
+   // -->
+   </script>
+   <noscript>
+     <table>
+       <tr><td width="500px">
+         <p style="font-family:Arial,Helvetica,sans-serif;font-size:16px;color:#CC0018;font-weight:bold;">
+           %NoJavascriptHeader%<br>
+         </p>
+         <p style="font-family:Arial,Helvetica,sans-serif;font-size:12px;color:%IntroTextColor%;font-weight:normal;">
+           %NoJavascriptReason%
+         </p>
+         <ul style="list-style-type:disc;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:%IntroTextColor%;font-weight:normal;">
+           <li>%NoJavascriptCause1%</li><br>
+           <li>%NoJavascriptSpecial%<br>%NoJavascriptCause2%<br><br>
+           <img src="images/%NoJavascriptImage%"></li>
+         </ul>
+       </td><td>&nbsp;</td></tr>
+     </table>
+   </noscript>
+
+         <p style="font-family:Arial,Helvetica,sans-serif;font-size:12px;color:%IntroTextColor%;font-weight:normal;">%IntroText%</p>
+      </td>
+   </tr>
+   </table>
+   </body>
+</html>

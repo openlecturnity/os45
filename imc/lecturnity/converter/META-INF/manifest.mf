@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: imc.lecturnity.converter.ConverterWizard
+Created-By: Martin Danielsson
+

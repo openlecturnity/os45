@@ -1,0 +1,717 @@
+var g_isSliding = false;
+var g_wasPlaying = false;
+
+var g_TimeLabel = null;
+var g_lastDisplayedTimeMs = -1000;
+var g_layoutIgnoreTimeChange = false;
+var g_currentDate = 0;
+
+//var g_layoutTimeSlider = null;
+//var g_layoutVolumeSlider = null;
+var g_layoutCurrentSlide = -1;
+
+var g_layoutLogoCode = '%LogoImage%';
+
+// States of 'standard navigation':
+// 0: enabled; 1: disabled; 2: hidden
+var g_layoutNavigationControlBar        = %NavigationControlBar%;
+var g_layoutNavigationStandardButtons   = %NavigationStandardButtons%;
+var g_layoutNavigationTimeLine          = %NavigationTimeLine%;
+var g_layoutNavigationTimeDisplay       = %NavigationTimeDisplay%;
+var g_layoutNavigationDocumentStructure = %NavigationDocumentStructure%;
+// 0: visible; 1: hidden
+var g_layoutLecturnityWebPlayerLogo     = %LecturnityWebPlayerLogo%;
+
+var g_slidesOffset = 0;
+
+// 0 = horizontal, 1 = vertical
+var g_slidesArrangement = 0;
+if (!g_hasVideo && !g_hasStillImage)
+  g_slidesArrangement = 1;
+
+var isIE = false;
+
+if (document.all)
+  isIE = true;
+
+function layout_init()
+{
+}
+
+function s(id)
+{
+  if (isNS4)
+    return eval('document.' + id);
+  else
+    return document.getElementById(id).style;
+}
+
+function o(id)
+{
+  if (isNS4)
+    return s(id);
+  return document.getElementById(id);
+}
+
+function d_s(documentName, id)
+{
+  if (isNS4)
+    return eval(documentName + '.document.' + id);
+  else
+    return eval(documentName + '.document.getElementById("' + id + '").style');
+}
+
+function d_o(documentName, id)
+{
+  if (isNS4)
+    return d_s(documentName, id);
+  return eval(documentName + '.document.getElementById("' + id + '")');
+}
+
+function layout_getSlideForTime(msTime)
+{
+  var newSlideNr = -1;
+  for (var i=0; i<g_thumbCount-1; ++i)
+  {
+      // alert("checking between " + parent.g_thumbEntries[i].timeStamp + " and " + parent.g_thumbEntries[i+1].timeStamp);
+      if (msTime >= g_thumbEntries[i].timeStamp &&
+          msTime < g_thumbEntries[i+1].timeStamp)
+      {
+        newSlideNr = i;
+      }
+  }
+  if (newSlideNr == -1)
+  {
+    if (msTime < g_thumbEntries[0].timeStamp)
+      newSlideNr = 0;
+    else
+      newSlideNr = g_thumbCount - 1;
+  }
+
+  return newSlideNr;
+}
+
+function layout_checkDelayedPlaystate()
+{
+  var bSpecialTimestampIsStopmark = slides_specialTimestampIsStopmark(g_lastPositionMs);
+  if (g_wasPlaying && !control_isPlayerPlaying(control_getMasterPlayer()) && !bSpecialTimestampIsStopmark)
+    control_play();
+}
+
+function layout_onPlayPause()
+{
+  control_playPause();
+  g_wasPlaying = !g_wasPlaying;
+}
+
+function layout_onPlay()
+{
+  control_play();
+  g_wasPlaying = true;
+}
+
+function layout_onPause()
+{
+  control_pause();
+  g_wasPlaying = false;
+}
+
+function layout_onMute(playState)
+{
+  control_mute();
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  //setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onMuteOn(playState)
+{
+  control_muteOn();
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  //setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onMuteOff(playState)
+{
+  control_muteOff();
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  //setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onHome(playState)
+{
+  control_seekTime(0);
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onBack(playState)
+{
+  var currentSlide = layout_getCurrentSlide();
+  if (currentSlide > 0)
+    control_seekTime(g_thumbEntries[currentSlide - 1].timeStamp);
+  else
+    layout_onHome();
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onEnd(playState)
+{
+  control_seekTime(g_mediaDurations[0]-1);
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onForward(playState)
+{
+  var currentSlide = layout_getCurrentSlide();
+  if (currentSlide < g_thumbCount - 1)
+    control_seekTime(g_thumbEntries[currentSlide + 1].timeStamp);
+  else
+    layout_onEnd();
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onGotoSlide(slideNumber, playState)
+{
+  control_seekTime(g_thumbEntries[slideNumber].timeStamp);
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onGotoTargetmark(idTarget, playState)
+{
+  control_seekTime(g_targetmarkTimes[idTarget]);
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onGotoTimestamp(timeMs, playState)
+{
+  control_seekTime(timeMs);
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onGotoTimestampR(timeMs, playState)
+{
+    g_JumpRandomTimestamp = timeMs;
+  control_seekTime(timeMs);
+   
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onGotoQuestion()
+{
+    if(g_bAllQuestionsAnswered)
+        return;
+    layout_onGotoTimestampR(g_JumpRandomTimestamp, 'play');
+}
+
+function layout_onOpenUrl(url, playState)
+{
+  var currentDate = new Date().getTime(); 
+  if (currentDate - g_currentDate < 1000)
+    return;
+  
+  g_currentDate = currentDate;
+  
+  window.open(url, "_blank");
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  //setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onOpenFile(filename, playState)
+{
+  var currentDate = new Date().getTime(); 
+  if (currentDate - g_currentDate < 1000)
+    return;
+  
+  g_currentDate = currentDate;
+  
+  window.open(filename, "_blank");
+
+  if (playState == 'play')
+    layout_onPlay();
+  else if (playState == 'pause')
+    layout_onPause();
+  //setTimeout("layout_checkDelayedPlaystate()", 250);
+}
+
+function layout_onResetQuestion(pageNumber)
+{
+  testing_resetQuestion(pageNumber);
+}
+
+function layout_onSubmitAnswer(pageNumber)
+{
+  if (control_isPlaying())
+    control_pause();
+  testing_submitAnswer(pageNumber);
+}
+
+function layout_onResetQuestionnaire(pageNumber)
+{
+  testing_resetQuestionnaire(pageNumber);
+}
+
+function layout_onSubmitTesting(pageNumber)
+{
+  if (control_isPlaying())
+    control_pause();
+  testing_submitTesting(pageNumber);
+}
+
+function layout_onClose()
+{
+  top.window.close();
+}
+
+function layout_onDoNothing()
+{
+  return;
+}
+
+function layout_getSlide(timeMs)
+{
+  var slideNr = -1;
+  for (var i=0; i<g_thumbCount-1; ++i)
+  {
+    if ((timeMs >= g_thumbEntries[i].timeStamp &&
+        timeMs < g_thumbEntries[i+1].timeStamp) ||
+	  (i == 0 && timeMs < g_thumbEntries[i+1].timeStamp))
+      slideNr = i;
+  }
+  if (slideNr == -1)
+    slideNr = g_thumbCount-1;
+  return slideNr;
+}
+
+function layout_getCurrentSlide()
+{
+  var timeMs = control_getTimeMs();
+  return layout_getSlide(timeMs);
+}
+
+function layout_displayOverview()
+{
+  // Hide/show areas
+  s('slidesFrame').visibility = 'hidden';
+  s('slidesFrameVert').visibility = 'hidden';
+  s('slidesLabel').visibility = 'hidden';
+  s('slidesLayout').visibility = 'hidden';
+  s('infoDiv').visibility = 'hidden';
+  s('searchFrame').visibility = 'hidden';
+  s('thumbsFrame').visibility = 'visible';
+
+  // Fix colors
+  s('slidesTab').backgroundColor = '%InactiveTabColor%';
+  s('searchTab').backgroundColor = '%InactiveTabColor%';
+  s('infoTab').backgroundColor = '%InactiveTabColor%';
+  s('overviewTab').backgroundColor = '%InfoTabBgColor%';
+
+  // And Z-Index
+  s('slidesTab').zIndex = 5;
+  s('searchTab').zIndex = 5;
+  s('infoTab').zIndex = 5;
+  s('overviewTab').zIndex = 7;
+}
+
+function layout_displaySlides()
+{
+  s('thumbsFrame').visibility = 'hidden';
+  s('searchFrame').visibility = 'hidden';
+  s('infoDiv').visibility = 'hidden';
+  if (g_slidesArrangement == 0)
+  {
+    s('slidesFrame').visibility = 'visible';
+    s('slidesFrameVert').visibility = 'hidden';
+  }
+  else
+  {
+    s('slidesFrame').visibility = 'hidden';
+    s('slidesFrameVert').visibility = 'visible';
+  }
+  s('slidesLabel').visibility = 'visible';
+  s('slidesLayout').visibility = 'visible';
+
+  s('slidesTab').backgroundColor = '%InfoTabBgColor%';
+  s('searchTab').backgroundColor = '%InactiveTabColor%';
+  s('infoTab').backgroundColor = '%InactiveTabColor%';
+  s('overviewTab').backgroundColor = '%InactiveTabColor%';
+
+  s('slidesTab').zIndex = 7;
+  s('searchTab').zIndex = 5;
+  s('infoTab').zIndex = 5;
+  s('overviewTab').zIndex = 5;
+}
+
+function layout_displaySearch()
+{
+  s('thumbsFrame').visibility = 'hidden';
+  s('slidesFrame').visibility = 'hidden';
+  s('slidesFrameVert').visibility = 'hidden';
+  s('slidesLabel').visibility = 'hidden';
+  s('slidesLayout').visibility = 'hidden';
+  s('searchFrame').visibility = 'visible';
+  s('infoDiv').visibility = 'hidden';
+
+  s('slidesTab').backgroundColor = '%InactiveTabColor%';
+  s('searchTab').backgroundColor = '%InfoTabBgColor%';
+  s('infoTab').backgroundColor = '%InactiveTabColor%';
+  s('overviewTab').backgroundColor = '%InactiveTabColor%';
+
+  s('slidesTab').zIndex = 5;
+  s('searchTab').zIndex = 7;
+  s('infoTab').zIndex = 5;
+  s('overviewTab').zIndex = 5;
+}
+
+function layout_displayInfo()
+{
+  s('thumbsFrame').visibility = 'hidden';
+  s('slidesFrame').visibility = 'hidden';
+  s('slidesFrameVert').visibility = 'hidden';
+  s('slidesLabel').visibility = 'hidden';
+  s('slidesLayout').visibility = 'hidden';
+  s('searchFrame').visibility = 'hidden';
+  s('infoDiv').visibility = 'visible';
+
+  s('slidesTab').backgroundColor = '%InactiveTabColor%';
+  s('searchTab').backgroundColor = '%InactiveTabColor%';
+  s('infoTab').backgroundColor = '%InfoTabBgColor%';
+  s('overviewTab').backgroundColor = '%InactiveTabColor%';
+
+  s('slidesTab').zIndex = 5;
+  s('searchTab').zIndex = 5;
+  s('infoTab').zIndex = 7;
+  s('overviewTab').zIndex = 5;
+}
+
+function layout_onResize()
+{
+  layout_checkStandardNavigation();
+  
+  // Resizing mechanism.
+  // How much space do we need for the header contents, excluding margins?
+  // This is also the width for the media player.
+  var headerWidth = 300; // minimum width
+  if (g_hasVideo)
+  {
+    if (g_videoWidth > headerWidth)
+      headerWidth = g_videoWidth;
+  }
+  if (g_hasStillImage)
+  {
+    if (g_stillImageWidth > headerWidth)
+      headerWidth = g_stillImageWidth;
+  }
+
+  // How much space do we have horizontally?
+  var height;
+  if (!isIE)
+    height = window.innerHeight - 20;
+  else
+    height = document.body.offsetHeight - 20;
+
+  // Minimum 130 pixels plus margin for the info panels
+  
+  // Calculate inner space for player components
+  var statusbarHeight = %StatusbarHeight%;
+  var playerHeight = statusbarHeight;
+  if (g_hasVideo)
+    playerHeight += g_videoHeight;
+  else if (g_hasStillImage)
+    playerHeight += g_stillImageHeight;
+
+  // Which leaves us with...
+  var infoPanelHeight = height - playerHeight - 20 - 105; // 20 is margin, 105 top pos of info area
+  if (infoPanelHeight < 134)
+    infoPanelHeight = 134;
+
+  var ieOffset = 0;
+  if (!isIE)
+    ieOffset = 2;
+
+  // Let's go.
+  s('slidesFrame').width = headerWidth - 2; // -2 for frame border
+  s('slidesFrameVert').width = headerWidth - 2; // -2 for frame border
+  s('slidesFrameVert').height = infoPanelHeight - 24; // -24 for frame border
+  s('thumbsFrame').width = headerWidth - 2;
+  s('thumbsFrame').height = infoPanelHeight - 2;
+  s('searchFrame').width = headerWidth - 2;
+  s('searchFrame').height = infoPanelHeight - 2;
+  s('infoDiv').width = headerWidth - (5*ieOffset);
+  s('infoDiv').height = infoPanelHeight - (5*ieOffset);
+  s('containerDiv').width = headerWidth + 12 - ieOffset;
+  s('containerDiv').height = infoPanelHeight + 12 - ieOffset;
+
+  s('slidesLabel').top = 90 + infoPanelHeight;
+  s('slidesLayout').top = 87 + infoPanelHeight;
+
+  s('playerDiv').top = 105 + 12 + infoPanelHeight;
+  s('playerDiv').width = headerWidth + 12 - ieOffset;
+  s('playerDiv').height = playerHeight + 12 - ieOffset;
+
+  var playerTop = 105 + 18 + infoPanelHeight;
+  if (g_hasStillImage)
+    playerTop += g_stillImageHeight;
+  s('masterPlayerDiv').top = playerTop;
+  if (!g_hasVideo)
+    s('masterPlayerDiv').width = headerWidth;
+  if (g_hasStillImage)
+  {
+    s('stillImageDiv').top = 105 + 18 + infoPanelHeight;
+    s('stillImageDiv').width = g_stillImageWidth;
+    s('stillImageDiv').height = g_stillImageHeight;
+  }
+
+  // Title and Logo
+  if (g_layoutLogoCode == '')
+  {
+    // No logo
+    s('titleDiv').left = 9;
+    s('titleDiv').width = 300;
+  }
+
+  if (g_slidesArrangement == 0)
+  {
+    button_setButtonState("layoutSlidesHorz", "1");
+    button_setButtonState("layoutSlidesVert", "0");    
+  }
+  else
+  {
+    button_setButtonState("layoutSlidesHorz", "0");
+    button_setButtonState("layoutSlidesVert", "1");    
+  }
+
+  g_slidesOffset = headerWidth + 27; // used in layoutapi.js
+
+  if (g_layoutNavigationDocumentStructure == 2)
+  {
+    var width; 
+    if (!isIE)
+      width = window.innerWidth - 30;
+    else
+      width = document.body.offsetWidth - 45;
+
+    if ((!g_hasVideo) && (!g_hasStillImage))
+    {
+      g_slidesOffset = 10 + 0.5 *(width - g_slidesWidth);
+      if (g_slidesOffset < 10)
+        g_slidesOffset = 10;
+
+      for (i = 0; i <= maxLayerIndex; i++)
+      {
+        var slideEntry = slides_findSlideEntry(i);
+        var SlideAreasStyle = getHtmlObject("", ("SlideareaLayer"+i), ("Slidefield"+i), true, true);
+        SlideAreasStyle.left = g_slidesOffset + g_slideEntries[slideEntry].x;
+      }
+      // Telepointer
+      if (TelepointerStyle != null)
+        setTP(actualTimestamp); // in slides.js
+    }
+    else if (!g_isStandaloneMode)
+    {
+      if (g_hasVideo)
+      {
+        s('masterPlayerDiv').top = layout_getSlidesTop() + g_slidesHeight - g_videoHeight;
+        s('masterPlayerDiv').left = 10;
+      }
+      else if (g_hasStillImage)
+      {
+        s('stillImageDiv').top = layout_getSlidesTop() + g_slidesHeight - g_stillImageHeight;
+        s('stillImageDiv').left = 10;
+      }
+    }
+  }
+
+  for (var i=0; i<g_interactionEntries.length; ++i)
+  {
+    s(''+ g_interactionEntries[i].strId +'Layer').left = g_interactionEntries[i].x + layout_getSlidesLeft();
+    s(''+ g_interactionEntries[i].strId +'Layer').top = g_interactionEntries[i].y + layout_getSlidesTop();
+  }
+  var protectiveImg = o('protectiveImg');
+  if (protectiveImg)
+  {
+    protectiveImg.width = g_slidesWidth;
+    protectiveImg.height = g_slidesHeight;
+    s('protectiveLayer').left = layout_getSlidesLeft();
+    s('protectiveLayer').top = layout_getSlidesTop();
+  }
+}
+
+function layout_arrangeSlidesHorz()
+{
+  s('slidesFrameVert').visibility = 'hidden';
+  s('slidesFrame').visibility = 'visible';
+  button_setButtonState("layoutSlidesHorz", "1");
+  button_setButtonState("layoutSlidesVert", "0");
+  g_slidesArrangement = 0;
+}
+
+function layout_arrangeSlidesVert()
+{
+  s('slidesFrameVert').visibility = 'visible';
+  s('slidesFrame').visibility = 'hidden';
+  button_setButtonState("layoutSlidesHorz", "0");
+  button_setButtonState("layoutSlidesVert", "1");
+  g_slidesArrangement = 1;
+}
+
+function layout_checkStandardNavigation()
+{
+  if (g_layoutNavigationControlBar > 0)
+  {
+    g_layoutNavigationStandardButtons = g_layoutNavigationControlBar;
+    g_layoutNavigationTimeLine        = g_layoutNavigationControlBar;
+    g_layoutNavigationTimeDisplay     = g_layoutNavigationControlBar;
+
+    if (g_layoutNavigationControlBar == 2)
+    {
+      // hide the control bar
+      top.document.getElementById("FrameSet").rows = "*, 0";
+    }
+  }
+  
+  if (g_layoutNavigationStandardButtons > 0)
+  {
+    layout_enableControl("play", false);
+    layout_enableControl("end", false);
+    layout_enableControl("home", false);
+    layout_enableControl("back", false);
+    layout_enableControl("forward", false);
+
+    if (g_layoutNavigationStandardButtons == 2)
+    {
+      d_s('parent.control', 'playButtonDiv').visibility ='hidden';
+      d_s('parent.control', 'endButtonDiv').visibility ='hidden';
+      d_s('parent.control', 'homeButtonDiv').visibility ='hidden';
+      d_s('parent.control', 'backButtonDiv').visibility ='hidden';
+      d_s('parent.control', 'forwardButtonDiv').visibility ='hidden';
+    }
+  }
+  
+  if (g_layoutNavigationTimeLine > 0)
+  {
+    parent.control.g_layoutTimeSlider.setSliderIcon('images/timeslider_knob_f4.png', 24, 8);
+    parent.control.g_layoutTimeSlider.setBackgroundImage('images/trans.gif', 'no-repeat');
+    parent.control.g_layoutTimeSlider.setDisabled();
+
+    if (g_layoutNavigationTimeLine == 2)
+    {
+      if (g_layoutNavigationTimeDisplay == 2)
+      {
+        // see below
+      }
+      else
+        d_s('parent.control', 'controlleft').backgroundImage = "url(images/controlbar_left_notl.png)";
+    }
+  }
+  
+  if (g_layoutNavigationTimeDisplay > 0)
+  {
+    d_s('parent.control', 'statusAreaDiv').visibility ='hidden';
+    d_s('parent.control', 'slidesAreaDiv').visibility ='hidden';
+
+    if (g_layoutNavigationTimeDisplay == 2)
+    {
+      if (g_layoutNavigationTimeLine == 2)
+      {
+        d_s('parent.control', 'timeSliderDiv').visibility ='hidden';
+        d_s('parent.control', 'controlleft').backgroundImage = "url(images/controlbar_left_notltd.png)";
+        parent.control.g_layoutTimeSlider.setSliderIcon('images/trans.gif', 24, 8);
+        parent.control.g_layoutTimeSlider.setBackgroundImage('images/trans.gif', 'no-repeat');
+      }
+      else
+        d_s('parent.control', 'controlleft').backgroundImage = "url(images/controlbar_left_notd.png)";
+    }
+  }
+  
+  if (g_layoutNavigationDocumentStructure > 0)
+  {
+    if(g_layoutNavigationDocumentStructure == 2)
+    {
+      for (var i=1; i<parent.main.g_thumbCount+1; ++i)
+      {
+        d_s('parent.main.thumbsFrame', ('overviewThumb'+i)).visibility ='hidden';
+        d_s('parent.main.slidesFrame', ('slideThumb'+i)).visibility ='hidden';
+        d_s('parent.main.slidesFrameVert', ('slideThumb'+i)).visibility ='hidden';
+      }
+      
+      d_s('parent.main', 'logoDiv').visibility ='hidden';
+      d_s('parent.main', 'titleDiv').visibility ='hidden';
+      d_s('parent.main', 'overviewTab').visibility ='hidden';
+      d_s('parent.main', 'slidesTab').visibility ='hidden';
+      d_s('parent.main', 'searchTab').visibility ='hidden';
+      d_s('parent.main', 'infoTab').visibility ='hidden';
+      d_s('parent.main', 'containerDiv').visibility ='hidden';
+      d_s('parent.main', 'slidesFrame').visibility ='hidden';
+      d_s('parent.main', 'slidesFrameVert').visibility ='hidden';
+      d_s('parent.main', 'thumbsFrame').visibility ='hidden';
+      d_s('parent.main', 'searchFrame').visibility ='hidden';
+      d_s('parent.main', 'slidesLabel').visibility ='hidden';
+      d_s('parent.main', 'slidesLayout').visibility ='hidden';
+      d_s('parent.main', 'infoDiv').visibility ='hidden';
+      d_s('parent.main', 'playerDiv').visibility ='hidden';
+
+      parent.main.control_hideStatusBar();
+    }
+  }
+  
+  if (g_layoutLecturnityWebPlayerLogo > 0)
+  {
+    d_s('parent.control', 'controlright').backgroundImage = "url(images/controlbar_bg.png)";
+    d_o('parent.control', 'LecturnityWebPlayerLogo').width = 0;
+    d_o('parent.control', 'LecturnityWebPlayerLogo').height = 0;
+  }
+}

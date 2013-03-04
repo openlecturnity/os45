@@ -1,0 +1,494 @@
+function scutils_Init(a_MinScore, a_MaxScore)
+{
+  if(g_scormEnabled && g_scormLoaded )
+  {  
+    var flashMovie = getFlashMovieObject("%LecFlashPlayer%");
+    if ((!flashMovie.%GetScormVariable%) || (!flashMovie.%SetScormVariable%))
+       return;
+    var bHasTesting = flashMovie.%GetScormVariable%("%LecMovie%g_bHasTesting");
+    scutils_checkResumeSupported();
+
+    if(g_LMSResumeSupported)
+      flashMovie.%SetScormVariable%("%LecMovie%g_LMSResumeSupported", true);
+    else
+      flashMovie.%SetScormVariable%("%LecMovie%g_LMSResumeSupported", false);
+    var entryType = doLMSGetValue("cmi.entry");
+
+    if(g_LMSResumeSupported && bHasTesting == "true" && checkSuccessStatus() != null)
+    {
+      doLMSSetValue( "cmi.score.min", a_MinScore ) ;
+      doLMSSetValue( "cmi.score.max", a_MaxScore ) ;
+      
+      if(entryType == "resume")
+      {
+        var a_Score =  doLMSGetValue( "cmi.score.raw" ) ;
+        if(a_Score != null)
+        {
+          var a_crtAchiveScore = parseInt(a_Score);
+          flashMovie.%SetScormVariable%("%LecMovie%g_nTotalCurrentlyAchievePoints", a_crtAchiveScore);
+        }
+        else
+        {
+          doLMSSetValue( "cmi.score.raw", a_MinScore ) ;
+        }
+      }
+      else
+      {
+        doLMSSetValue( "cmi.score.raw", a_MinScore ) ;
+      }
+    }
+  
+    if(entryType == "resume")
+    {
+      var loc = doLMSGetValue("cmi.location");
+      var status = doLMSGetValue("cmi.success_status");
+      if(status != "unknown" && status != null)
+      {
+          g_successStatus = status;
+          flashMovie.%SetScormVariable%("%LecMovie%g_successStatus", g_successStatus);
+      }
+      g_completionStatus = doLMSGetValue("cmi.completion_status");
+      var location = parseFloat(loc);
+      location = location * 1000.0;
+      flashMovie.%SetScormVariable%("%LecMovie%g_resumePos", location);
+      flashMovie.%SetScormVariable%("%LecMovie%g_bDoLoadLocationData", true);
+      flashMovie.%SetScormVariable%("%LecMovie%g_completionStatus", g_completionStatus);
+      var a_suspendDataInformation = doLMSGetValue("cmi.suspend_data" ) ;
+      if (a_suspendDataInformation != null)
+      {
+        flashMovie.%SetScormVariable%("%LecMovie%g_suspendData", a_suspendDataInformation);  
+        flashMovie.%SetScormVariable%("%LecMovie%g_bDoLoadSuspendData", true);  
+      }
+      else
+        flashMovie.%SetScormVariable%("%LecMovie%g_bSuspendDataLoaded", true);
+    }
+    else
+    {
+      //if(bHasTesting == "true" && checkSuccessStatus() != null)
+	  if(bHasTesting == "true")
+      {
+        doLMSSetValue( "cmi.success_status", g_successStatus);
+      }
+      doLMSSetValue( "cmi.completion_status", g_completionStatus) ;
+      flashMovie.%SetScormVariable%("%LecMovie%g_bSuspendDataLoaded", true);
+    }
+    if(g_LMSResumeSupported)
+    {
+      if(entryType == "resume" && bHasTesting == "true")
+      {
+        scutils_loadLearnerData();  
+        flashMovie.%SetScormVariable%("%LecMovie%g_bDoLoadLearnerData", true);  
+      }
+      else
+      {
+        flashMovie.%SetScormVariable%("%LecMovie%g_bLearnerDataLoaded", true);  
+      }
+    }
+  }
+}
+
+function scutils_Finish()
+{
+/*
+  var flashMovie = getFlashMovieObject("%LecFlashPlayer%");
+  if ((!flashMovie.%GetScormVariable%) || (!flashMovie.%SetScormVariable%))
+     return;
+  g_Location = flashMovie.%GetScormVariable%("%LecMovie%g_locationTimeStamp"); 
+  g_sessionTime = parseInt(flashMovie.%GetScormVariable%("%LecMovie%g_nSessionTime"));
+  g_suspendData = flashMovie.%GetScormVariable%("%LecMovie%g_suspendData");
+  var time = getPlayTime(parseInt(g_sessionTime/8.0)); 
+  g_completionStatus = flashMovie.%GetScormVariable%("%LecMovie%g_completionStatus");
+  
+  var bHasTesting = flashMovie.%GetScormVariable%("%LecMovie%g_bHasTesting");
+  
+  if(bHasTesting == "true" && checkSuccessStatus() != null)
+  {
+    g_successStatus = flashMovie.%GetScormVariable%("%LecMovie%g_successStatus");
+    doLMSSetValue( "cmi.success_status", g_successStatus) ;
+  }
+    
+  doLMSSetValue( "cmi.location", g_Location ) ;
+  doLMSSetValue( "cmi.session_time", time);
+  doLMSSetValue( "cmi.suspend_data", g_suspendData) ;     
+  doLMSSetValue( "cmi.completion_status", g_completionStatus) ;
+*/
+  doLMSSetValue( "cmi.exit", "suspend");
+}
+
+function scutils_SetLocationAndSessionTime()
+{
+  var flashMovie = getFlashMovieObject("%LecFlashPlayer%");
+  if ((!flashMovie.%GetScormVariable%) || (!flashMovie.%SetScormVariable%))
+     return;
+  g_Location = flashMovie.%GetScormVariable%("%LecMovie%g_locationTimeStamp"); 
+  g_sessionTime = parseInt(flashMovie.%GetScormVariable%("%LecMovie%g_nSessionTime"));
+  var time = getPlayTime(parseInt(g_sessionTime/8.0)); 
+
+  doLMSSetValue( "cmi.location", g_Location ) ;
+  doLMSSetValue( "cmi.session_time", time);
+}
+
+function scutils_SetCompletionStatus()
+{
+  scutils_SetLocationAndSessionTime();
+  var flashMovie = getFlashMovieObject("%LecFlashPlayer%");
+  if ((!flashMovie.%GetScormVariable%) || (!flashMovie.%SetScormVariable%))
+     return;
+  g_completionStatus = flashMovie.%GetScormVariable%("%LecMovie%g_completionStatus");
+  doLMSSetValue( "cmi.completion_status", g_completionStatus) ;
+}
+
+function scutils_SetSuccessStatus()
+{
+  scutils_SetLocationAndSessionTime();
+  var flashMovie = getFlashMovieObject("%LecFlashPlayer%");
+  if ((!flashMovie.%GetScormVariable%) || (!flashMovie.%SetScormVariable%))
+     return;
+  var bHasTesting = flashMovie.%GetScormVariable%("%LecMovie%g_bHasTesting");
+
+  if(bHasTesting == "true" && checkSuccessStatus() != null)
+  {
+    g_successStatus = flashMovie.%GetScormVariable%("%LecMovie%g_successStatus");
+    doLMSSetValue( "cmi.success_status", g_successStatus) ;
+  }
+}
+
+function checkSuccessStatus()
+{
+  var t_crtCout = doLMSGetValue("cmi.interactions._count");
+  var t_InteractionID;
+  var result;
+  
+  var flashMovie = getFlashMovieObject("%LecFlashPlayer%");    
+  if ((!flashMovie.%GetScormVariable%) || (!flashMovie.%SetScormVariable%))
+     return;
+  var questionNr = flashMovie.%GetScormVariable%("%LecMovie%g_nQuestionsCount");
+  
+  for (var qIdx = 0; qIdx < questionNr; qIdx++)
+  {  
+    var n = scutils_getInteractionIndex(qIdx);
+    if( n != null)
+    {
+      result = doLMSGetValue("cmi.interactions."+n+".result");
+      if(result != null)
+        break;
+    }
+  }
+  return result;
+}
+
+function getPlayTime(a_sesTime)
+{
+  var hours = parseInt(a_sesTime / 3600);
+  var minutes = parseInt((a_sesTime % 3600) / 60);
+  var seconds = (a_sesTime % 3600) % 60;
+  var retVal = "PT"+ hours+"H"+minutes+"M"+seconds+"S";
+  return retVal;
+}
+
+function scutils_setInteractionResult(a_InteractionID, a_InteractionResult, a_InteractionLearnerResponse, a_AchiveScore ,a_InteractionTimeLatency)
+{
+  if (g_scormEnabled && g_scormLoaded  )
+  {
+    var t_index = scutils_getInteractionIndex(a_InteractionID)
+    if(t_index != null)
+    {
+      doLMSSetValue( "cmi.interactions."+t_index+".result", a_InteractionResult ) ;
+      doLMSSetValue( "cmi.interactions."+t_index+".learner_response", a_InteractionLearnerResponse) ;
+      doLMSSetValue( "cmi.score.raw", a_AchiveScore ) ;
+      var t_timeStamp = doLMSGetValue( "cmi.interactions."+t_index+".timestamp");
+      var t_TimeStampGMT = scutils_LMStoGMTtime(t_timeStamp);
+      var t_InteractionTimeLatency = new Date(a_InteractionTimeLatency);
+      var t_InteractionTimeLatencyGMT = new Date(t_InteractionTimeLatency.toUTCString());
+      var t_TimeLatencyGMT = t_InteractionTimeLatencyGMT-t_TimeStampGMT;
+      var t_TimeLatencyLMS = scutils_GMTtoLMS_TimeInterval(t_TimeLatencyGMT);
+      doLMSSetValue( "cmi.interactions."+t_index+".latency", t_TimeLatencyLMS ) ;
+      doLMSCommit();
+    }
+    var flashMovie = getFlashMovieObject("%LecFlashPlayer%");    
+    if ((!flashMovie.%GetScormVariable%) || (!flashMovie.%SetScormVariable%))
+		return;
+	var g_sSuspendData = flashMovie.%GetScormVariable%("%LecMovie%g_suspendData");
+	doLMSSetValue( "cmi.suspend_data", g_sSuspendData) ;
+  }
+}
+
+function scutils_getInteractionIndex(a_InteractionID)
+{
+  if (g_scormEnabled && g_scormLoaded  )
+  {
+    var t_crtCout = doLMSGetValue("cmi.interactions._count");
+    var t_InteractionID;
+    for (var i = 0; i < t_crtCout; ++i)
+    {
+      t_InteractionID = doLMSGetValue("cmi.interactions."+i+".id");
+      if(("urn:IMC:interaction_"+a_InteractionID) == t_InteractionID)
+      {
+        return i;
+      }
+    }
+    return null;
+  }
+  return null;  
+}
+
+function scutils_GMTtoLMStime(a_TimeStamp)
+{
+  var a_Year = a_TimeStamp.getFullYear();
+  var a_Month =  a_TimeStamp.getUTCMonth()+1;
+  if(a_Month<10)
+    a_Month = "0"+a_Month;
+  var a_Date =  a_TimeStamp.getUTCDate();
+  if(a_Date<10)
+    a_Date = "0"+a_Date;
+  var a_Hour =  a_TimeStamp.getUTCHours();
+  if(a_Hour<10)
+    a_Hour = "0"+a_Hour;
+  var a_Minute=  a_TimeStamp.getUTCMinutes();
+  if(a_Minute<10)
+    a_Minute = "0"+a_Minute;
+  var a_Second=  a_TimeStamp.getUTCSeconds();
+  if(a_Second<10)
+    a_Second = "0"+a_Second;  
+  var timeLMS = a_Year+"-"+a_Month+"-"+a_Date+"T"+a_Hour+":"+a_Minute+":"+a_Second;
+  return timeLMS;
+}
+
+function scutils_LMStoGMTtime(a_TimeStamp)
+{
+  var a_DateTime = new Array();
+  a_DateTime = a_TimeStamp.split("T");
+  var a_Date = new Array();
+  a_Date = a_DateTime[0].split("-");
+
+  var a_Time = new Array();
+  a_Time = a_DateTime[1].split(":");
+
+  var t_DateTimeGMT = new Date();  
+
+  var a_Year = parseInt(a_Date[0]);
+  t_DateTimeGMT.setYear(a_Year);
+
+  var a_Month = parseInt(a_Date[1])-1;
+  t_DateTimeGMT.setUTCMonth(a_Month);
+
+  var a_Date = parseInt(a_Date[2]);
+  t_DateTimeGMT.setUTCDate(a_Date);
+
+  var a_Hour = parseInt(a_Time[0]);
+  t_DateTimeGMT.setUTCHours(a_Hour);
+
+  var a_Minute = parseInt(a_Time[1]);
+  t_DateTimeGMT.setUTCMinutes(a_Minute);
+
+  var a_Second = parseInt(a_Time[2]); 
+  t_DateTimeGMT.setUTCSeconds(a_Second);
+
+  return new Date(t_DateTimeGMT.toUTCString());
+}
+
+function scutils_GMTtoLMS_TimeInterval(a_TimeInterval)
+{
+  var a_DateTimeGMT = new Date(a_TimeInterval);
+  var a_Year;
+  if(a_DateTimeGMT.getTimezoneOffset()>=0)
+    a_Year = a_DateTimeGMT.getFullYear()-1969;
+  else
+    a_Year = a_DateTimeGMT.getFullYear()-1970;
+  var a_Date = a_DateTimeGMT.getUTCDate()-1;
+  var retDateTime = "P"+a_Year+"Y"+a_DateTimeGMT.getUTCMonth()+"M"+a_Date+"DT"
+            +a_DateTimeGMT.getUTCHours()+"H"+a_DateTimeGMT.getUTCMinutes()+"M"+a_DateTimeGMT.getUTCSeconds()+"S";
+  return retDateTime;
+}
+
+function scutils_addInteraction(a_InteractionID, a_InteractionTimeStamp, a_InteractionWeighting, a_InteractionType, a_InteractionPattern)
+{
+ if (g_scormEnabled && g_scormLoaded  )
+  {
+    var t_InteractionTimeStamp = new Date(a_InteractionTimeStamp);
+    var t_InteractionTimeStamp = scutils_GMTtoLMStime(t_InteractionTimeStamp); 
+    var crtCout = doLMSGetValue("cmi.interactions._count");
+
+    doLMSSetValue( "cmi.interactions."+crtCout+".id", "urn:IMC:interaction_"+a_InteractionID) ;
+    //doLMSCommit();
+    doLMSSetValue( "cmi.interactions."+crtCout+".timestamp", t_InteractionTimeStamp);
+    //doLMSCommit();
+    doLMSSetValue( "cmi.interactions."+crtCout+".weighting", a_InteractionWeighting );
+    //doLMSCommit();
+    doLMSSetValue( "cmi.interactions."+crtCout+".type", a_InteractionType) ;
+    //doLMSCommit();
+    if(a_InteractionType == "fill-in")
+    {
+      var i=0;
+      var j=0;
+      var k=0;
+      var str = "";
+      var fill = new Array();  
+    
+      while(i < a_InteractionPattern.length)
+      {
+        fill[j] = new Array();
+    
+        while(a_InteractionPattern.charAt(i) != '[' && i < a_InteractionPattern.length)
+        {
+          if(a_InteractionPattern.charAt(i) != ';' && a_InteractionPattern.charAt(i) != '[')
+            str += a_InteractionPattern.charAt(i);
+          else 
+          {
+            fill[j][k] = str;
+            str = "";
+            k ++;  
+          }
+          i ++;  
+        }
+        fill[j][k] = str;
+        str = "";  
+        k = 0;
+        i += 3;
+        j ++;  
+      }
+  
+      k = 0;
+      var index = 0;
+      var as = false;
+      var st = new Array();
+      st[k] = -1;
+      while(k > -1)
+      {
+        if(st[k] < fill[k].length-1)
+        {
+          st[k] = st[k] + 1;
+          as = true;
+        }
+        else
+          as = false;
+        if(as)
+        {
+          if(k == fill.length-1)
+          {
+            a_InteractionPattern = "";
+            for(i=0; i < st.length; i++)
+            {
+              if(i != st.length-1)
+                a_InteractionPattern += fill[i][st[i]] + "[,]";
+              else
+                a_InteractionPattern += fill[i][st[i]];
+            }
+            doLMSSetValue( "cmi.interactions."+crtCout+".correct_responses."+index+".pattern", a_InteractionPattern ) ;
+            index ++;  
+          }
+          else
+          {
+            k ++;
+            st[k] = -1;
+          }
+        }
+        else
+          k --; 
+      }  
+    }
+    else
+      doLMSSetValue( "cmi.interactions."+crtCout+".correct_responses.0.pattern", a_InteractionPattern );
+    doLMSCommit();
+  }
+}
+
+function getFlashMovieObject(movieName)
+{
+  if (window.document[movieName]) 
+  {
+    return window.document[movieName];
+  }
+  if (navigator.appName.indexOf("Microsoft Internet")==-1)
+  {
+    if (document.embeds && document.embeds[movieName])
+      return document.embeds[movieName]; 
+  }
+  else // if (navigator.appName.indexOf("Microsoft Internet")!=-1)
+  {
+    return document.getElementById(movieName);
+  }
+}
+
+function scutils_checkResumeSupported()
+{
+  // sets the g_LMSResumeSupported
+  if(g_scormEnabled && g_scormLoaded)
+  {
+    var supportedInteractionsDM =  doLMSGetValue("cmi.interactions._children");
+    var supportedScoreDM =  doLMSGetValue("cmi.score._children");
+    if((supportedInteractionsDM != null)&&(supportedScoreDM != null))  
+    {
+      if((supportedInteractionsDM.search("id")  != -1) &&
+       (supportedInteractionsDM.search("type") != -1) &&
+       (supportedInteractionsDM.search("learner_response") != -1) &&
+       (supportedInteractionsDM.search("result") != -1) &&
+       (supportedScoreDM.search("raw") != -1 ))
+        g_LMSResumeSupported = true;
+      else
+        alert("%LmsNoCourseResumingAlert%");  
+    }
+  }
+}
+
+function scutils_saveSuspendData()
+{
+  if (g_scormEnabled && g_scormLoaded )
+  {
+    var flashMovie = getFlashMovieObject("%LecFlashPlayer%");    
+    if ((!flashMovie.%GetScormVariable%) || (!flashMovie.%SetScormVariable%))
+		return;
+	var g_sSuspendData = flashMovie.%GetScormVariable%("%LecMovie%g_suspendData");
+	doLMSSetValue( "cmi.suspend_data", g_sSuspendData) ;
+  }
+}   
+
+function scutils_loadLearnerData()
+{
+  var flashMovie = getFlashMovieObject("%LecFlashPlayer%");
+  if ((!flashMovie.%GetScormVariable%) || (!flashMovie.%SetScormVariable%))
+     return;
+  var questionNr = flashMovie.%GetScormVariable%("%LecMovie%g_nQuestionsCount"); 
+  var learnerResponse = "";
+  var index = "";
+  var questionResult = "";
+  var emptyResponse = 0;
+  var emptyResult = 0;
+  for (var qIdx = 0; qIdx < questionNr; qIdx++)
+  {
+    var n = scutils_getInteractionIndex(qIdx);
+    if( n != null)
+    {
+      var result = doLMSGetValue("cmi.interactions."+n+".result");
+      if(emptyResult == 0)
+      {
+        if(result == "correct")
+          questionResult = "c";
+        else
+          questionResult = "i";
+        index = qIdx;
+        emptyResult = 1;
+      }  
+      else
+      {
+        if(result == "correct")
+          questionResult += "," + "c";
+        else
+          questionResult += "," + "i";
+        index += "," + qIdx;
+      }
+      var response = doLMSGetValue("cmi.interactions."+n+".learner_response");  
+      flashMovie.%SetScormVariable%("%LecMovie%g_learnerResponse", response);
+      if(emptyResponse == 0)
+      {  
+        learnerResponse = response;
+        emptyResponse = 1;
+      }
+      else
+        learnerResponse += "<,>" + response;          
+    }
+  }
+  flashMovie.%SetScormVariable%("%LecMovie%g_questionIndex", index);
+  flashMovie.%SetScormVariable%("%LecMovie%g_learnerResponse", learnerResponse);
+  flashMovie.%SetScormVariable%("%LecMovie%g_questionResult", questionResult);
+}   

@@ -1,0 +1,4 @@
+Manifest-Version: 1.0
+Main-Class: imc.epresenter.player.Manager
+Created-By: Ulrich Kuhn
+

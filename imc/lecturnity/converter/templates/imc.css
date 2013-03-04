@@ -1,0 +1,14 @@
+/* LECTURNITY version 1.6.1 */
+
+body          {background-color:#FFFFFF}
+a:link        {color:#FF9966}
+a:visited     {color:#FF9966}
+a:active      {color:#FF9966}
+
+.category     {font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#333333;font-weight:bold}      /* underlined header */
+.headline     {font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#7A787A;font-weight:normal}    /* header over inputfield */
+.metadata     {font-family:Arial,Helvetica,sans-serif;font-size:15px;color:#000000;font-weight:normal}    /* for metadata */
+.inputfield   {font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#000000;font-weight:normal; width:321px} /* for inputfield */
+.thumbsdescb  {font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#333333;font-weight:bold}      /* for thumbs header */
+.thumbsdesc   {font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#000000;font-weight:normal}    /* for thumbs subheader */
+.thumbstime   {font-family:Arial,Helvetica,sans-serif;font-size:11px;color:#333333;font-weight:normal}    /* for thumbs timestamp */

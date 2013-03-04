@@ -1,0 +1,158 @@
+body {
+  background-color:#121627;
+  color:#ffffff;
+  padding:0px;
+  margin:0px;
+}
+
+div.backgroundLeftMiddle {
+  position:absolute;
+  top:11px;
+  left:10px;
+  background-color:#E9E9E9;
+  visibility:hidden;
+}
+
+div.backgroundRight {
+  position:absolute;
+  top:11px;
+  left:10px;
+  background-image:url(images/slides2_1.png);
+  background-repeat:repeat-y;
+  visibility:hidden;
+}
+
+table.totallayout {
+  border:0px;
+  margin-left:10;
+  margin-top:10;
+  margin-right:10;
+  margin-bottom:10;
+}
+
+td.header {
+  background-color:#121627;
+  text-align:left;
+  vertical-align:top;
+}
+
+td.headercell
+{
+  background-color:#d7d7d7;
+  color:#000000;
+  text-align:left;
+  vertical-align:top;
+  font-family:Arial, Helvetica, sans-serif;
+  background-image:url(images/header_bg.gif);
+  background-repeat:repeat-y;
+}
+
+td.slidescell {
+  background-color:#E9E9E9;
+  text-align:top;
+  vertical-align:top;
+}
+
+td.video {
+  background-color:#121627;
+  text-align:center;
+  vertical-align:middle;
+}
+
+td.player {
+  background-color:#121627;
+  vertical-align:top;
+}
+
+td.buffercell { 
+  vertical-align:top;
+  color:#ffffff;
+  font-family:Arial, Helvetica, sans-serif;
+  font-size:11px;
+  padding-left:15px;
+  padding-top:5px;
+  background-image:url(images/playerbuffering.jpg);
+}
+
+div.bufferLabel { 
+  vertical-align:top;
+  color:#ffffff;
+  padding-top:6px;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:11px;
+}
+
+td.timefield {
+  background-image:url(images/player_timefield.png);
+  vertical-align:top;
+  text-align:left;
+  color:#ffffff;
+  font-family:Arial,Helvetica,sans-serif;
+  font-size:15px;
+  font-weight:bold;
+  width:83px;
+  height:26px;
+}
+
+div.timefield { 
+  padding-left:22px;
+  padding-top:5px;
+}
+
+td.playButton {
+  background-image:url(images/button_play_bg.png);
+}
+
+td.forwardButton {
+  background-image:url(images/button_ffw_bg.png);
+}
+
+td.endButton {
+  background-image:url(images/button_ffw_end_bg.png);
+}
+
+td.homeButton {
+  background-image:url(images/button_bw_start_bg.png);
+}
+td.backButton {
+  background-image:url(images/button_bw_bg.png);
+}
+
+.TextField
+{
+  border: 1px solid #000000;
+  background-color:#FFFFFF;
+}
+
+div.searchDivOuter, div.searchDivInner {
+  background-color: #E9E9E9;
+}
+
+div.searchDivInner div.textdiv {
+  color: #000000;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 12px;
+  vertical-align: middle;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+div.searchDivInner div.searchtextdiv {
+  color: #222222;
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 11px;
+  vertical-align: middle;
+  overflow:hidden;
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+div.searchDivInner a {
+  text-decoration: none;
+  color: #000000;
+}
+
+div.searchDivInner a:hover {
+  color: #264EB8;
+}

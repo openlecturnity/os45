@@ -1,0 +1,151 @@
+AvGrabber DLL
+=============
+
+Kurze Erläuterung der Bedeutung der verschiedenen Dateien.
+
+$Revision: 1.3 $
+$Date: 2005-12-06 08:05:53 $
+
+AudioFile.cpp 
+   Enthält Code zum relativ einfachen Schreiben von WAV- oder
+   LAD-Dateien, ausgehend von einem Datenformat (d.hg. Kanäle,
+   Samplerate, etc.) und rohen Sound-Daten.
+
+
+audiomixer.cpp
+   Mit Hilfe des in audiomixer.cpp implementierten Klasse AudioMixer
+   lässt sich für ein waveIn-Device die Lautstärke verändern und
+   abfragen. Zudem stellt die Klasse AudioMixer Informationen über
+   verfügbare Audioquellen eines Audio-Gerätes zur Verfügung.
+
+
+avgrabber.cpp
+   Enthält die Klasse AvGrabber; der AvGrabber stellt die
+   Schnittstelle zwischen den darunterliegenden Klassen (WdmCapturer,
+   VideoCapturer, AudioCapturer...) und einer Applikation (z.B. den
+   Assistant) zur Verfügung. Man sollte immer über den AvGrabber mit
+   der AvGrabber-DLL kommunizieren.
+
+
+CaptureRectChooser.cpp
+   Diese Datei enthält die Klasse CaptureRectChooser, welche dazu
+   benutzt wird, ein Bereich für das Screengrabbing auszuwählen. Dabei
+   wird ein unsichtbares Fenster über den Bildschirm gelegt und
+   sämtliche sinnvoll aussehende HWND-Strukturen zur Auswahl
+   angeboten.
+
+cdrawwindow.cpp
+   Enthält die Klasse CDrawWindow, welche vom ScreenCapturer benutzt
+   wird, wenn der Annotations-Modus während einer
+   Screengrabbing-Aufzeichnung gestartet wird. Klasse ist mit reinen
+   Win32-Funktionen aufgebaut, benutzt also nicht das MFC. Enthält
+   also ganz klassisch eine Window Loop und eine WindowProc-Funktion
+   zum Abfangen von Mausereignissen auf dem Fenster.
+
+
+cpumeter.cpp
+   Die Datei cpumeter.cpp enthält Code, der zum Auslesen der
+   Prozessorauslastung benutzt werden kann. Der AvGrabber besitzt eine
+   entsprechende Methode, welche auf diese Datei zugreift. Allerdings
+   werden diese Informationen im Moment nirgends benutzt. Im Prinzip
+   ist die Funktionalität dazu gedacht, zu hohe Prozessorauslastung zu
+   erkennen, aber eine solche Funktion wurde niemals implementiert.
+
+getdxver.cpp
+   Mit Hilfe der Funktion GetDXVersion() kann die aktuell verfügbare
+   DirectX-Version geprüft werden. Ich meine, dass eine solche
+   Funktion jedoch auch im Editor vorhanden ist; wahrscheinlich sogar
+   die gleiche (und wahrscheinlich aber nicht die
+   gleiche... Doppelcode!). Dieser Code stammt direkt aus dem DirectX
+   SDK; es wundert mich, dass eine Funktion "GetDXVer" nicht direkt in
+   DirectX implementiert ist, aber wahrscheinlich wurde das von Anfang
+   an verpennt, und aus irgendwelchen Gründen ist es schwierig, das
+   nachträglich in den Kanon der DirectX-Funktionen aufzunehmen.
+
+
+hwaccelmanager.cpp
+   In hwaccelmanager.cpp ist der Code für die An- und Abschaltung der
+   Hardwarebeschleunigung zu finden. Dieses Feature wird auf Wunsch
+   beim Screengrabbing verwendet, um eine bessere Performance zu
+   erreichen.
+
+
+kerberok.cpp
+   Diese Datei wird im Moment nicht verwendet. Er enthält eine
+   einzelne Methode kerberokCheck(), welches auf das Vorhandensein des
+   Registry-Wertes HKLM\Software\Kerberok\Fence. Wenn dieser Wert
+   nicht vorhanden ist (oder kein DWORD ist), wird eine
+   Zugriffsverletzung provoziert. Diese Funktion wurde implementiert,
+   um unvorsichtige Ausprobierer in Saarbrücken davon abzuhalten, den
+   Assistant der Version 1.2beta (mit frischer Videoaufzeichnung)
+   weiterzugeben (weil er sowieso nur abstürzte).  Wird vielleicht in
+   Zukunft mal wieder nützlich.
+
+
+localizer.cpp
+   Im AvGrabber ist die Frage der Strings und die Lokalisierung
+   derselben unglaublich ungeschickt gelöst: In einer String-Tabelle
+   sind sämtliche Strings hintereinander aufgeführt, und es wird
+   darauf vertraut, dass die englische Variante immer eine ID+1
+   gegenüber dem deutschen Text hat. Den korrekten String für die
+   korrekte Sprache und ID auslesen übernimmt die Klasse Local in
+   localizer.cpp. Ja, das wird tatsächlich noch so verwendet...
+
+
+MyAudio.cpp
+   Enthält den AudioCapturer. Siehe CSC (Beschreibung als LPD).
+
+
+rectkeeper.cpp
+   In rectkeeper.cpp gibt es Code, der für das "Quick Capture" im
+   ScreenCapturer Änderungsrechtecke verwaltet. Man kann einem
+   CRectKeeper-Objekt ein Recteck geben, welches es dann in einer
+   Liste von disjunkten Änderungsrechtecken verwaltet. Überschneidet
+   sich ein neues Rechteck mit einem alten, so werden diese Rechtecke
+   miteinander verschmolzen. Der CRectKeeper kann zudem eine Ausgabe
+   mit Zusatzinformationen für den LSGC-Codec erzeugen, so dass LSGC
+   nicht eigenmächtig die Änderungsrechtecke berechnen muss.
+
+
+RiffFile.cpp
+   Implementierung einer RIFF-Datei, wird für das Schreiben von
+   AVI-Dateien benutzt, bzw. diese Klasse dient als Basisklasse für
+   die Klasse VideoFile benutzt; VideoFile greift auf die Methoden zum
+   Öffnen und Schließen von RIFF-Tags in RiffFile zu. Im AvGrabber
+   wird RiffFile jedoch nicht als Basis für Audiodateien benutzt, da
+   ja nicht WAV-, sondern LAD-Dateien geschrieben werden. Die in
+   RiffFile verwendeten mmio*-Routinen würden hierfür aber nicht
+   taugen. Hier ist also zu AudioFile relativ Pseudo-Doppelcode.
+
+
+samplecallback.cpp
+   Implementiert das Interface ISampleGrabberCB zur Benutzung im
+   WdmCapturer. Im Prinzip hätte man diese Klasse der Übersicht halber
+   auch in den WdmCapturer legen können, aber nun ist er einmal
+   hier... ISampleGrabberCB muss implementiert werden, um dem
+   SampleGrabber im DirectX eine Schnittstelle zur Applikation zu
+   geben.
+
+
+ScreenCapturer.cpp
+    Implementierung des ScreenCapturer (siehe Präsentation im CSC).
+
+
+StdAfx.cpp
+    Für die vorkompilierten Header.
+
+
+VideoCapturer.cpp
+    Implementierung des VideoCapturer (VfW, siehe Präsentation im
+    CSC).
+
+VideoFile.cpp
+    Implementierung einer AVI-Datei auf der Basis der Klasse RiffFile
+    (siehe oben). Relativ unüberschaubare Datei, stark gewachsen. Hier
+    ist der meiste Code, der mit der tatsächlichen Komprimierung der
+    Videodaten (Kommunikation mit Codecs) zu tun hat. Im Prinzip hätte
+    man das ganze Zentralisieren müssen und einen "CodecHandler" oder
+    sowas ähnliches schreiben müssen, denn im Moment ist das Erzeugen
+    einer Codec-Liste für ein Video-Format im VideoCapturer
+    implementiert, aber anderer Legacy-Code zur Codec-Kommunikation
+    befindet sich eben in dieser Datei. Unschön, sowas.

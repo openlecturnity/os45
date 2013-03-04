@@ -1,0 +1,344 @@
+<templateConfig name="LECTURNITY WebPlayer Popup" 
+                title_de="Standard-Design: Popup-Fenster/Vollbild" 
+                title_en="Standard design: Popup window/Full screen" 
+                description_de="Vorlage im Standard-Design mit viel Platz für Folien. Video wird nicht unterstützt. Der Vollbild-Modus ist auf den Internet Explorer beschränkt." 
+                description_en="Template in standard design providing much space for slides. Video is not supported. Full screen support is restricted to the Internet Explorer." 
+                author="imc AG" 
+                copyright="(c) 2005 imc AG, Office Freiburg" 
+                screenshot="screenshot.jpg">
+
+   <configurations>
+      <config name="normalDocument">true</config>
+      <config name="standaloneDocument">true</config>
+   </configurations>
+
+   <id>{1476D73F-47D7-4de5-88B5-7C651E6D1C7C}</id>
+   <isScormCompliant>true</isScormCompliant>
+   <isUtfTemplate>true</isUtfTemplate>
+
+   <configurableKeywords>
+      <keyword name="%LogoImage%" name_de="Logo auf der Steuerungsleiste" name_en="Logo on control bar" type="image" minwidth="0" minheight="0" maxwidth="100" maxheight="34"></keyword>
+      <keyword name="%LogoImageUrl%" name_de="URL für Logo auf Steuerungsleiste" name_en="URL for Logo on control bar" type="text" maxlength="255">http://www.lecturnity.de</keyword>
+      <keyword name="%TitleAlignment%" name_de="Textausrichtung Titel" name_en="Alignment of title" type="select" options_de="Linksbündig|Zentriert|Rechtsbündig" options_en="Left aligned|Centered|Right aligned" options="left|center|right">left</keyword>
+      <keyword name="%BackgroundColor%" name_de="Hintergrundfarbe" name_en="Background color" type="color">#F1EFE2</keyword>
+      <keyword name="%TextColor%" name_de="Textfarbe" name_en="Text color" type="color">#333333</keyword>
+      <keyword name="%InfoTabBgColor%" name_de="Hintergrundfarbe Informationsbereich" name_en="Background color information area" type="color">#ECE9D7</keyword>
+      <keyword name="%BorderColor%" name_de="Randfarbe" name_en="Border color" type="color">#666666</keyword>
+      <keyword name="%FullScreen%" name_de="Vollbild-Modus (nur Internet Explorer)" name_en="Full screen mode (only Internet Explorer)" type="select" options_de="Aus|Ein" options_en="Off|On" options="0|1">0</keyword>
+      <keyword name="%MenuBar%" name_de="Menüleiste (nur wenn nicht Vollbild)" name_en="Menu bar (only if not full screen)" type="select" options_de="Aus|Ein" options_en="Off|On" options="0|1">0</keyword>
+      <keyword name="%ToolBar%" name_de="Werkzeugleiste (nur wenn nicht Vollbild)" name_en="Tool bar (only if not full screen)" type="select" options_de="Aus|Ein" options_en="Off|On" options="0|1">0</keyword>
+      <keyword name="%LocationBar%" name_de="Adressleiste (nur wenn nicht Vollbild)" name_en="Location bar (only if not full screen)" type="select" options_de="Aus|Ein" options_en="Off|On" options="0|1">0</keyword>
+      <keyword name="%StatusBar%" name_de="Statusleiste (nur wenn nicht Vollbild)" name_en="Status bar (only if not full screen)" type="select" options_de="Aus|Ein" options_en="Off|On" options="0|1">1</keyword>
+      <keyword name="%IntroPageLogo%" name_de="Intro-Seite: Logo-Bild" name_en="Intro screen: Logo image" type="image" minwidth="0" minheight="0" maxwidth="640" maxheight="480"></keyword>
+      <keyword name="%IntroBackgroundColor%" name_de="Intro-Seite: Hintergrundfarbe" name_en="Intro screen: Background color" type="color">#F1EFE2</keyword>
+      <keyword name="%IntroBorderColor%" name_de="Intro-Seite: Rahmenfarbe" name_en="Intro screen: Border color" type="color">#666666</keyword>
+      <keyword name="%IntroBorderWidth%" name_de="Intro-Seite: Rahmenbreite (auch 0 möglich)" name_en="Intro screen: Border width (may be 0)" type="integer">2</keyword>
+      <keyword name="%IntroText%" name_de="Intro-Seite: Zusätzlicher Text" name_en="Intro screen: Additional text" type="text"></keyword>
+      <keyword name="%IntroTextColor%" name_de="Intro-Seite: Textfarbe" name_en="Intro screen: Text color" type="color">#333333</keyword>
+      <keyword name="%NavigationControlBar%" name_de="Navigation: Steuerleiste" name_en="Navigation: Control Bar" type="select" options_de="aktiviert|deaktiviert|ausgeblendet" options_en="enabled|disabled|hidden" options="0|1|2">0</keyword>
+      <keyword name="%NavigationStandardButtons%" name_de="Navigation: Standard-Schaltflächen" name_en="Navigation: Standard Buttons" type="select" options_de="aktiviert|deaktiviert|ausgeblendet" options_en="enabled|disabled|hidden" options="0|1|2">0</keyword>
+      <keyword name="%NavigationTimeLine%" name_de="Navigation: Zeitleiste" name_en="Navigation: Timeline" type="select" options_de="aktiviert|deaktiviert|ausgeblendet" options_en="enabled|disabled|hidden" options="0|1|2">0</keyword>
+      <keyword name="%NavigationTimeDisplay%" name_de="Navigation: Zeitanzeige" name_en="Navigation: Time Display" type="select" options_de="aktiviert|deaktiviert|ausgeblendet" options_en="enabled|disabled|hidden" options="0|1|2">0</keyword>
+      <keyword name="%NavigationPluginContextMenu%" name_de="Navigation: Kontextmenü des PlugIns" name_en="Navigation: Context Menu of PlugIn" type="select" options_de="aktiviert|ausgeblendet" options_en="enabled|hidden" options="0|1">0</keyword>
+      <keyword name="%LecturnityWebPlayerLogo%" name_de="\"Lecturnity WebPlayer\" Logo/Schriftzug" name_en="\"LECTURNITY WebPlayer\" logo/lettering" type="select" options_de="sichtbar|ausgeblendet" options_en="visible|hidden" options="0|1">0</keyword>
+   </configurableKeywords>
+
+   <normalDocument>
+      <slidesSize>
+         <width>%ScreenWidth% - if(%FullScreen%, 0, 20)</width>
+         <height>%ScreenHeight% - if(%FullScreen%, 113, 125 + if(%ToolBar%, 42, 0) + if(%MenuBar%, 24, 0) + if(%StatusBar%, 24, 0) + if(%LocationBar%, 24, 0))</height>
+      </slidesSize>
+
+      <staticFiles>
+         <file>config.xml</file>
+         <file>js/browserlib.js</file>
+         <file>js/button.js</file>
+         <file>js/evhandler.js</file>
+         <file>js/lslider.js</file>
+         <file>js/slides.js</file>
+         <file>js/testing.js</file>
+         <file>js/utils.js</file>
+         <file>images/bubble.gif</file>
+         <file>images/button_back.png</file>
+         <file>images/button_back_f2.png</file>
+         <file>images/button_back_f3.png</file>
+         <file>images/button_back_f4.png</file>
+         <file>images/button_end.png</file>
+         <file>images/button_end_f2.png</file>
+         <file>images/button_end_f3.png</file>
+         <file>images/button_end_f4.png</file>
+         <file>images/button_forward.png</file>
+         <file>images/button_forward_f2.png</file>
+         <file>images/button_forward_f3.png</file>
+         <file>images/button_forward_f4.png</file>
+         <file>images/button_home.png</file>
+         <file>images/button_home_f2.png</file>
+         <file>images/button_home_f3.png</file>
+         <file>images/button_home_f4.png</file>
+         <file>images/button_mute.png</file>
+         <file>images/button_mute_f2.png</file>
+         <file>images/button_mute_f3.png</file>
+         <file>images/button_mute_f4.png</file>
+         <file>images/button_pause.png</file>
+         <file>images/button_pause_f2.png</file>
+         <file>images/button_pause_f3.png</file>
+         <file>images/button_pause_f4.png</file>
+         <file>images/button_play.png</file>
+         <file>images/button_play_f2.png</file>
+         <file>images/button_play_f3.png</file>
+         <file>images/button_play_f4.png</file>
+         <file>images/controlbar_bg.png</file>
+         <file>images/controlbar_left.png</file>
+         <file>images/controlbar_left_notd.png</file>
+         <file>images/controlbar_left_notl.png</file>
+         <file>images/controlbar_left_notltd.png</file>
+         <file>images/controlbar_right.png</file>
+         <file>images/cursor.gif</file>
+         <file>images/telepointer24.gif</file>
+         <file>images/timeslider_bg.png</file>
+         <file>images/timeslider_knob.png</file>
+         <file>images/timeslider_knob_f4.png</file>
+         <file>images/trans.gif</file>
+         <file>images/volumeslider_bg.png</file>
+         <file>images/initialize.png</file>
+         <file>images/ie_xpsp2_internetoptionen.png</file>
+         <file>images/ie_xpsp2_internet_options.png</file>
+         <file>images/button_exit.png</file>
+         <file>images/button_exit_f2.png</file>
+         <file>images/button_exit_f3.png</file>
+         <file>images/button_exit_f4.png</file>
+      </staticFiles>
+      
+      <scormFiles>  
+         <file>js/scorm.js</file>
+	 <file>js/scorm_utils.js</file>
+    </scormFiles>
+    
+    <commonFiles>
+	 <file>js/APIWrapper.js</file>
+	 <file writeToRoot="true">scorm/datatypes.dtd</file>
+	 <file writeToRoot="true">scorm/XMLSchema.dtd</file>
+	 <file writeToRoot="true">scorm/adlcp_v1p3.xsd</file>
+	 <file writeToRoot="true">scorm/adlnav_v1p3.xsd</file>
+	 <file writeToRoot="true">scorm/adlseq_v1p3.xsd</file>
+	 <file writeToRoot="true">scorm/imscp_v1p1.xsd</file>
+	 <file writeToRoot="true">scorm/imsss_v1p0.xsd</file>
+	 <file writeToRoot="true">scorm/imsss_v1p0auxresource.xsd</file>
+	 <file writeToRoot="true">scorm/imsss_v1p0control.xsd</file>
+	 <file writeToRoot="true">scorm/imsss_v1p0delivery.xsd</file>
+	 <file writeToRoot="true">scorm/imsss_v1p0limit.xsd</file>
+	 <file writeToRoot="true">scorm/imsss_v1p0objective.xsd</file>
+	 <file writeToRoot="true">scorm/imsss_v1p0random.xsd</file>
+	 <file writeToRoot="true">scorm/imsss_v1p0rollup.xsd</file>
+	 <file writeToRoot="true">scorm/imsss_v1p0seqrule.xsd</file>
+	 <file writeToRoot="true">scorm/imsss_v1p0util.xsd</file>
+	 <file writeToRoot="true">scorm/lom.xsd</file>
+	 <file writeToRoot="true">scorm/lomCustom.xsd</file>
+	 <file writeToRoot="true">scorm/lomLoose.xsd</file>
+	 <file writeToRoot="true">scorm/lomStrict.xsd</file>
+	 <file writeToRoot="true">scorm/xml.xsd</file>
+	 <file>common/anyElement.xsd</file>
+	 <file>common/dataTypes.xsd</file>
+	 <file>common/elementNames.xsd</file>
+	 <file>common/elementTypes.xsd</file>
+	 <file>common/rootElement.xsd</file>
+	 <file>common/vocabTypes.xsd</file>
+	 <file>common/vocabValues.xsd</file>
+	 <file>extend/custom.xsd</file>
+	 <file>extend/strict.xsd</file>
+	 <file>unique/loose.xsd</file>
+	 <file>unique/strict.xsd</file>
+	 <file>vocab/adlmd_vocabv1p0.xsd</file>
+	 <file>vocab/custom.xsd</file>
+	 <file>vocab/loose.xsd</file>
+	 <file>vocab/strict.xsd</file>  
+    </commonFiles>
+
+      <templateFiles>
+         <file writeToRoot="true" prefix="%BaseDocumentName%" isIndex="true">index.html.tmpl</file>
+         <file writeToRoot="true">normal/__frames.html.tmpl</file>
+         <file>__controlbar.html.tmpl</file>
+         <file writeToRoot="true">normal/__main.html.tmpl</file>
+         <file writeToRoot="true">normal/__slides.html.tmpl</file>
+         <file writeToRoot="true">normal/__feedback.html.tmpl</file>
+         <file writeToRoot="true">normal/slides.css.tmpl</file>
+         <file writeToRoot="true">normal/style.css.tmpl</file>
+         <file>js/controlbar.js.tmpl</file>
+         <file>js/layout.js.tmpl</file>
+         <file>js/layoutapi.js.tmpl</file>
+         <file>js/questionnaire.js.tmpl</file>
+         <file>js/variables.js.tmpl</file>
+      </templateFiles>
+
+      <realMedia>
+         <replaceKeywords>
+            <keyword name="%ControlJavaScript%">control_rm.js</keyword>
+         </replaceKeywords>
+
+         <staticFiles>
+            <file>js/control_rm.js</file>
+         </staticFiles>
+
+         <templateFiles>
+         </templateFiles>
+      </realMedia>
+
+      <windowsMedia>
+         <replaceKeywords>
+            <keyword name="%ControlJavaScript%">control_wm.js</keyword>
+         </replaceKeywords>
+
+         <staticFiles>
+            <file>js/control_wm.js</file>
+         </staticFiles>
+
+         <templateFiles>
+            <file>__masterplayer_wm.html.tmpl</file>
+         </templateFiles>
+      </windowsMedia>
+   </normalDocument>
+
+   <standaloneDocument>
+      <staticFiles>
+         <file>config.xml</file>
+         <file>js/browserlib.js</file>
+         <file>js/button.js</file>
+         <file>js/evhandler.js</file>
+         <file>js/lslider.js</file>
+         <file>js/slides.js</file>
+         <file>js/utils.js</file>
+         <file>images/button_back.png</file>
+         <file>images/button_back_f2.png</file>
+         <file>images/button_back_f3.png</file>
+         <file>images/button_back_f4.png</file>
+         <file>images/button_end.png</file>
+         <file>images/button_end_f2.png</file>
+         <file>images/button_end_f3.png</file>
+         <file>images/button_end_f4.png</file>
+         <file>images/button_forward.png</file>
+         <file>images/button_forward_f2.png</file>
+         <file>images/button_forward_f3.png</file>
+         <file>images/button_forward_f4.png</file>
+         <file>images/button_home.png</file>
+         <file>images/button_home_f2.png</file>
+         <file>images/button_home_f3.png</file>
+         <file>images/button_home_f4.png</file>
+         <file>images/button_mute.png</file>
+         <file>images/button_mute_f2.png</file>
+         <file>images/button_mute_f3.png</file>
+         <file>images/button_mute_f4.png</file>
+         <file>images/button_pause.png</file>
+         <file>images/button_pause_f2.png</file>
+         <file>images/button_pause_f3.png</file>
+         <file>images/button_pause_f4.png</file>
+         <file>images/button_play.png</file>
+         <file>images/button_play_f2.png</file>
+         <file>images/button_play_f3.png</file>
+         <file>images/button_play_f4.png</file>
+         <file>images/controlbar_bg.png</file>
+         <file>images/controlbar_left.png</file>
+         <file>images/controlbar_left_notd.png</file>
+         <file>images/controlbar_left_notl.png</file>
+         <file>images/controlbar_left_notltd.png</file>
+         <file>images/controlbar_right.png</file>
+         <file>images/cursor.gif</file>
+         <file>images/timeslider_bg.png</file>
+         <file>images/timeslider_knob.png</file>
+         <file>images/timeslider_knob_f4.png</file>
+         <file>images/trans.gif</file>
+         <file>images/volumeslider_bg.png</file>
+         <file>images/initialize.png</file>
+         <file>images/ie_xpsp2_internetoptionen.png</file>
+         <file>images/ie_xpsp2_internet_options.png</file>
+         <file>images/button_exit.png</file>
+         <file>images/button_exit_f2.png</file>
+         <file>images/button_exit_f3.png</file>
+         <file>images/button_exit_f4.png</file>
+      </staticFiles>
+      
+       <scormFiles>
+         <file>js/scorm.js</file>
+	 <file>js/scorm_utils.js</file>
+      </scormFiles>
+      
+      <commonFiles>
+         <file>js/APIWrapper.js</file>
+	 <file writeToRoot="true">scorm/datatypes.dtd</file>
+	 <file writeToRoot="true">scorm/XMLSchema.dtd</file>
+	 <file writeToRoot="true">scorm/adlcp_v1p3.xsd</file>
+	 <file writeToRoot="true">scorm/adlnav_v1p3.xsd</file>
+	 <file writeToRoot="true">scorm/adlseq_v1p3.xsd</file>
+	 <file writeToRoot="true">scorm/imscp_v1p1.xsd</file>
+	 <file writeToRoot="true">scorm/imsss_v1p0.xsd</file>
+	 <file writeToRoot="true">scorm/imsss_v1p0auxresource.xsd</file>
+	 <file writeToRoot="true">scorm/imsss_v1p0control.xsd</file>
+	 <file writeToRoot="true">scorm/imsss_v1p0delivery.xsd</file>
+	 <file writeToRoot="true">scorm/imsss_v1p0limit.xsd</file>
+	 <file writeToRoot="true">scorm/imsss_v1p0objective.xsd</file>
+	 <file writeToRoot="true">scorm/imsss_v1p0random.xsd</file>
+	 <file writeToRoot="true">scorm/imsss_v1p0rollup.xsd</file>
+	 <file writeToRoot="true">scorm/imsss_v1p0seqrule.xsd</file>
+	 <file writeToRoot="true">scorm/imsss_v1p0util.xsd</file>
+	 <file writeToRoot="true">scorm/lom.xsd</file>
+	 <file writeToRoot="true">scorm/lomCustom.xsd</file>
+	 <file writeToRoot="true">scorm/lomLoose.xsd</file>
+	 <file writeToRoot="true">scorm/lomStrict.xsd</file>
+	 <file writeToRoot="true">scorm/xml.xsd</file>
+	 <file>common/anyElement.xsd</file>
+	 <file>common/dataTypes.xsd</file>
+	 <file>common/elementNames.xsd</file>
+	 <file>common/elementTypes.xsd</file>
+	 <file>common/rootElement.xsd</file>
+	 <file>common/vocabTypes.xsd</file>
+	 <file>common/vocabValues.xsd</file>
+	 <file>extend/custom.xsd</file>
+	 <file>extend/strict.xsd</file>
+	 <file>unique/loose.xsd</file>
+	 <file>unique/strict.xsd</file>
+	 <file>vocab/adlmd_vocabv1p0.xsd</file>
+	 <file>vocab/custom.xsd</file>
+	 <file>vocab/loose.xsd</file>
+	 <file>vocab/strict.xsd</file>  
+      </commonFiles>
+
+      <templateFiles>
+         <file writeToRoot="true" prefix="%BaseDocumentName%" isIndex="true">index.html.tmpl</file>
+         <file writeToRoot="true">standalone/__frames.html.tmpl</file>
+         <file>__controlbar.html.tmpl</file>
+         <file writeToRoot="true">standalone/__main.html.tmpl</file>
+         <file writeToRoot="true">standalone/style.css.tmpl</file>
+         <file>js/controlbar.js.tmpl</file>
+         <file>js/layoutstandalone.js.tmpl</file>
+         <file>js/layoutapi.js.tmpl</file>
+         <file>js/variables.js.tmpl</file>
+      </templateFiles>
+
+      <realMedia>
+         <replaceKeywords>
+            <keyword name="%ControlJavaScript%">control_rm.js</keyword>
+         </replaceKeywords>
+
+         <staticFiles>
+            <file>js/control_rm.js</file>
+         </staticFiles>
+
+         <templateFiles>
+         </templateFiles>
+      </realMedia>
+
+      <windowsMedia>
+         <replaceKeywords>
+            <keyword name="%ControlJavaScript%">control_wm.js</keyword>
+         </replaceKeywords>
+
+         <staticFiles>
+            <file>js/control_wm.js</file>
+         </staticFiles>
+
+         <templateFiles>
+            <file>__masterplayer_wm.html.tmpl</file>
+         </templateFiles>
+      </windowsMedia>
+   </standaloneDocument>
+
+</templateConfig>

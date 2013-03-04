@@ -1,0 +1,61 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "minilzo", "..\minilzo\minilzo.vcproj", "{635110F1-6807-42C5-99C0-AA664F4A139B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "twlc", "twlc.vcproj", "{7713061D-A63A-4D26-B81C-81C6B1A72719}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D59530D8-8310-4295-B319-7399743FBD09} = {D59530D8-8310-4295-B319-7399743FBD09}
+		{635110F1-6807-42C5-99C0-AA664F4A139B} = {635110F1-6807-42C5-99C0-AA664F4A139B}
+		{3FBA68F3-D62D-4D4D-932C-BB375561F549} = {3FBA68F3-D62D-4D4D-932C-BB375561F549}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "..\zlib\zlib.vcproj", "{3FBA68F3-D62D-4D4D-932C-BB375561F549}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "lutils", "..\..\..\lecturnity\common\lutils\lutils.vcproj", "{D59530D8-8310-4295-B319-7399743FBD09}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		English_ReleaseStatic|Win32 = English_ReleaseStatic|Win32
+		Release|Win32 = Release|Win32
+		ReleaseStatic|Win32 = ReleaseStatic|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{635110F1-6807-42C5-99C0-AA664F4A139B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{635110F1-6807-42C5-99C0-AA664F4A139B}.Debug|Win32.Build.0 = Debug|Win32
+		{635110F1-6807-42C5-99C0-AA664F4A139B}.English_ReleaseStatic|Win32.ActiveCfg = Release|Win32
+		{635110F1-6807-42C5-99C0-AA664F4A139B}.English_ReleaseStatic|Win32.Build.0 = Release|Win32
+		{635110F1-6807-42C5-99C0-AA664F4A139B}.Release|Win32.ActiveCfg = Release|Win32
+		{635110F1-6807-42C5-99C0-AA664F4A139B}.Release|Win32.Build.0 = Release|Win32
+		{635110F1-6807-42C5-99C0-AA664F4A139B}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
+		{635110F1-6807-42C5-99C0-AA664F4A139B}.ReleaseStatic|Win32.Build.0 = Release|Win32
+		{7713061D-A63A-4D26-B81C-81C6B1A72719}.Debug|Win32.ActiveCfg = Debug|Win32
+		{7713061D-A63A-4D26-B81C-81C6B1A72719}.Debug|Win32.Build.0 = Debug|Win32
+		{7713061D-A63A-4D26-B81C-81C6B1A72719}.English_ReleaseStatic|Win32.ActiveCfg = Release|Win32
+		{7713061D-A63A-4D26-B81C-81C6B1A72719}.English_ReleaseStatic|Win32.Build.0 = Release|Win32
+		{7713061D-A63A-4D26-B81C-81C6B1A72719}.Release|Win32.ActiveCfg = Release|Win32
+		{7713061D-A63A-4D26-B81C-81C6B1A72719}.Release|Win32.Build.0 = Release|Win32
+		{7713061D-A63A-4D26-B81C-81C6B1A72719}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
+		{7713061D-A63A-4D26-B81C-81C6B1A72719}.ReleaseStatic|Win32.Build.0 = Release|Win32
+		{3FBA68F3-D62D-4D4D-932C-BB375561F549}.Debug|Win32.ActiveCfg = Debug|Win32
+		{3FBA68F3-D62D-4D4D-932C-BB375561F549}.Debug|Win32.Build.0 = Debug|Win32
+		{3FBA68F3-D62D-4D4D-932C-BB375561F549}.English_ReleaseStatic|Win32.ActiveCfg = Release|Win32
+		{3FBA68F3-D62D-4D4D-932C-BB375561F549}.English_ReleaseStatic|Win32.Build.0 = Release|Win32
+		{3FBA68F3-D62D-4D4D-932C-BB375561F549}.Release|Win32.ActiveCfg = Release|Win32
+		{3FBA68F3-D62D-4D4D-932C-BB375561F549}.Release|Win32.Build.0 = Release|Win32
+		{3FBA68F3-D62D-4D4D-932C-BB375561F549}.ReleaseStatic|Win32.ActiveCfg = Release|Win32
+		{3FBA68F3-D62D-4D4D-932C-BB375561F549}.ReleaseStatic|Win32.Build.0 = Release|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.Debug|Win32.ActiveCfg = Debug|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.Debug|Win32.Build.0 = Debug|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.English_ReleaseStatic|Win32.ActiveCfg = English_ReleaseStatic|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.English_ReleaseStatic|Win32.Build.0 = English_ReleaseStatic|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.Release|Win32.ActiveCfg = Release|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.Release|Win32.Build.0 = Release|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.ReleaseStatic|Win32.ActiveCfg = ReleaseStatic|Win32
+		{D59530D8-8310-4295-B319-7399743FBD09}.ReleaseStatic|Win32.Build.0 = ReleaseStatic|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

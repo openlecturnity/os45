@@ -1,0 +1,94 @@
+<!-- LECTURNITY version 1.6.1 -->
+
+<html>
+  <head>
+    <title>%AUTHOR%: %TITLE%</title>
+    <style type="text/css">
+      #MessageLayer {position:absolute; left:%E_MESSAGE_LEFT%; top:%E_MESSAGE_TOP%; z-index:%TELEPOINTER_Z_INDEX%; visibility:visible}
+      #TableSlideviewLayer {position:absolute; left:%E_TABLE_SLIDEVIEW_LEFT%; top:%E_TABLE_SLIDEVIEW_TOP%; z-index:2; visibility:visible}
+      #SlideareaLayer0 {position:absolute; left:%E_SLIDEAREA_LEFT%; top:%E_SLIDEAREA_TOP%; z-index:2; visibility:visible}
+      %SLIDEAREA_CSS%
+      #TelepointerLayer {position:absolute; left:%E_TELEPOINTER_LEFT%; top:%E_TELEPOINTER_TOP%; z-index:%TELEPOINTER_Z_INDEX%; visibility:hidden}
+      %SMIL_CSS%
+    </style>
+    
+    %CONTROL_ALL_JS%
+    <script language="JavaScript" type="text/javascript">
+    <!--
+      if ((navigator.appName=="Netscape") && (parseFloat(navigator.appVersion.substring(0,4))<5.0) )
+      {
+        document.open();
+        document.writeln('<link rel="stylesheet" href="imcns.css">');
+      }
+      else
+      {
+        document.open();
+        document.writeln('<link rel="stylesheet" href="imc.css">');
+      }
+      document.close();
+    //-->
+    </script>
+
+  </head>
+   
+  <body style="background-color:%BACKGROUND_COLOR%;margin:0px;">
+         
+    <div id="MessageLayer">
+      <img name="InitImage" 
+           src="%INIT_IMAGE_FILE%" 
+           width="%INIT_IMAGE_WIDTH%" 
+           height="%INIT_IMAGE_HEIGHT%" 
+           border="0" 
+           alt="/">
+    </div>
+    
+    <div id="TableSlideviewLayer">
+      <table id="TableSlideview" 
+             name="TableSlideview" 
+             border="0" 
+             cellspacing="0" 
+             cellpadding="0">
+        <tr> 
+          <td class="category">
+            %SLIDE_VIEW%</td>
+        </tr>
+        <tr> 
+          <td bgcolor="#333333">
+            <img name="headline" src="headline.gif" width="%SLIDE_WIDTH%" height="1" alt=""></td>
+        </tr>
+        <tr> 
+          <td>
+            <img src="trans.gif" width="1" height="4" alt=""></td>
+        </tr>
+      </table>
+    </div>
+
+    <div id="SlideareaLayer0">
+      <img name="Slidefield0" 
+           src="%SLIDE_ZERO%" 
+           width="%SLIDE_WIDTH%" 
+           height="%SLIDE_HEIGHT%" 
+           border="0" 
+           alt="%ALT_IMAGE%">
+    </div>
+    
+    
+    
+    %SLIDEAREA_IMAGES%
+    
+    <div id="TelepointerLayer">
+      <img name="Telepointer24" 
+           src="%TELEPOINTER_FILE%" 
+           width="%TELEPOINTER_WIDTH%" 
+           height="%TELEPOINTER_HEIGHT%" 
+           border="0" 
+           alt="/">
+    </div>
+
+    %SMIL_CLIPPLAYER%
+
+    %CLIPS_SEPARATED_PLAYER_BLOCK%
+
+  </body>
+
+</html>

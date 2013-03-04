@@ -1,0 +1,53 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>%Author%: %Title% %LecturnityWebPlayer% %Version%</title>
+    <meta name="author" content="%Author%">
+    <meta name="keywords" content="%MetadataKeywords%">
+
+    <script type="text/javascript">
+      <!--
+      
+      function frameset_init()
+      {
+        control.controlbar_init();
+        main.main_init();
+      }
+      
+      function frameset_finish()
+      {
+	    main.main_finish();
+      }
+      
+      // -->
+    </script>
+  </head>
+
+  <script type="text/javascript">
+  <!--
+  document.writeln('<frameset id="FrameSet" rows="*, 35" frameborder="0" framespacing="0" border="0" onLoad="frameset_init();" onUnload="frameset_finish();">');
+  document.writeln('  <frame src="__main.html" name="main" frameborder="0" marginheight="0" marginwidth="0">');
+  document.writeln('  <frame src="__controlbar.html" name="control" noresize="true" scrolling="no" frameborder="0" marginheight="0" marginwidth="0">');
+  document.writeln('</frameset>');
+  // -->
+  </script>
+  <noscript>
+    <table>
+      <tr><td width="500px">
+        <p style="font-family:Arial,Helvetica,sans-serif;font-size:16px;color:#CC0018;font-weight:bold;">
+          %NoJavascriptHeader%<br>
+        </p>
+        <p style="font-family:Arial,Helvetica,sans-serif;font-size:12px;color:#000000;font-weight:normal;">
+          %NoJavascriptReason%
+        </p>
+        <ul style="list-style-type:disc;font-family:Arial,Helvetica,sans-serif;font-size:12px;color:%IntroTextColor%;font-weight:normal;">
+          <li>%NoJavascriptCause1%</li><br>
+          <li>%NoJavascriptSpecial%<br>%NoJavascriptCause2%<br><br>
+          <img src="images/%NoJavascriptImage%"></li>
+        </ul>
+      </td><td>&nbsp;</td></tr>
+    </table>
+  </noscript>
+  
+</html>

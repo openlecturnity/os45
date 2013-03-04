@@ -1,0 +1,691 @@
+/* LECTURNITY version 1.6.1 */
+
+/* ----------------------------------------------------------------------------
+ * Global variables
+ * ---------------------------------------------------------------------------- */
+
+// Media Player
+var MediaPlayer1           = null;
+var Spacer1                = null;
+
+// tryouts (waiting time) depend on clips: 10 sec + 1 sec per clip 
+var maxTryouts = 50 + (5 * numOfClips);
+var waitingTime = maxTryouts * 200;
+
+%CLIPS_SEPARATED_VAR_BLOCK%
+
+
+/* ------------------------------------------------------------------------
+ * Init: initialize media player
+ * ------------------------------------------------------------------------ */
+
+function delayedInitCheck1()
+{
+  InitImageStyle.visibility = "visible";
+
+  // preload popups
+  if (isClipsSeparated && isNS4)
+  {
+    popups[0] = null;
+    for (i = 0; i < clipBeginTimes.length; ++i)
+    {
+      focusRequests[i] = true;
+      showWMPlayer(i);
+    }
+  }
+}
+
+function delayedInitCheck2()
+{
+  if (isClipsSeparated)
+  {
+    // a "reload" doesn't seem to clean all timers
+    // so an old timer can strike on a new page => check the id
+    secondChanceId = new Date().getMilliseconds();
+    setTimeout("secondChanceWMInit("+secondChanceId+")",  waitingTime);
+    delayedWMInit();
+  }
+  else
+  {
+    // only one player, which has already been determined
+    initPlayerFinished = true;
+    InitImageStyle.visibility = "hidden";
+  }
+}
+
+function determineMediaPlayers()
+{
+  Spacer1 = eval('top.videoframe.' + pre + 'Spacer1' + post);
+  MediaPlayer1 = getEmbeddedObject("videoframe", "MediaPlayer1");
+}
+
+function determinePlayerObjectStyles()
+{
+  // MediaPlayer1 is not positioned with a <div> tag so it has no style
+}
+
+function getWMPlayer(playerNumber)
+{
+  var player = null;
+  
+  if (!isNS4)
+  {
+    player = eval('top.viewframe.document.ClipPlayer'+playerNumber);
+  }
+  else // special case for Netscape 4.x: popup windows
+  {
+    if (popups[playerNumber] && !popups[playerNumber].closed)
+      player = popups[playerNumber].document.embeds["ClipPlayer"+playerNumber];
+  }
+  
+  return player;
+}
+
+function getWMControlsHeight()
+{
+  return 72;
+}
+
+
+/* ------------------------------------------------------------------------
+ * Part for Dynamic Frames
+ * ----------------------------------------------------------------------- */
+function resizeMediaPlayer(frameWidth, frameHeight)
+{
+  if (frameWidth < 120)
+    return;
+  if (frameHeight < 160)
+    return;
+  
+  var maxPlayerWidth = frameWidth - 40;
+  var maxPlayerHeight = frameHeight - 14;
+  var tempPlayerHeight = (aspectRatioVideo > 0) ? ((maxPlayerWidth / aspectRatioVideo) + 72) : 72;
+
+  // Netscape 4.x: width and height can not be changed dynamically
+  if ((!isNS4) && (isScalable == true))
+  {
+    if (tempPlayerHeight > maxPlayerHeight)
+    {
+      if ( (videoType == TYPE_NOVIDEO) || (videoType == TYPE_STILLIMAGE) )
+      {
+        MediaPlayer1.height = 72;
+        MediaPlayer1.width = ((maxPlayerHeight - 72) * aspectRatioVideo);
+      }
+      else
+      {
+        MediaPlayer1.height = maxPlayerHeight;
+        MediaPlayer1.width = ((MediaPlayer1.height - 72) * aspectRatioVideo);
+      }
+    }
+    else
+    {
+      MediaPlayer1.width = maxPlayerWidth;
+      if ( (videoType == TYPE_NOVIDEO) || (videoType == TYPE_STILLIMAGE) )
+        MediaPlayer1.height = 72;
+      else
+        MediaPlayer1.height = (aspectRatioVideo > 0) ? ((MediaPlayer1.width / aspectRatioVideo) + 72) : 72;
+    }
+    Spacer1.height = frameHeight - MediaPlayer1.height - 5;
+  
+    if ( (videoType == TYPE_NOVIDEO) || (videoType == TYPE_STILLIMAGE) )
+    {
+      var availableWidth = frameWidth - 40;
+      var availableHeight = frameHeight - 92;
+      var scale = Math.min(availableWidth/StillimageWidth, availableHeight/StillimageHeight);
+      if (scale > 1.0)
+         scale = 1.0;
+      StillimageImage.width = scale * StillimageWidth;
+      StillimageImage.height = scale * StillimageHeight;
+      if (videoType == TYPE_STILLIMAGE && StillimageHeight <= 240)
+      {
+        var stillimageOffsetHeight = scale * (120 + (0.5 * StillimageHeight));
+        moveHtmlObjectToY(StillimageStyle, frameHeight - stillimageOffsetHeight - 77);
+      }
+      else
+      {
+        moveHtmlObjectToY(StillimageStyle, frameHeight - StillimageImage.height - 77);
+      }
+      moveHtmlObjectToX(StillimageStyle, 20 + parseInt(0.5 * (MediaPlayer1.width - StillimageImage.width)));
+    }
+    
+    if ( (videoType == TYPE_NOVIDEO) 
+      || (videoType == TYPE_VIDEO) && (hasMetadataTable) )
+      moveHtmlObjectToY(TableMetadataStyle, frameHeight - 112);
+  }
+}
+
+
+/* ------------------------------------------------------------------------
+ * Media Player Interfaces
+ * ------------------------------------------------------------------------ */
+
+function doPlay(Player)
+{
+  Player.Play();
+}
+
+function doPause(Player)
+{
+  Player.Pause();
+}
+
+function doStop(Player)
+{
+  Player.Stop();
+}
+
+function setPosition(Player, milliseconds)
+{
+  if (Player == null)
+    return;
+
+  var seconds = milliseconds / 1000.0;
+  if (isNS4)
+    Player.SetCurrentPosition(seconds);
+  else if (isIE4 || isDOM)
+    Player.CurrentPosition = seconds;
+  else
+    return;
+}
+
+function getPosition(Player)
+{
+  if (Player == null)
+    return -2;
+
+  // return position in milliseconds
+  if (isNS4)
+    return Math.round(Player.GetCurrentPosition() * 1000);
+  else if (isIE4 || isDOM)
+    return Math.round(Player.CurrentPosition * 1000);
+  else
+    return -2;
+}
+
+function getDuration(Player)
+{
+  if (Player == null)
+    return -2;
+
+  if (isNS4)
+    return Player.GetDuration();
+  else if (isIE4 || isDOM)
+    return Player.Duration;
+  else
+    return -2;
+}
+
+function getPlayState(Player)
+{
+  if (Player == null)
+    return -2;
+
+  if (!isNS4 && Player.Duration == 0)
+    return -2;
+
+  if (isNS4)
+    return Player.GetPlayState();
+  else if (isIE4 || isDOM)
+    return Player.PlayState;
+  else
+    return -2;
+}
+
+function isStopped(Player)
+{
+  return (getPlayState(Player) == 0);
+}
+
+function isPaused(Player)
+{
+  return (getPlayState(Player) == 1);
+}
+
+function isPlaying(Player)
+{
+  return (getPlayState(Player) == 2);
+}
+
+function isWaiting(Player)
+{
+  return (getPlayState(Player) == 3);
+}
+
+function isScanningForward(Player)
+{
+  return (getPlayState(Player) == 4);
+}
+
+function isScanningReverse(Player)
+{
+  return (getPlayState(Player) == 5);
+}
+
+function isNext(Player)
+{
+  return (getPlayState(Player) == 6);
+}
+
+function isPrevious(Player)
+{
+  return (getPlayState(Player) == 7);
+}
+
+function isClosed(Player)
+{
+  return (getPlayState(Player) == 8);
+}
+
+function isContacting(Player)
+{
+  // not implemented ==> RealMedia
+  return false;
+}
+
+function isBuffering(Player)
+{
+  // not implemented ==> RealMedia
+  return false;
+}
+
+function isSeeking(Player)
+{
+  // not implemented ==> RealMedia
+  return false;
+}
+
+
+/* ------------------------------------------------------------------------
+ * Part for "Clips separated from video"
+ * ------------------------------------------------------------------------ */
+
+/* ------------------------------------------------------------------------
+ * Extended init stuff
+ * ------------------------------------------------------------------------ */
+
+function closePopups()
+{
+  if (isClipsSeparated && isNS4)
+  {
+    for (i = 0; i < clipBeginTimes.length; ++i)
+      closePopupPlayer(i);
+  }
+}
+
+function delayedWMInit()
+{
+  // playersAreReady is true after a reload though the
+  // players are not, therefore: repeat at least once? (tryouts == 0)
+  var playersAreReady = tryouts > 0 ? determineWMPlayerReadyness() : false;
+
+  if (!playersAreReady)
+  {
+    tryouts++;
+      
+    if (tryouts < maxTryouts)
+    {
+      setTimeout("delayedWMInit()", 200);
+    }
+    else
+    {
+      // will get tackled by secondChanceWMInit()
+    }
+  }
+  else
+  {
+    initWMFunctions();
+  }
+}
+
+function secondChanceWMInit(id)
+{
+  if (!initPlayerFinished && id == secondChanceId)
+  {
+    var playersAreReady = determineWMPlayerReadyness();
+
+    if (!playersAreReady)
+    {
+      var msEnd = new Date().getMilliseconds();
+      var messageText = "%PLAYER_NOT_READY%";
+      messageText += "%PLAYER_NOT_READY_2%";
+      alert(messageText);
+      InitImageStyle.visibility = "hidden";
+    }
+    else
+    {
+      initWMFunctions();
+    }
+  }
+}
+
+function determineWMPlayerReadyness()
+{
+  var playersAreReady = true;
+  for (i = 0; i < clipBeginTimes.length; ++i)
+  {
+    var player = getWMPlayer(i);
+    if (!player || (getWMPosition(player) < 0) || getWMPlayState(player) != 0)
+      playersAreReady = false;
+  }
+   
+  return playersAreReady;
+}
+
+function initWMFunctions()
+{
+  for (i = 0; i < clipBeginTimes.length; ++i)
+  {
+    var player = getWMPlayer(i);
+    if (player)
+    {
+      ClipPlayers[i] = player;
+      clipEndTimes[i] = clipBeginTimes[i] + getWMDuration(player);
+
+      // Netscape 4.x uses popup windows for the clip players so they have no styles
+      if (!isNS4)
+      {
+        ClipPlayersStyle[i] = getHtmlObject("viewframe", ("ClipLayer"+i), ("ClipPlayer"+i), true, true);
+      }
+    }
+  }
+
+  initPlayerFinished = true;
+  InitImageStyle.visibility = "hidden";
+
+  setInterval("timerWMCheck()", 100);
+  setInterval("syncWMCheck()", 200);
+}
+
+
+/* ------------------------------------------------------------------------
+ * Synchronizing
+ * ------------------------------------------------------------------------ */
+
+function timerWMCheck()
+{
+  var idx = findMatchingWMPlayerIndex();
+   
+  // first things first:
+  // match the replay state of the clips with that of the master
+  // one exception: the master is paused to wait for a clip to move
+   
+  var masterState = getWMPlayState(MediaPlayer1);
+   
+  for (i = 0; i < clipBeginTimes.length; ++i)
+  {
+    var player = getWMPlayer(i);
+      
+    if (player)
+    {
+      switch(masterState)
+      {
+        case 2: // Playing 
+                if (getWMPlayState(player) != 1 && !startRequests[i] && i != idx 
+                    && (getWMPosition(MediaPlayer1)) >= (clipBeginTimes[i]-5.0)
+                    && (getWMPosition(MediaPlayer1)) < clipBeginTimes[i])
+                {
+                   // "preload" player
+                   if (getWMPlayState(player) == 0)
+                      player.Play();
+                   
+                   // "pause" player, if clip is not streamed
+                   var sourceLink = "";
+                   if (isNS4)
+                     sourceLink = player.GetSourceLink();
+                   else if (isIE4 || isDOM)
+                     sourceLink = player.SourceLink;
+                   if (sourceLink.toLowerCase().substr(0, 6) != "mms://")
+                     player.Pause();
+          
+                   // "hold" player in start position
+                   if (getWMPosition(player) != 0.0)
+                      setWMPosition(player, 0.0);
+                }
+                break;
+        case 1: // Paused 
+                if (getWMPlayState(player) == 2 && !startRequests[i])
+                  player.Pause();
+                break;
+        case 0: // Stopped 
+                if (getWMPlayState(player) != 0)
+                  stopClipPlayer(player, i);
+                break;
+      }
+    }
+  }
+
+  // one clip player maybe needs to be shown/started
+  if (idx > -1)
+  {
+    // this player should be visible
+    showWMPlayer(idx);
+
+    var player = getWMPlayer(idx);
+      
+    if (player)
+    {
+      var masterIsRunning = getWMPlayState(MediaPlayer1) == 2;
+      var clipIsRunning = getWMPlayState(player) == 2;
+
+      var playerOnePosition = getWMPosition(MediaPlayer1);
+         
+      // clip should have this time
+      var playerTwoWannabePosition = playerOnePosition - clipBeginTimes[idx];
+         
+      if (playerTwoWannabePosition < getWMDuration(player) - 5)
+      {
+        // start clip, if it's not yet running
+        if (masterIsRunning && !clipIsRunning)
+          startClipPlayer(player, idx, playerTwoWannabePosition);
+
+        // continue master, if the clip has started after buffering
+        // (the clip starts asap if it's postion is > 0)
+        if (getWMPlayState(MediaPlayer1) == 1 && startRequests[idx])
+        {
+          var playerTwoPosition = getWMPosition(player);
+          if (playerTwoPosition > 0)//lastPositions[idx])
+          {
+            MediaPlayer1.Play();
+            startRequests[idx] = false;
+          }
+        }
+      }
+      else
+      {
+        // setting this position will result in a strange player state
+        // so it doesn't need to be started
+      }
+    }
+  }
+
+  // stop and/or hide the other player
+  for (var idx2 = 0; idx2 < clipBeginTimes.length; ++idx2)
+  {
+    if (idx2 != idx)
+    {
+      // interferes with "case 2:" above, 
+      // but otherwise they won't get stopped at all...
+      /*
+      var player = getWMPlayer(idx2);
+      if (player && getWMPlayState(player) != 0)
+      {
+        stopClipPlayer(player, idx2);
+      }
+      */
+       
+      // all others shall not be visible
+      hideWMPlayer(idx2);
+    }
+  }
+}
+
+function syncWMCheck()
+{
+  var idx = findMatchingWMPlayerIndex();
+
+  if (idx > -1)
+  {
+    var player = getWMPlayer(idx);
+
+    if (player)
+    {
+      var playerOnePosition = getWMPosition(MediaPlayer1);
+         
+      // clip should have this time
+      var playerTwoWannabePosition = playerOnePosition - clipBeginTimes[idx];
+         
+      if (playerTwoWannabePosition < getWMDuration(player) - 5)
+      {
+        // it has this time
+        var playerTwoPosition = getWMPosition(player);
+         
+        var positionDiff = playerTwoWannabePosition-playerTwoPosition;
+         
+        if (Math.abs(positionDiff) > 0.3)// && !startRequests[idx])
+          setWMPosition(player, playerTwoWannabePosition);
+      }
+      else
+      {
+        // setting this position will result in a strange player state
+      }
+    }
+  }
+}
+
+
+/* ------------------------------------------------------------------------
+ * Start/Stop Clip Player
+ * ------------------------------------------------------------------------ */
+
+function startClipPlayer(player, playerNumber, position)
+{
+  // should be true: masterIsRunning && !clipIsRunning
+  if (getWMPlayState(player) != 2)
+  {
+    MediaPlayer1.Pause();
+    startRequests[playerNumber] = true;
+    if (position > 0.2)
+      setWMPosition(player, position);
+    player.Play();
+  }
+}
+
+function stopClipPlayer(player, playerNumber)
+{
+  if (getWMPlayState(player) != 0)
+    player.Stop();
+   
+  if (getWMPosition(player) != 0.0)
+    setWMPosition(player, 0.0);
+}
+
+
+/* ------------------------------------------------------------------------
+ * Show/Hide Player
+ * ------------------------------------------------------------------------ */
+function showWMPlayer(playerNumber)
+{
+  if (!isNS4)
+  {
+    if (ClipPlayersStyle[playerNumber].visibility != "visible")
+      ClipPlayersStyle[playerNumber].visibility = "visible";
+  }
+  else // special case for Netscape 4.x
+  {
+    if (popups[playerNumber] && !popups[playerNumber].closed)
+    {
+      // do nothing special here
+    }
+    else if (focusRequests[playerNumber])
+    {
+      // (re-)open the popup
+      var popupUrl = "%OUTPUT_NAME%_popup" + playerNumber + ".html";
+      var posY = playerNumber * 10 + 10;
+      var pWidth = playerWidths[playerNumber]>=100 ? playerWidths[playerNumber] : 100;
+      var posX = screen.availWidth - pWidth - (playerNumber * 10) - 20;
+      var options = "width=" + playerWidths[playerNumber] 
+          + ",height=" + playerHeights[playerNumber] + ",left=" + posX + ",top=" + posY 
+          + ",locationbar=no,menubar=no,toolbar=no,statusbar=no,resizable=no,scrollbars=no";
+         
+      popups[playerNumber] = window.open(popupUrl, "popupClip"+playerNumber, options);
+    }
+
+    if (focusRequests[playerNumber])
+      popups[playerNumber].focus();
+    focusRequests[playerNumber] = false;
+  }
+}
+
+function hideWMPlayer(playerNumber)
+{
+  if (!isNS4)
+  {
+    if (ClipPlayersStyle[playerNumber].visibility != "hidden")
+      ClipPlayersStyle[playerNumber].visibility = "hidden";
+  }
+  else // special case for Netscape 4.x
+  {
+    //var popup = window.open("", "popupClip"+playerNumber, "");
+    if (popups[playerNumber] && !popups[playerNumber].closed  && !focusRequests[playerNumber])
+    {
+      popups[playerNumber].blur();
+      //popups[playerNumber].close();
+      focusRequests[playerNumber] = true;
+    }
+  }
+}
+
+function closePopupPlayer(playerNumber)
+{
+  if (isNS4)
+  {
+    if (popups[playerNumber])// prevents closing: && !popups[playerNumber].closed  && !focusRequests[playerNumber])
+    {
+      popups[playerNumber].close();
+      focusRequests[playerNumber] = true;
+    }
+  }
+}
+
+
+function findMatchingWMPlayerIndex()
+{
+  var masterPlayerPosition = getWMPosition(MediaPlayer1);
+
+  for (var idx = 0; idx < clipBeginTimes.length; ++idx)
+  {
+    // ">" (and not ">=") is important to make sure that starting a clip
+    // (with it's pause and start of the master player)
+    // doesn't interfere with the buffering of the master player
+    if (masterPlayerPosition > clipBeginTimes[idx] && masterPlayerPosition < clipEndTimes[idx])
+    {
+      return idx;
+    }
+  }
+
+  return -1;
+}
+
+
+
+function getWMPosition(player)
+{
+  var seconds = getPosition(player) / 1000.0;
+  return seconds;
+}
+
+function setWMPosition(player, seconds)
+{
+  var milliseconds = seconds * 1000;
+  setPosition(player, milliseconds);
+}
+
+function getWMPlayState(player)
+{
+  return getPlayState(player);
+}
+
+function getWMDuration(player)
+{
+  return getDuration(player);
+}
