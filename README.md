@@ -21,5 +21,5 @@ Documentation
 ### File format specifications
 
 [Presentation](tree/master/doc/lecturnitySourceDocuments): The presentation file, also called "Lecturniy Source Document" (LSD).  
-[Recoring ](tree/master/doc/lecturnityRecordings): The recording files, incl. "Lecturniy Recording Document" (LRD), "Lecturnity Meta Data" (LMD), the object file (OBJ) and the event queue file (EVQ).
+[Recording ](tree/master/doc/lecturnityRecordings): The recording files, incl. "Lecturniy Recording Document" (LRD), "Lecturnity Meta Data" (LMD), the object file (OBJ) and the event queue file (EVQ).
 
