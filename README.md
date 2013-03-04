@@ -15,7 +15,7 @@ The OpenLECTURNITY project has just been started. Basic source code has been upl
 However as the open source project is based on the full version of LECTURNITY there is already lots of functionality thta will be available soon.
 
 
-Contribution Guides
+Contribution
 -------------------
 In the spirit of open source software development, OpenLECTURNITY always encourages community code contribution.
 
