@@ -32,5 +32,5 @@ The recording files, incl. "Lecturniy Recording Document" (LRD), "Lecturnity Met
 
 ### Class overviews
 
-- The [Editor class overview](tree/master/doc/lec_overview_editor_classes_v1.doc) provides an overview on the main editing component.
-- The [Publisher class overview](tree/master/doc/lec_overview_Publisher_classes.doc) provides an overview on the main publishing component, which converts recordings to common file fomats.
+- The [Editor class overview](https://github.com/openlecturnity/os45/tree/master/doc/lec_overview_editor_classes_v1.doc) provides an overview on the main editing component.
+- The [Publisher class overview](https://github.com/openlecturnity/os45/tree/master/doc/lec_overview_Publisher_classes.doc) provides an overview on the main publishing component, which converts recordings to common file fomats.
