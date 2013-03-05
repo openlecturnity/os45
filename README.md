@@ -34,3 +34,9 @@ The recording files, incl. "Lecturniy Recording Document" (LRD), "Lecturnity Met
 
 - The [Editor class overview](https://github.com/openlecturnity/os45/tree/master/doc/lec_overview_editor_classes_v1.doc) provides an overview on the main editing component.
 - The [Publisher class overview](https://github.com/openlecturnity/os45/tree/master/doc/lec_overview_Publisher_classes.doc) provides an overview on the main publishing component, which converts recordings to common file fomats.
+
+
+License
+-------
+
+OpenLECTURBITY is licensed under [GNU Lesser General Public License](https://github.com/openlecturnity/os45/blob/master/LICENSE.md). You may get a copy of the GNU Lesser General Public License from http://www.gnu.org/licenses/lgpl.txt
