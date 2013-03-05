@@ -12,7 +12,7 @@ Current State
 
 The OpenLECTURNITY project has just been started. Basic source code has been uploaded. Build instructions have to be provided in order to compile a running executable.
 
-However as the open source project is based on the full version of LECTURNITY there is already lots of functionality thta will be available soon.
+However as the open source project is based on the full version of LECTURNITY there is already lots of functionality that will be available soon.
 
 
 Contribution
@@ -25,9 +25,9 @@ Documentation
 
 ### File format specifications
 
-- [Presentation](tree/master/doc/lecturnitySourceDocuments)  
+- [Presentation](https://github.com/openlecturnity/os45/tree/master/doc/lecturnitySourceDocuments)  
 The presentation file, also called "Lecturniy Source Document" (LSD) incl. DTD and "Lecturnity Metadata Document" (LMD).
-- [Recording ](tree/master/doc/lecturnityRecordings)  
+- [Recording ](https://github.com/openlecturnity/os45/tree/master/doc/lecturnityRecordings)  
 The recording files, incl. "Lecturniy Recording Document" (LRD), "Lecturnity Metadata Document" (LMD), the object file (OBJ) and the event queue file (EVQ).
 
 ### Class overviews
